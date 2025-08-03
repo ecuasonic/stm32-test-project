@@ -1,0 +1,30 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m3",
+      "-c",
+      "-Iinclude",
+      "-o",
+      "build/main.o",
+      "src/main.c"
+    ],
+    "directory": "/home/ecuas/Documents/code/stm/test",
+    "file": "/home/ecuas/Documents/code/stm/test/src/main.c",
+    "output": "/home/ecuas/Documents/code/stm/test/build/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/arm-none-eabi-gcc",
+      "-mcpu=cortex-m3",
+      "-c",
+      "-Iinclude",
+      "-o",
+      "build/vectors.o",
+      "src/vectors.c"
+    ],
+    "directory": "/home/ecuas/Documents/code/stm/test",
+    "file": "/home/ecuas/Documents/code/stm/test/src/vectors.c",
+    "output": "/home/ecuas/Documents/code/stm/test/build/vectors.o"
+  }
+]
