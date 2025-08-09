@@ -27,7 +27,7 @@
 !_TAG_OUTPUT_VERSION	0.0	/current.age/
 !_TAG_PARSER_VERSION!C	0.0	/current.age/
 !_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
-!_TAG_PROC_CWD	/home/ecuas/Documents/code/stm/test/	//
+!_TAG_PROC_CWD	/home/ecuasonic/Documents/stm32/stm32-test-project/	//
 !_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
@@ -237,13 +237,14 @@ gpio	include/gpio/gpio.h	/^struct gpio {$/;"	s	line:6
 gpio_set_mode	include/util.h	/^gpio_set_mode(uint16_t pin, uint8_t mode ) {$/;"	f	line:9	typeref:typename:INLINE void
 gpio_write	include/util.h	/^gpio_write(uint16_t pin, uint32_t set) {$/;"	f	line:27	typeref:typename:INLINE void
 int_type	include/arm-cortex-m3/nvic/int_type.h	/^struct int_type {$/;"	s	line:3
-main	src/main.c	/^int main(void) {$/;"	f	line:9	typeref:typename:int
+main	src/main.c	/^int main(void) {$/;"	f	line:26	typeref:typename:int
 rcc	include/rcc/rcc.h	/^struct rcc {$/;"	s	line:8
 s_ticks	src/systick.c	/^volatile uint32_t s_ticks;$/;"	v	line:4	typeref:typename:volatile uint32_t
+setup	src/main.c	/^void setup(void) {$/;"	f	line:9	typeref:typename:void
 systick	include/arm-cortex-m3/nvic/sys_timer.h	/^struct systick {$/;"	s	line:16
 systick_init	include/systick.h	/^INLINE void systick_init(uint32_t ticks) {$/;"	f	line:4	typeref:typename:INLINE void
 tab	src/vectors.c	/^void (*const tab[16+91])(void) = {$/;"	v	line:46	typeref:typename:void (* const[16+91])(void)
-timer_expired	src/systick.c	/^uint32_t timer_expired(uint32_t *t, uint32_t prd, uint32_t now) {$/;"	f	line:11	typeref:typename:uint32_t
+timer_expired	src/systick.c	/^uint32_t timer_expired(uint32_t *t, uint32_t prd, uint32_t now) {$/;"	f	line:19	typeref:typename:uint32_t
 uart	include/uart.h	/^struct uart {$/;"	s	line:3
 uint16_t	include/types.h	/^typedef unsigned short uint16_t;$/;"	t	line:7	typeref:typename:unsigned short
 uint32_t	include/types.h	/^typedef unsigned int uint32_t;$/;"	t	line:6	typeref:typename:unsigned int

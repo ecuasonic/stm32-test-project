@@ -6,6 +6,7 @@ extern int main(void);
 __attribute__((weak)) void Default_Handler(void) {
     while (1);
 }
+// Redefinition will replace weak alias for function.
 #define WEAK_ALIAS(x) __attribute__((weak, alias(#x)))
 
 void NMI_Handler(void)          WEAK_ALIAS(Default_Handler);
@@ -13,12 +14,12 @@ void HardFault_Handler(void)    WEAK_ALIAS(Default_Handler);
 void MemManage_Handler(void)    WEAK_ALIAS(Default_Handler);
 void BusFault_Handler(void)     WEAK_ALIAS(Default_Handler);
 void UsageFault_Handler(void)   WEAK_ALIAS(Default_Handler);
-void SVC_Handler(void)          WEAK_ALIAS(Default_Handler);
-void DebugMon_Handler(void)     WEAK_ALIAS(Default_Handler);
+void SVCall_Handler(void)          WEAK_ALIAS(Default_Handler);
+void DebugMonitor_Handler(void)     WEAK_ALIAS(Default_Handler);
 void PendSV_Handler(void)       WEAK_ALIAS(Default_Handler);
 
 // startup code
-__attribute__((naked, noreturn)) void _reset(void) {
+__attribute__((noreturn)) void Reset_Handler(void) {
     extern long _sbss, _ebss, _sdata, _edata, _sidata;
 
     // memset .bss to zero,
@@ -45,15 +46,15 @@ extern void _estack(void); // Defined in linker.ld
 __attribute__((section(".vectors")))
 void (*const tab[16+91])(void) = {
     _estack,
-    _reset,
+    Reset_Handler,
     NMI_Handler,
     HardFault_Handler,
     MemManage_Handler,
     BusFault_Handler,
     UsageFault_Handler,
     0, 0, 0, 0,
-    SVC_Handler,
-    DebugMon_Handler,
+    SVCall_Handler,
+    DebugMonitor_Handler,
     0,
     PendSV_Handler,
     SysTick_Handler,
