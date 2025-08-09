@@ -27,7 +27,7 @@
 !_TAG_OUTPUT_VERSION	0.0	/current.age/
 !_TAG_PARSER_VERSION!C	0.0	/current.age/
 !_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
-!_TAG_PROC_CWD	/home/ecuasonic/Documents/stm32/stm32-test-project/	//
+!_TAG_PROC_CWD	/home/ecuas/Documents/code/stm/test/	//
 !_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
@@ -35,52 +35,52 @@
 !_TAG_ROLE_DESCRIPTION!C!header	local	/local header/
 !_TAG_ROLE_DESCRIPTION!C!header	system	/system header/
 !_TAG_ROLE_DESCRIPTION!C!macro	undef	/undefined/
-AHBENR	include/rcc/rcc.h	/^  volatile uint32_t AHBENR;     \/\/ AHB Peripheral Reset Register$/;"	m	line:14	struct:rcc	typeref:typename:volatile uint32_t
-AHBRSTR	include/rcc/rcc.h	/^  volatile uint32_t AHBRSTR;    \/\/ AHB Peripheral Clock Reset Register$/;"	m	line:19	struct:rcc	typeref:typename:volatile uint32_t
-APB1ENR	include/rcc/rcc.h	/^  volatile uint32_t APB1ENR;    \/\/ APB1 Peripheral Clock Enable Register$/;"	m	line:16	struct:rcc	typeref:typename:volatile uint32_t
-APB1RSTR	include/rcc/rcc.h	/^  volatile uint32_t APB1RSTR;   \/\/ APB1 Peripheral Reset Register$/;"	m	line:13	struct:rcc	typeref:typename:volatile uint32_t
-APB2ENR	include/rcc/rcc.h	/^  volatile uint32_t APB2ENR;    \/\/ APB2 Peripheral Clock Enable Register$/;"	m	line:15	struct:rcc	typeref:typename:volatile uint32_t
-APB2PERIPH_BASE	include/gpio/gpio.h	/^#define APB2PERIPH_BASE /;"	d	line:24
-APB2RSTR	include/rcc/rcc.h	/^  volatile uint32_t APB2RSTR;   \/\/ APB2 Peripheral Reset Register$/;"	m	line:12	struct:rcc	typeref:typename:volatile uint32_t
+AHBENR	include/core_stm/rcc.h	/^    uint32_t AHBENR;$/;"	m	line:165	struct:rcc	typeref:typename:uint32_t
+APB1ENR	include/core_stm/rcc.h	/^    uint32_t APB1ENR;$/;"	m	line:234	struct:rcc	typeref:typename:uint32_t
+APB1RSTR	include/core_stm/rcc.h	/^    uint32_t APB1RSTR;$/;"	m	line:147	struct:rcc	typeref:typename:uint32_t
+APB2ENR	include/core_stm/rcc.h	/^    uint32_t APB2ENR;$/;"	m	line:197	struct:rcc	typeref:typename:uint32_t
+APB2RSTR	include/core_stm/rcc.h	/^    uint32_t APB2RSTR;$/;"	m	line:112	struct:rcc	typeref:typename:uint32_t
 AUX_CTRL	include/arm-cortex-m3/nvic/int_type.h	/^  volatile uint32_t AUX_CTRL;       \/\/ Auxiliary Control Register$/;"	m	line:5	struct:int_type	typeref:typename:volatile uint32_t
-BDCR	include/rcc/rcc.h	/^  volatile uint32_t BDCR;       \/\/ Backup Domain Control Register$/;"	m	line:17	struct:rcc	typeref:typename:volatile uint32_t
-BRR	include/gpio/gpio.h	/^    volatile uint32_t BRR;  \/\/ Port Bit Reset Register$/;"	m	line:12	struct:gpio	typeref:typename:volatile uint32_t
-BRR	include/uart.h	/^  volatile uint32_t BRR;  \/\/ Baud Rate Register$/;"	m	line:6	struct:uart	typeref:typename:volatile uint32_t
-BSRR	include/gpio/gpio.h	/^    volatile uint32_t BSRR; \/\/ Port Bit Set\/Reset Register$/;"	m	line:11	struct:gpio	typeref:typename:volatile uint32_t
+BDCR	include/core_stm/rcc.h	/^    uint32_t BDCR;$/;"	m	line:259	struct:rcc	typeref:typename:uint32_t
+BRR	include/core_stm/gpio.h	/^    uint32_t BRR;$/;"	m	line:65	struct:gpio	typeref:typename:uint32_t
+BSRR	include/core_stm/gpio.h	/^    uint32_t BSRR;$/;"	m	line:56	struct:gpio	typeref:typename:uint32_t
 CALIB	include/arm-cortex-m3/nvic/sys_timer.h	/^  volatile uint32_t CALIB;  \/\/ SysTick Calibration Value Register$/;"	m	line:20	struct:systick	typeref:typename:volatile uint32_t
-CFGR	include/rcc/rcc.h	/^  volatile uint32_t CFGR;       \/\/ Clock Configuration Register$/;"	m	line:10	struct:rcc	typeref:typename:volatile uint32_t
-CFGR2	include/rcc/rcc.h	/^  volatile uint32_t CFGR2;      \/\/ Clock Configuration Register 2$/;"	m	line:20	struct:rcc	typeref:typename:volatile uint32_t
-CIR	include/rcc/rcc.h	/^  volatile uint32_t CIR;        \/\/ Clock Interrupt Register$/;"	m	line:11	struct:rcc	typeref:typename:volatile uint32_t
+CFGR	include/core_stm/rcc.h	/^    uint32_t CFGR;$/;"	m	line:53	struct:rcc	typeref:typename:uint32_t
+CIR	include/core_stm/rcc.h	/^    uint32_t CIR;$/;"	m	line:82	struct:rcc	typeref:typename:uint32_t
 CLKSOURCE_SHIFT	include/arm-cortex-m3/nvic/sys_timer.h	/^#define CLKSOURCE_SHIFT(/;"	d	line:34
 COUNTFLAG_SHIFT	include/arm-cortex-m3/nvic/sys_timer.h	/^#define COUNTFLAG_SHIFT(/;"	d	line:31
-CR	include/rcc/rcc.h	/^  volatile uint32_t CR;         \/\/ Clock Control Register$/;"	m	line:9	struct:rcc	typeref:typename:volatile uint32_t
-CR1	include/uart.h	/^  volatile uint32_t CR1;  \/\/ Control Register 1$/;"	m	line:7	struct:uart	typeref:typename:volatile uint32_t
-CR2	include/uart.h	/^  volatile uint32_t CR2;  \/\/ Control Register 2$/;"	m	line:8	struct:uart	typeref:typename:volatile uint32_t
-CR3	include/uart.h	/^  volatile uint32_t CR3;  \/\/ Control Register 3$/;"	m	line:9	struct:uart	typeref:typename:volatile uint32_t
-CRH	include/gpio/gpio.h	/^    volatile uint32_t CRH;  \/\/ Port Configuration Register High$/;"	m	line:8	struct:gpio	typeref:typename:volatile uint32_t
-CRL	include/gpio/gpio.h	/^    volatile uint32_t CRL;  \/\/ Port Configuration Register Low$/;"	m	line:7	struct:gpio	typeref:typename:volatile uint32_t
-CSR	include/rcc/rcc.h	/^  volatile uint32_t CSR;        \/\/ Control\/Status Register$/;"	m	line:18	struct:rcc	typeref:typename:volatile uint32_t
+CR	include/core_stm/rcc.h	/^    uint32_t CR;$/;"	m	line:28	struct:rcc	typeref:typename:uint32_t
+CRH	include/core_stm/gpio.h	/^    uint32_t CRH;$/;"	m	line:27	struct:gpio	typeref:typename:uint32_t
+CRL	include/core_stm/gpio.h	/^    uint32_t CRL;$/;"	m	line:16	struct:gpio	typeref:typename:uint32_t
+CSR	include/core_stm/rcc.h	/^    uint32_t CSR;$/;"	m	line:280	struct:rcc	typeref:typename:uint32_t
 CTRL	include/arm-cortex-m3/nvic/sys_timer.h	/^  volatile uint32_t CTRL;   \/\/ SysTick Control and Status Register$/;"	m	line:17	struct:systick	typeref:typename:volatile uint32_t
 CURRENT	include/arm-cortex-m3/nvic/sys_timer.h	/^  volatile uint32_t CURRENT;    \/\/ SysTick Curent Value Register$/;"	m	line:19	struct:systick	typeref:typename:volatile uint32_t
 CURRENT_SHIFT	include/arm-cortex-m3/nvic/sys_timer.h	/^#define CURRENT_SHIFT(/;"	d	line:66
+DEC_PINBANK	include/core_stm/gpio.h	/^#define DEC_PINBANK(/;"	d	line:82
+DEC_PINNO	include/core_stm/gpio.h	/^#define DEC_PINNO(/;"	d	line:81
 DISDEFWBUF	include/arm-cortex-m3/nvic/int_type.h	/^#define DISDEFWBUF            DISDEFWBUF_/;"	d	line:40
 DISDEFWBUF_SHIFT	include/arm-cortex-m3/nvic/int_type.h	/^#define DISDEFWBUF_SHIFT(/;"	d	line:39
 DISFOLD	include/arm-cortex-m3/nvic/int_type.h	/^#define DISFOLD               DISFOLD_/;"	d	line:37
 DISFOLD_SHIFT	include/arm-cortex-m3/nvic/int_type.h	/^#define DISFOLD_SHIFT(/;"	d	line:36
 DISMCYCINT	include/arm-cortex-m3/nvic/int_type.h	/^#define DISMCYCINT            DISMCYCINT_/;"	d	line:43
 DISMCYCINT_SHIFT	include/arm-cortex-m3/nvic/int_type.h	/^#define DISMCYCINT_SHIFT(/;"	d	line:42
-DR	include/uart.h	/^  volatile uint32_t DR;   \/\/ Data Register$/;"	m	line:5	struct:uart	typeref:typename:volatile uint32_t
 Default_Handler	src/vectors.c	/^__attribute__((weak)) void Default_Handler(void) {$/;"	f	line:6	typeref:typename:void
 ENABLE_SHIFT	include/arm-cortex-m3/nvic/sys_timer.h	/^#define ENABLE_SHIFT(/;"	d	line:40
-GPIO	include/gpio/gpio.h	/^#define GPIO(bank)        ((struct gpio *)(GPIO_/;"	d	line:27
-GPIO_BASE	include/gpio/gpio.h	/^#define GPIO_BASE /;"	d	line:25
-GPIO_H	include/gpio/gpio.h	/^#define GPIO_H$/;"	d	line:4
-GPIO_MODE_INPUT	include/gpio/gpio.h	/^  GPIO_MODE_INPUT,$/;"	e	line:17	enum:__anoncc1c275b0103
-GPIO_MODE_OUTPUT_10MHZ	include/gpio/gpio.h	/^  GPIO_MODE_OUTPUT_10MHZ,$/;"	e	line:18	enum:__anoncc1c275b0103
-GPIO_MODE_OUTPUT_2MHZ	include/gpio/gpio.h	/^  GPIO_MODE_OUTPUT_2MHZ,$/;"	e	line:19	enum:__anoncc1c275b0103
-GPIO_MODE_OUTPUT_50MHZ	include/gpio/gpio.h	/^  GPIO_MODE_OUTPUT_50MHZ$/;"	e	line:20	enum:__anoncc1c275b0103
-GTPR	include/uart.h	/^  volatile uint32_t GTPR; \/\/ Guard Time and Prescalar Register$/;"	m	line:10	struct:uart	typeref:typename:volatile uint32_t
-IDR	include/gpio/gpio.h	/^    volatile uint32_t IDR;  \/\/ Port Input Data$/;"	m	line:9	struct:gpio	typeref:typename:volatile uint32_t
+ENC_PIN	include/core_stm/gpio.h	/^#define ENC_PIN(/;"	d	line:80
+GPIO	include/core_stm/gpio.h	/^#define GPIO(/;"	d	line:79
+GPIO_BRR_BR	include/core_stm/gpio.h	/^#define GPIO_BRR_BR(/;"	d	line:64
+GPIO_BSRR_BR	include/core_stm/gpio.h	/^#define GPIO_BSRR_BR(/;"	d	line:53
+GPIO_BSRR_SR	include/core_stm/gpio.h	/^#define GPIO_BSRR_SR(/;"	d	line:55
+GPIO_CRH_CNF	include/core_stm/gpio.h	/^#define GPIO_CRH_CNF(/;"	d	line:24
+GPIO_CRH_MODE	include/core_stm/gpio.h	/^#define GPIO_CRH_MODE(/;"	d	line:26
+GPIO_CRL_CNF	include/core_stm/gpio.h	/^#define GPIO_CRL_CNF(/;"	d	line:13
+GPIO_CRL_MODE	include/core_stm/gpio.h	/^#define GPIO_CRL_MODE(/;"	d	line:15
+GPIO_H	include/core_stm/gpio.h	/^#define GPIO_H$/;"	d	line:4
+GPIO_IDR	include/core_stm/gpio.h	/^#define GPIO_IDR(/;"	d	line:35
+GPIO_LCKR_LCK	include/core_stm/gpio.h	/^#define GPIO_LCKR_LCK(/;"	d	line:75
+GPIO_LCKR_LCKK	include/core_stm/gpio.h	/^#define GPIO_LCKR_LCKK /;"	d	line:73
+GPIO_ODR	include/core_stm/gpio.h	/^#define GPIO_ODR(/;"	d	line:44
+IDR	include/core_stm/gpio.h	/^    uint32_t IDR;$/;"	m	line:36	struct:gpio	typeref:typename:uint32_t
 INLINE	include/types.h	/^#define INLINE /;"	d	line:4
 INTTYPE	include/arm-cortex-m3/nvic/int_type.h	/^#define INTTYPE /;"	d	line:8
 INT_CTRLR_TYPE	include/arm-cortex-m3/nvic/int_type.h	/^  volatile uint32_t INT_CTRLR_TYPE;  \/\/ Interrupt Control Type Register$/;"	m	line:4	struct:int_type	typeref:typename:volatile uint32_t
@@ -95,119 +95,162 @@ INT_LINES_NUM_97_128	include/arm-cortex-m3/nvic/int_type.h	/^  INT_LINES_NUM_97_
 INT_LINES_NUM_MASK	include/arm-cortex-m3/nvic/int_type.h	/^#define INT_LINES_NUM_MASK /;"	d	line:17
 INT_LINES_NUM_OPTS	include/arm-cortex-m3/nvic/int_type.h	/^enum INT_LINES_NUM_OPTS {$/;"	g	line:18
 INT_LINES_NUM_SHIFT	include/arm-cortex-m3/nvic/int_type.h	/^#define INT_LINES_NUM_SHIFT(/;"	d	line:16
-LCKR	include/gpio/gpio.h	/^    volatile uint32_t LCKR; \/\/ Port Configuration Lock Register$/;"	m	line:13	struct:gpio	typeref:typename:volatile uint32_t
+LCKR	include/core_stm/gpio.h	/^    uint32_t LCKR;$/;"	m	line:76	struct:gpio	typeref:typename:uint32_t
 LOAD	include/arm-cortex-m3/nvic/sys_timer.h	/^  volatile uint32_t LOAD;   \/\/ SysTick Reload Value Register$/;"	m	line:18	struct:systick	typeref:typename:volatile uint32_t
 LOAD_SHIFT	include/arm-cortex-m3/nvic/sys_timer.h	/^#define LOAD_SHIFT(/;"	d	line:56
 NOREF_SHIFT	include/arm-cortex-m3/nvic/sys_timer.h	/^#define NOREF_SHIFT(/;"	d	line:76
 NVIC_BASE	include/arm-cortex-m3/nvic/int_type.h	/^#define NVIC_BASE /;"	d	line:7
 NVIC_BASE	include/arm-cortex-m3/nvic/sys_timer.h	/^#define NVIC_BASE /;"	d	line:22
-ODR	include/gpio/gpio.h	/^    volatile uint32_t ODR;  \/\/ Port Output Data$/;"	m	line:10	struct:gpio	typeref:typename:volatile uint32_t
-PERIPH_BASE	include/gpio/gpio.h	/^#define PERIPH_BASE /;"	d	line:23
-PIN	include/gpio/gpio.h	/^#define PIN(/;"	d	line:28
-PINBANK	include/gpio/gpio.h	/^#define PINBANK(/;"	d	line:30
-PINNO	include/gpio/gpio.h	/^#define PINNO(/;"	d	line:29
-RCC	include/rcc/rcc.h	/^#define RCC                   ((struct rcc *)(RCC_/;"	d	line:24
-RCC_BASE	include/rcc/rcc.h	/^#define RCC_BASE /;"	d	line:23
-RCC_CFGR_ADCPRE_DIV2	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_ADCPRE_DIV2 /;"	d	line:19
-RCC_CFGR_ADCPRE_DIV4	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_ADCPRE_DIV4 /;"	d	line:20
-RCC_CFGR_ADCPRE_DIV6	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_ADCPRE_DIV6 /;"	d	line:21
-RCC_CFGR_ADCPRE_DIV8	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_ADCPRE_DIV8 /;"	d	line:22
-RCC_CFGR_ADCPRE_MASK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_ADCPRE_MASK /;"	d	line:18
-RCC_CFGR_ADCPRE_SHIFT	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_ADCPRE_SHIFT(/;"	d	line:17
-RCC_CFGR_HPRE_DIV128	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_HPRE_DIV128 /;"	d	line:51
-RCC_CFGR_HPRE_DIV16	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_HPRE_DIV16 /;"	d	line:49
-RCC_CFGR_HPRE_DIV2	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_HPRE_DIV2 /;"	d	line:46
-RCC_CFGR_HPRE_DIV256	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_HPRE_DIV256 /;"	d	line:52
-RCC_CFGR_HPRE_DIV4	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_HPRE_DIV4 /;"	d	line:47
-RCC_CFGR_HPRE_DIV512	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_HPRE_DIV512 /;"	d	line:53
-RCC_CFGR_HPRE_DIV64	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_HPRE_DIV64 /;"	d	line:50
-RCC_CFGR_HPRE_DIV8	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_HPRE_DIV8 /;"	d	line:48
-RCC_CFGR_HPRE_MASK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_HPRE_MASK /;"	d	line:44
-RCC_CFGR_HPRE_NODIV	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_HPRE_NODIV /;"	d	line:45
-RCC_CFGR_HPRE_SHIFT	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_HPRE_SHIFT(/;"	d	line:43
-RCC_CFGR_MCO_HSECLK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_MCO_HSECLK /;"	d	line:7
-RCC_CFGR_MCO_HSICLK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_MCO_HSICLK /;"	d	line:6
-RCC_CFGR_MCO_MASK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_MCO_MASK /;"	d	line:3
-RCC_CFGR_MCO_NOCLK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_MCO_NOCLK /;"	d	line:4
-RCC_CFGR_MCO_PLL2	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_MCO_PLL2 /;"	d	line:9
-RCC_CFGR_MCO_PLL3	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_MCO_PLL3 /;"	d	line:12
-RCC_CFGR_MCO_PLL3DIV2CLK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_MCO_PLL3DIV2CLK /;"	d	line:10
-RCC_CFGR_MCO_PLLDIV2CLK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_MCO_PLLDIV2CLK /;"	d	line:8
-RCC_CFGR_MCO_SHIFT	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_MCO_SHIFT(/;"	d	line:2
-RCC_CFGR_MCO_SYSCLK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_MCO_SYSCLK /;"	d	line:5
-RCC_CFGR_MCO_XT1	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_MCO_XT1 /;"	d	line:11
-RCC_CFGR_PPRE1_DIV16	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE1_DIV16 /;"	d	line:40
-RCC_CFGR_PPRE1_DIV2	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE1_DIV2 /;"	d	line:37
-RCC_CFGR_PPRE1_DIV4	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE1_DIV4 /;"	d	line:38
-RCC_CFGR_PPRE1_DIV8	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE1_DIV8 /;"	d	line:39
-RCC_CFGR_PPRE1_MASK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE1_MASK /;"	d	line:35
-RCC_CFGR_PPRE1_NODIV	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE1_NODIV /;"	d	line:36
-RCC_CFGR_PPRE1_SHIFT	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE1_SHIFT(/;"	d	line:34
-RCC_CFGR_PPRE2_DIV16	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE2_DIV16 /;"	d	line:31
-RCC_CFGR_PPRE2_DIV2	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE2_DIV2 /;"	d	line:28
-RCC_CFGR_PPRE2_DIV4	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE2_DIV4 /;"	d	line:29
-RCC_CFGR_PPRE2_DIV8	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE2_DIV8 /;"	d	line:30
-RCC_CFGR_PPRE2_MASK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE2_MASK /;"	d	line:26
-RCC_CFGR_PPRE2_NODIV	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE2_NODIV /;"	d	line:27
-RCC_CFGR_PPRE2_SHIFT	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_PPRE2_SHIFT(/;"	d	line:25
-RCC_CFGR_SWS_HSE	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_SWS_HSE /;"	d	line:62
-RCC_CFGR_SWS_HSI	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_SWS_HSI /;"	d	line:61
-RCC_CFGR_SWS_MASK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_SWS_MASK /;"	d	line:60
-RCC_CFGR_SWS_PLL	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_SWS_PLL /;"	d	line:63
-RCC_CFGR_SWS_SHIFT	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_SWS_SHIFT(/;"	d	line:59
-RCC_CFGR_SW_HSE	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_SW_HSE /;"	d	line:70
-RCC_CFGR_SW_HSI	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_SW_HSI /;"	d	line:69
-RCC_CFGR_SW_MASK	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_SW_MASK /;"	d	line:68
-RCC_CFGR_SW_PLL	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_SW_PLL /;"	d	line:71
-RCC_CFGR_SW_SHIFT	include/rcc/rcc_cfgr.h	/^#define RCC_CFGR_SW_SHIFT(/;"	d	line:67
-RCC_CR_CSSON	include/rcc/rcc_cr.h	/^#define RCC_CR_CSSON            RCC_CR_CSSON_/;"	d	line:49
-RCC_CR_CSSON_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_CSSON_MASK /;"	d	line:48
-RCC_CR_CSSON_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_CSSON_SHIFT(/;"	d	line:47
-RCC_CR_HSEBYP	include/rcc/rcc_cr.h	/^#define RCC_CR_HSEBYP           RCC_CR_HSEBYP_/;"	d	line:54
-RCC_CR_HSEBYP_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_HSEBYP_MASK /;"	d	line:53
-RCC_CR_HSEBYP_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_HSEBYP_SHIFT(/;"	d	line:52
-RCC_CR_HSEON	include/rcc/rcc_cr.h	/^#define RCC_CR_HSEON            RCC_CR_HSEON_/;"	d	line:64
-RCC_CR_HSEON_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_HSEON_MASK /;"	d	line:63
-RCC_CR_HSEON_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_HSEON_SHIFT(/;"	d	line:62
-RCC_CR_HSERDY	include/rcc/rcc_cr.h	/^#define RCC_CR_HSERDY           RCC_CR_HSERDY_/;"	d	line:59
-RCC_CR_HSERDY_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_HSERDY_MASK /;"	d	line:58
-RCC_CR_HSERDY_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_HSERDY_SHIFT(/;"	d	line:57
-RCC_CR_HSICAL_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_HSICAL_MASK /;"	d	line:70
-RCC_CR_HSICAL_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_HSICAL_SHIFT(/;"	d	line:69
-RCC_CR_HSION	include/rcc/rcc_cr.h	/^#define RCC_CR_HSION            RCC_CR_HSION_/;"	d	line:86
-RCC_CR_HSION_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_HSION_MASK /;"	d	line:85
-RCC_CR_HSION_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_HSION_SHIFT(/;"	d	line:84
-RCC_CR_HSIRDY	include/rcc/rcc_cr.h	/^#define RCC_CR_HSIRDY           RCC_CR_HSIRDY_/;"	d	line:81
-RCC_CR_HSIRDY_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_HSIRDY_SHIFT(/;"	d	line:80
-RCC_CR_HSITRIM	include/rcc/rcc_cr.h	/^#define RCC_CR_HSITRIM(n)       RCC_CR_HSITRIM_/;"	d	line:77
-RCC_CR_HSITRIM_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_HSITRIM_MASK /;"	d	line:76
-RCC_CR_HSITRIM_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_HSITRIM_SHIFT(/;"	d	line:75
-RCC_CR_PLL2ON	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL2ON           RCC_CR_PLL2ON_/;"	d	line:29
-RCC_CR_PLL2ON_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL2ON_MASK /;"	d	line:28
-RCC_CR_PLL2ON_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL2ON_SHIFT(/;"	d	line:27
-RCC_CR_PLL2RDY	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL2RDY          RCC_CR_PLL2RDY_/;"	d	line:24
-RCC_CR_PLL2RDY_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL2RDY_MASK /;"	d	line:23
-RCC_CR_PLL2RDY_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL2RDY_SHIFT(/;"	d	line:22
-RCC_CR_PLL3ON	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL3ON           RCC_CR_PLL3ON_/;"	d	line:17
-RCC_CR_PLL3ON_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL3ON_MASK /;"	d	line:16
-RCC_CR_PLL3ON_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL3ON_SHIFT(/;"	d	line:15
-RCC_CR_PLL3RDY	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL3RDY          RCC_CR_PLL3RDY_/;"	d	line:12
-RCC_CR_PLL3RDY_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL3RDY_MASK /;"	d	line:11
-RCC_CR_PLL3RDY_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_PLL3RDY_SHIFT(/;"	d	line:10
-RCC_CR_PLLON	include/rcc/rcc_cr.h	/^#define RCC_CR_PLLON            RCC_CR_PLLON_/;"	d	line:41
-RCC_CR_PLLON_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_PLLON_MASK /;"	d	line:40
-RCC_CR_PLLON_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_PLLON_SHIFT(/;"	d	line:39
-RCC_CR_PLLRDY	include/rcc/rcc_cr.h	/^#define RCC_CR_PLLRDY           RCC_CR_PLLRDY_/;"	d	line:36
-RCC_CR_PLLRDY_MASK	include/rcc/rcc_cr.h	/^#define RCC_CR_PLLRDY_MASK /;"	d	line:35
-RCC_CR_PLLRDY_SHIFT	include/rcc/rcc_cr.h	/^#define RCC_CR_PLLRDY_SHIFT(/;"	d	line:34
-RCC_H	include/rcc/rcc.h	/^#define RCC_H$/;"	d	line:6
-RCC_IOPAEN	include/rcc/rcc.h	/^#define RCC_IOPAEN /;"	d	line:26
-RCC_IOPBEN	include/rcc/rcc.h	/^#define RCC_IOPBEN /;"	d	line:27
-RCC_IOPCEN	include/rcc/rcc.h	/^#define RCC_IOPCEN /;"	d	line:28
-RCC_USART1EN	include/rcc/rcc_apb2enr.h	/^#define RCC_USART1EN               RCC_USART1EN_/;"	d	line:8
-RCC_USART1EN_SHIFT	include/rcc/rcc_apb2enr.h	/^#define RCC_USART1EN_SHIFT(/;"	d	line:7
+ODR	include/core_stm/gpio.h	/^    uint32_t ODR;$/;"	m	line:45	struct:gpio	typeref:typename:uint32_t
+RCC	include/core_stm/rcc.h	/^#define RCC                   ((struct rcc *)RCC_/;"	d	line:284
+RCC_AHBENR_CRCEN	include/core_stm/rcc.h	/^#define RCC_AHBENR_CRCEN /;"	d	line:160
+RCC_AHBENR_DMA1EN	include/core_stm/rcc.h	/^#define RCC_AHBENR_DMA1EN /;"	d	line:164
+RCC_AHBENR_DMA2EN	include/core_stm/rcc.h	/^#define RCC_AHBENR_DMA2EN /;"	d	line:163
+RCC_AHBENR_FLITFEN	include/core_stm/rcc.h	/^#define RCC_AHBENR_FLITFEN /;"	d	line:161
+RCC_AHBENR_FSMCEN	include/core_stm/rcc.h	/^#define RCC_AHBENR_FSMCEN /;"	d	line:159
+RCC_AHBENR_SDIOEN	include/core_stm/rcc.h	/^#define RCC_AHBENR_SDIOEN /;"	d	line:158
+RCC_AHBENR_SRAMEN	include/core_stm/rcc.h	/^#define RCC_AHBENR_SRAMEN /;"	d	line:162
+RCC_APB1ENR_BKPEN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_BKPEN /;"	d	line:232
+RCC_APB1ENR_CANEN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_CANEN /;"	d	line:219
+RCC_APB1ENR_DACEN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_DACEN /;"	d	line:230
+RCC_APB1ENR_I2C1EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_I2C1EN /;"	d	line:222
+RCC_APB1ENR_I2C2EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_I2C2EN /;"	d	line:221
+RCC_APB1ENR_PWREN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_PWREN /;"	d	line:231
+RCC_APB1ENR_SPI2EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_SPI2EN /;"	d	line:228
+RCC_APB1ENR_SPI3EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_SPI3EN /;"	d	line:227
+RCC_APB1ENR_TIM12EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_TIM12EN /;"	d	line:211
+RCC_APB1ENR_TIM13EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_TIM13EN /;"	d	line:210
+RCC_APB1ENR_TIM14EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_TIM14EN /;"	d	line:209
+RCC_APB1ENR_TIM2EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_TIM2EN /;"	d	line:217
+RCC_APB1ENR_TIM3EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_TIM3EN /;"	d	line:216
+RCC_APB1ENR_TIM4EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_TIM4EN /;"	d	line:215
+RCC_APB1ENR_TIM5EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_TIM5EN /;"	d	line:214
+RCC_APB1ENR_TIM6EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_TIM6EN /;"	d	line:213
+RCC_APB1ENR_TIM7EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_TIM7EN /;"	d	line:212
+RCC_APB1ENR_UART4EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_UART4EN /;"	d	line:224
+RCC_APB1ENR_UART5EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_UART5EN /;"	d	line:223
+RCC_APB1ENR_USART2EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_USART2EN /;"	d	line:226
+RCC_APB1ENR_USART3EN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_USART3EN /;"	d	line:225
+RCC_APB1ENR_USBEN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_USBEN /;"	d	line:220
+RCC_APB1ENR_WWDGEN	include/core_stm/rcc.h	/^#define RCC_APB1ENR_WWDGEN /;"	d	line:233
+RCC_APB1RSTR_BKPRST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_BKPRST /;"	d	line:145
+RCC_APB1RSTR_CANRST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_CANRST /;"	d	line:132
+RCC_APB1RSTR_DACRST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_DACRST /;"	d	line:143
+RCC_APB1RSTR_I2C1RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_I2C1RST /;"	d	line:135
+RCC_APB1RSTR_I2C2RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_I2C2RST /;"	d	line:134
+RCC_APB1RSTR_PWRRST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_PWRRST /;"	d	line:144
+RCC_APB1RSTR_SPI2RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_SPI2RST /;"	d	line:141
+RCC_APB1RSTR_SPI3RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_SPI3RST /;"	d	line:140
+RCC_APB1RSTR_TIM12RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_TIM12RST /;"	d	line:124
+RCC_APB1RSTR_TIM13RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_TIM13RST /;"	d	line:123
+RCC_APB1RSTR_TIM14RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_TIM14RST /;"	d	line:122
+RCC_APB1RSTR_TIM2RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_TIM2RST /;"	d	line:130
+RCC_APB1RSTR_TIM3RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_TIM3RST /;"	d	line:129
+RCC_APB1RSTR_TIM4RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_TIM4RST /;"	d	line:128
+RCC_APB1RSTR_TIM5RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_TIM5RST /;"	d	line:127
+RCC_APB1RSTR_TIM6RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_TIM6RST /;"	d	line:126
+RCC_APB1RSTR_TIM7RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_TIM7RST /;"	d	line:125
+RCC_APB1RSTR_UART4RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_UART4RST /;"	d	line:137
+RCC_APB1RSTR_UART5RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_UART5RST /;"	d	line:136
+RCC_APB1RSTR_USART2RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_USART2RST /;"	d	line:139
+RCC_APB1RSTR_USART3RST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_USART3RST /;"	d	line:138
+RCC_APB1RSTR_USBRST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_USBRST /;"	d	line:133
+RCC_APB1RSTR_WWDGRST	include/core_stm/rcc.h	/^#define RCC_APB1RSTR_WWDGRST /;"	d	line:146
+RCC_APB2ENR_ADC1EN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_ADC1EN /;"	d	line:187
+RCC_APB2ENR_ADC2EN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_ADC2EN /;"	d	line:186
+RCC_APB2ENR_ADC3EN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_ADC3EN /;"	d	line:183
+RCC_APB2ENR_AFIOEN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_AFIOEN /;"	d	line:196
+RCC_APB2ENR_IOAEN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_IOAEN /;"	d	line:195
+RCC_APB2ENR_IOBEN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_IOBEN /;"	d	line:194
+RCC_APB2ENR_IOCEN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_IOCEN /;"	d	line:193
+RCC_APB2ENR_IODEN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_IODEN /;"	d	line:192
+RCC_APB2ENR_IOEEN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_IOEEN /;"	d	line:191
+RCC_APB2ENR_IOFEN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_IOFEN /;"	d	line:190
+RCC_APB2ENR_IOGEN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_IOGEN /;"	d	line:189
+RCC_APB2ENR_SPI1EN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_SPI1EN /;"	d	line:185
+RCC_APB2ENR_TIM10EN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_TIM10EN /;"	d	line:178
+RCC_APB2ENR_TIM11EN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_TIM11EN /;"	d	line:177
+RCC_APB2ENR_TIM1EN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_TIM1EN /;"	d	line:181
+RCC_APB2ENR_TIM8EN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_TIM8EN /;"	d	line:180
+RCC_APB2ENR_TIM9EN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_TIM9EN /;"	d	line:179
+RCC_APB2ENR_USART1EN	include/core_stm/rcc.h	/^#define RCC_APB2ENR_USART1EN /;"	d	line:184
+RCC_APB2RSTR_ADC1RST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_ADC1RST /;"	d	line:102
+RCC_APB2RSTR_ADC2RST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_ADC2RST /;"	d	line:101
+RCC_APB2RSTR_ADC3RST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_ADC3RST /;"	d	line:98
+RCC_APB2RSTR_AFIORST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_AFIORST /;"	d	line:111
+RCC_APB2RSTR_IOARST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_IOARST /;"	d	line:110
+RCC_APB2RSTR_IOBRST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_IOBRST /;"	d	line:109
+RCC_APB2RSTR_IOCRST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_IOCRST /;"	d	line:108
+RCC_APB2RSTR_IODRST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_IODRST /;"	d	line:107
+RCC_APB2RSTR_IOERST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_IOERST /;"	d	line:106
+RCC_APB2RSTR_IOFRST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_IOFRST /;"	d	line:105
+RCC_APB2RSTR_IOGRST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_IOGRST /;"	d	line:104
+RCC_APB2RSTR_SPI1RST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_SPI1RST /;"	d	line:100
+RCC_APB2RSTR_TIM10RST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_TIM10RST /;"	d	line:93
+RCC_APB2RSTR_TIM11RST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_TIM11RST /;"	d	line:92
+RCC_APB2RSTR_TIM1RST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_TIM1RST /;"	d	line:96
+RCC_APB2RSTR_TIM8RST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_TIM8RST /;"	d	line:95
+RCC_APB2RSTR_TIM9RST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_TIM9RST /;"	d	line:94
+RCC_APB2RSTR_USART1RST	include/core_stm/rcc.h	/^#define RCC_APB2RSTR_USART1RST /;"	d	line:99
+RCC_BASE	include/core_stm/rcc.h	/^#define RCC_BASE /;"	d	line:283
+RCC_BDCR_BDRST	include/core_stm/rcc.h	/^#define RCC_BDCR_BDRST /;"	d	line:254
+RCC_BDCR_LSEBYP	include/core_stm/rcc.h	/^#define RCC_BDCR_LSEBYP /;"	d	line:256
+RCC_BDCR_LSEON	include/core_stm/rcc.h	/^#define RCC_BDCR_LSEON /;"	d	line:258
+RCC_BDCR_LSERDY	include/core_stm/rcc.h	/^#define RCC_BDCR_LSERDY /;"	d	line:257
+RCC_BDCR_RTCEN	include/core_stm/rcc.h	/^#define RCC_BDCR_RTCEN /;"	d	line:251
+RCC_BDCR_RTCSEL	include/core_stm/rcc.h	/^#define RCC_BDCR_RTCSEL(/;"	d	line:252
+RCC_CFGR_ADCPRE	include/core_stm/rcc.h	/^#define RCC_CFGR_ADCPRE(/;"	d	line:42
+RCC_CFGR_HPRE	include/core_stm/rcc.h	/^#define RCC_CFGR_HPRE(/;"	d	line:45
+RCC_CFGR_MCO	include/core_stm/rcc.h	/^#define RCC_CFGR_MCO(/;"	d	line:39
+RCC_CFGR_MCO_HSI	src/main.c	/^#define RCC_CFGR_MCO_HSI /;"	d	line:9	file:
+RCC_CFGR_PLLMUL	include/core_stm/rcc.h	/^#define RCC_CFGR_PLLMUL(/;"	d	line:47
+RCC_CFGR_PLLSRC	include/core_stm/rcc.h	/^#define RCC_CFGR_PLLSRC /;"	d	line:49
+RCC_CFGR_PLLXTPRE	include/core_stm/rcc.h	/^#define RCC_CFGR_PLLXTPRE /;"	d	line:48
+RCC_CFGR_PPRE1	include/core_stm/rcc.h	/^#define RCC_CFGR_PPRE1(/;"	d	line:44
+RCC_CFGR_PPRE2	include/core_stm/rcc.h	/^#define RCC_CFGR_PPRE2(/;"	d	line:43
+RCC_CFGR_SW	include/core_stm/rcc.h	/^#define RCC_CFGR_SW(/;"	d	line:52
+RCC_CFGR_SWS	include/core_stm/rcc.h	/^#define RCC_CFGR_SWS(/;"	d	line:51
+RCC_CFGR_SW_HSE	src/main.c	/^#define RCC_CFGR_SW_HSE /;"	d	line:10	file:
+RCC_CFGR_USBPRE	include/core_stm/rcc.h	/^#define RCC_CFGR_USBPRE /;"	d	line:41
+RCC_CIR_CSSC	include/core_stm/rcc.h	/^#define RCC_CIR_CSSC /;"	d	line:63
+RCC_CIR_CSSF	include/core_stm/rcc.h	/^#define RCC_CIR_CSSF /;"	d	line:76
+RCC_CIR_HSERDYC	include/core_stm/rcc.h	/^#define RCC_CIR_HSERDYC /;"	d	line:65
+RCC_CIR_HSERDYF	include/core_stm/rcc.h	/^#define RCC_CIR_HSERDYF /;"	d	line:78
+RCC_CIR_HSERDYIE	include/core_stm/rcc.h	/^#define RCC_CIR_HSERDYIE /;"	d	line:71
+RCC_CIR_HSIRDYC	include/core_stm/rcc.h	/^#define RCC_CIR_HSIRDYC /;"	d	line:66
+RCC_CIR_HSIRDYF	include/core_stm/rcc.h	/^#define RCC_CIR_HSIRDYF /;"	d	line:79
+RCC_CIR_HSIRDYIE	include/core_stm/rcc.h	/^#define RCC_CIR_HSIRDYIE /;"	d	line:72
+RCC_CIR_LSERDYC	include/core_stm/rcc.h	/^#define RCC_CIR_LSERDYC /;"	d	line:67
+RCC_CIR_LSERDYF	include/core_stm/rcc.h	/^#define RCC_CIR_LSERDYF /;"	d	line:80
+RCC_CIR_LSERDYIE	include/core_stm/rcc.h	/^#define RCC_CIR_LSERDYIE /;"	d	line:73
+RCC_CIR_LSIRDYC	include/core_stm/rcc.h	/^#define RCC_CIR_LSIRDYC /;"	d	line:68
+RCC_CIR_LSIRDYF	include/core_stm/rcc.h	/^#define RCC_CIR_LSIRDYF /;"	d	line:81
+RCC_CIR_LSIRDYIE	include/core_stm/rcc.h	/^#define RCC_CIR_LSIRDYIE /;"	d	line:74
+RCC_CIR_PLLRDYC	include/core_stm/rcc.h	/^#define RCC_CIR_PLLRDYC /;"	d	line:64
+RCC_CIR_PLLRDYF	include/core_stm/rcc.h	/^#define RCC_CIR_PLLRDYF /;"	d	line:77
+RCC_CIR_PLLRDYIE	include/core_stm/rcc.h	/^#define RCC_CIR_PLLRDYIE /;"	d	line:70
+RCC_CR_CSSON	include/core_stm/rcc.h	/^#define RCC_CR_CSSON /;"	d	line:20
+RCC_CR_HSEBYP	include/core_stm/rcc.h	/^#define RCC_CR_HSEBYP /;"	d	line:24
+RCC_CR_HSEON	include/core_stm/rcc.h	/^#define RCC_CR_HSEON /;"	d	line:21
+RCC_CR_HSERDY	include/core_stm/rcc.h	/^#define RCC_CR_HSERDY /;"	d	line:16
+RCC_CR_HSICAL	include/core_stm/rcc.h	/^#define RCC_CR_HSICAL(/;"	d	line:26
+RCC_CR_HSION	include/core_stm/rcc.h	/^#define RCC_CR_HSION /;"	d	line:22
+RCC_CR_HSIRDY	include/core_stm/rcc.h	/^#define RCC_CR_HSIRDY /;"	d	line:17
+RCC_CR_HSITRIM	include/core_stm/rcc.h	/^#define RCC_CR_HSITRIM(/;"	d	line:27
+RCC_CR_PLLON	include/core_stm/rcc.h	/^#define RCC_CR_PLLON /;"	d	line:19
+RCC_CR_PLLRDY	include/core_stm/rcc.h	/^#define RCC_CR_PLLRDY /;"	d	line:15
+RCC_CSR_IWDGRSTF	include/core_stm/rcc.h	/^#define RCC_CSR_IWDGRSTF /;"	d	line:272
+RCC_CSR_LPWRRSTF	include/core_stm/rcc.h	/^#define RCC_CSR_LPWRRSTF /;"	d	line:270
+RCC_CSR_LSION	include/core_stm/rcc.h	/^#define RCC_CSR_LSION /;"	d	line:279
+RCC_CSR_LSIRDY	include/core_stm/rcc.h	/^#define RCC_CSR_LSIRDY /;"	d	line:278
+RCC_CSR_PIRRSTF	include/core_stm/rcc.h	/^#define RCC_CSR_PIRRSTF /;"	d	line:275
+RCC_CSR_PORRSTF	include/core_stm/rcc.h	/^#define RCC_CSR_PORRSTF /;"	d	line:274
+RCC_CSR_RMVF	include/core_stm/rcc.h	/^#define RCC_CSR_RMVF /;"	d	line:276
+RCC_CSR_SFTRSTF	include/core_stm/rcc.h	/^#define RCC_CSR_SFTRSTF /;"	d	line:273
+RCC_CSR_WWDGRSTF	include/core_stm/rcc.h	/^#define RCC_CSR_WWDGRSTF /;"	d	line:271
+RCC_H	include/core_stm/rcc.h	/^#define RCC_H$/;"	d	line:2
+Reset_Handler	src/vectors.c	/^__attribute__((noreturn)) void Reset_Handler(void) {$/;"	f	line:22	typeref:typename:void
 SKEW_SHIFT	include/arm-cortex-m3/nvic/sys_timer.h	/^#define SKEW_SHIFT(/;"	d	line:80
-SR	include/uart.h	/^  volatile uint32_t SR;   \/\/ Status Register$/;"	m	line:4	struct:uart	typeref:typename:volatile uint32_t
 SYSTICK	include/arm-cortex-m3/nvic/sys_timer.h	/^#define SYSTICK /;"	d	line:23
 SYSTICK_CLKSOURCE	include/arm-cortex-m3/nvic/sys_timer.h	/^#define SYSTICK_CLKSOURCE /;"	d	line:35
 SYSTICK_COUNTFLAG	include/arm-cortex-m3/nvic/sys_timer.h	/^#define SYSTICK_COUNTFLAG /;"	d	line:32
@@ -223,29 +266,27 @@ SYSTICK_SKEW_MASK	include/arm-cortex-m3/nvic/sys_timer.h	/^#define SYSTICK_SKEW_
 SYSTICK_TENMS	include/arm-cortex-m3/nvic/sys_timer.h	/^#define SYSTICK_TENMS(/;"	d	line:86
 SYSTICK_TENMS_MASK	include/arm-cortex-m3/nvic/sys_timer.h	/^#define SYSTICK_TENMS_MASK /;"	d	line:85
 SYSTICK_TICKINT	include/arm-cortex-m3/nvic/sys_timer.h	/^#define SYSTICK_TICKINT /;"	d	line:38
-SysTick_Handler	src/vectors.c	/^void SysTick_Handler(void) {$/;"	f	line:38	typeref:typename:void
+SysTick_Handler	src/vectors.c	/^void SysTick_Handler(void) {$/;"	f	line:39	typeref:typename:void
 TENMS_SHIFT	include/arm-cortex-m3/nvic/sys_timer.h	/^#define TENMS_SHIFT /;"	d	line:84
 TICKINT_SHIFT	include/arm-cortex-m3/nvic/sys_timer.h	/^#define TICKINT_SHIFT(/;"	d	line:37
 TIME	src/main.c	/^#define TIME /;"	d	line:7	file:
 TYPES_H	include/types.h	/^#define TYPES_H$/;"	d	line:2
-WEAK_ALIAS	src/vectors.c	/^#define WEAK_ALIAS(/;"	d	line:9	file:
-__anoncc1c275b0103	include/gpio/gpio.h	/^enum {$/;"	g	line:16
-_reset	src/vectors.c	/^__attribute__((naked, noreturn)) void _reset(void) {$/;"	f	line:21	typeref:typename:void
+WEAK_ALIAS	src/vectors.c	/^#define WEAK_ALIAS(/;"	d	line:10	file:
+config_rcc	src/main.c	/^static void config_rcc(void) {$/;"	f	line:12	typeref:typename:void	file:
 delay	include/util.h	/^INLINE void delay(volatile uint32_t count) {$/;"	f	line:4	typeref:typename:INLINE void
-delay	src/systick.c	/^void delay(unsigned ms) {$/;"	f	line:6	typeref:typename:void
-gpio	include/gpio/gpio.h	/^struct gpio {$/;"	s	line:6
-gpio_set_mode	include/util.h	/^gpio_set_mode(uint16_t pin, uint8_t mode ) {$/;"	f	line:9	typeref:typename:INLINE void
-gpio_write	include/util.h	/^gpio_write(uint16_t pin, uint32_t set) {$/;"	f	line:27	typeref:typename:INLINE void
+gpio	include/core_stm/gpio.h	/^struct gpio {$/;"	s	line:6
+gpio_clear	include/util.h	/^gpio_clear(uint16_t pin) {$/;"	f	line:25	typeref:typename:INLINE void
+gpio_set	include/util.h	/^gpio_set(uint16_t pin) {$/;"	f	line:19	typeref:typename:INLINE void
+gpio_set_mode	include/util.h	/^gpio_set_mode(uint16_t pin, uint8_t mode, uint8_t cnf) {$/;"	f	line:9	typeref:typename:INLINE void
 int_type	include/arm-cortex-m3/nvic/int_type.h	/^struct int_type {$/;"	s	line:3
-main	src/main.c	/^int main(void) {$/;"	f	line:26	typeref:typename:int
-rcc	include/rcc/rcc.h	/^struct rcc {$/;"	s	line:8
+main	src/main.c	/^int main(void) {$/;"	f	line:30	typeref:typename:int
+rcc	include/core_stm/rcc.h	/^struct rcc {$/;"	s	line:6
 s_ticks	src/systick.c	/^volatile uint32_t s_ticks;$/;"	v	line:4	typeref:typename:volatile uint32_t
-setup	src/main.c	/^void setup(void) {$/;"	f	line:9	typeref:typename:void
+setup	src/main.c	/^static void setup(void) {$/;"	f	line:26	typeref:typename:void	file:
 systick	include/arm-cortex-m3/nvic/sys_timer.h	/^struct systick {$/;"	s	line:16
 systick_init	include/systick.h	/^INLINE void systick_init(uint32_t ticks) {$/;"	f	line:4	typeref:typename:INLINE void
-tab	src/vectors.c	/^void (*const tab[16+91])(void) = {$/;"	v	line:46	typeref:typename:void (* const[16+91])(void)
-timer_expired	src/systick.c	/^uint32_t timer_expired(uint32_t *t, uint32_t prd, uint32_t now) {$/;"	f	line:19	typeref:typename:uint32_t
-uart	include/uart.h	/^struct uart {$/;"	s	line:3
+tab	src/vectors.c	/^void (*const tab[16+91])(void) = {$/;"	v	line:47	typeref:typename:void (* const[16+91])(void)
+timer_expired	src/systick.c	/^uint32_t timer_expired(uint32_t *t, uint32_t prd, uint32_t now) {$/;"	f	line:14	typeref:typename:uint32_t
 uint16_t	include/types.h	/^typedef unsigned short uint16_t;$/;"	t	line:7	typeref:typename:unsigned short
 uint32_t	include/types.h	/^typedef unsigned int uint32_t;$/;"	t	line:6	typeref:typename:unsigned int
 uint8_t	include/types.h	/^typedef unsigned char uint8_t;$/;"	t	line:8	typeref:typename:unsigned char

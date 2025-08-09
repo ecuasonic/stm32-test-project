@@ -1,16 +1,16 @@
-#include "types.h"
-
 #ifndef GPIO_H
 #define GPIO_H
 
-struct GPIO {
+#include "types.h"
+
+struct gpio {
     // ==========================================
     // Port Configuration Register Low (GPIOx_CRL) (x=A..G):
     //    Reset value:
     //        0x4444_4444
     //    Bits:
     //        CNFy[1:0] (Port x configuration bit (y=0..7)) (rw)
-#define GPIO_CRL_CNF(y, n) (((n)&0x3) << (((y)&0x7)*4)+2)
+#define GPIO_CRL_CNF(y, n) (((n)&0x3) << (((()&0x7)*4))+2)
     //        MODEy[1:0] (Port x mode bit (y=0..7)) (rw)
 #define GPIO_CRL_MODE(y, n) (((n)&0x3) << (((y)&0x7)*4))
     uint32_t CRL;
@@ -21,9 +21,9 @@ struct GPIO {
     //        0x4444_4444
     //    Bits:
     //        CNFy[1:0] (Port x configuration bit (y=8..15)) (rw)
-#define GPIO_CRH_CNF(y, n) (((n)&0x3) << (((y)&0x7)*4)+2)
+#define GPIO_CRH_CNF(pin, cnf) (uint32_t)((cnf) << (((pin)&0x7)*4+2))
     //        MODEy[1:0] (Port x mode bit (y=8..15)) (rw)
-#define GPIO_CRH_MODE(y, n) (((n)&0x3) << (((y)&0x7)*4))
+#define GPIO_CRH_MODE(pin, mode) (uint32_t)((mode) << (((pin)&0x7)*4))
     uint32_t CRH;
 
     // ==========================================
@@ -76,9 +76,9 @@ struct GPIO {
     uint32_t LCKR;
 };
 
-#define GPIO(bank)        ((struct GPIO *)(0x40010800 + (0x0400 * (bank - 'A'))))
-#define PIN(bank, num)    ((((bank) - 'A') << 8) | (num)) // Encodes bank + pinnum in same int
-#define PINNO(pin)        ((pin) & 255)
-#define PINBANK(pin)      (((pin) >> 8) + 'A')
+#define GPIO(bank)            ((struct gpio *)(0x40010800 + (0x0400 * (bank - 'A'))))
+#define ENC_PIN(bank, num)    ((((bank) - 'A') << 8) | (num)) // Encodes bank + pinnum in same int
+#define DEC_PINNO(pin)        ((pin) & 0xFF)
+#define DEC_PINBANK(pin)      (((pin) >> 8) + 'A')
 
 #endif
