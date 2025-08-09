@@ -7,33 +7,74 @@
 // =================================
 //              RCC
 // =================================
+// SYSCLK sources:
+//      HSI (8 MHz), HSE, PLL
+// MCO sources:
+//      SYSCLK, HSI, HSE, PLL/2 (Must be at most 50 MHz)
+// PLL sources:
+//      (HSI/2, HSE)*(2..16)
+// -- MCO
 #define CLEAR_MCO       ~RCC_CFGR_MCO(0x7)
 #define SET_MCO(mco)    RCC_CFGR_MCO(mco)
-// --
 #define SET_MCO_HSI     SET_MCO(0x5)
+#define SET_MCO_PLL     SET_MCO(0x7)
+// -- PLL
+#define CLEAR_PLLMUL    ~RCC_CFGR_PLLMUL(0xF)
+#define SET_HSI_HALF    ~RCC_CFGR_PLLSRC
+#define SET_PLLMUL_2    RCC_CFGR_PLLMUL(0x0)
+#define SET_PLLMUL_3    RCC_CFGR_PLLMUL(0x1)
+#define SET_PLLMUL_4    RCC_CFGR_PLLMUL(0x2)
+#define SET_PLLMUL_5    RCC_CFGR_PLLMUL(0x3)
+#define SET_PLLMUL_8    RCC_CFGR_PLLMUL(0x6)
+#define SET_PLLMUL_15   RCC_CFGR_PLLMUL(0xD)
+#define SET_PLLMUL_16   RCC_CFGR_PLLMUL(0xF)
+// -- HPRE (AHB PRE)
+#define CLEAR_HPRE      ~RCC_CFGR_HPRE(0xF)
+#define SET_HPRE_2      RCC_CFGR_HPRE(0x8)
+#define SET_HPRE_4      RCC_CFGR_HPRE(0x9)
+#define SET_HPRE_8      RCC_CFGR_HPRE(0xA)
 
 // =================================
 //              GPIO
 // =================================
+// -- CNF
 #define CLEAR_CNF(pin)          (~GPIO_CRH_CNF(pin, 0x3))
-#define CLEAR_MODE(pin)         (~GPIO_CRH_MODE(pin, 0x3))
-#define CLEAR_PIN(pin)          CLEAR_CNF(pin) & CLEAR_MODE(pin)
 #define SET_CNF(pin, cnf)       GPIO_CRH_CNF(pin, cnf)
-#define SET_MODE(pin, mode)     GPIO_CRH_MODE(pin, mode)
-// --
 #define SET_CNF_IN_PUPD(pin)    SET_CNF(pin, 0x2)
 #define SET_CNF_OUT_PP(pin)     SET_CNF(pin, 0x0)
 #define SET_CNF_OUT_AF_PP(pin)  SET_CNF(pin, 0x2)
-// --
+// -- MODE
+#define SET_MODE(pin, mode)     GPIO_CRH_MODE(pin, mode)
+#define CLEAR_MODE(pin)         (~GPIO_CRH_MODE(pin, 0x3))
 #define SET_MODE_IN(pin)        SET_MODE(pin, 0x0)
 #define SET_MODE_OUT_2MHZ(pin)  SET_MODE(pin, 0x2)
 #define SET_MODE_OUT_10MHZ(pin) SET_MODE(pin, 0x1)
 #define SET_MODE_OUT_50MHZ(pin) SET_MODE(pin, 0x3)
+// -- CNF and MODE
+#define CLEAR_PIN(pin)          CLEAR_CNF(pin) & CLEAR_MODE(pin)
 
 static void config_rcc(void) {
-    // MCO[2:0]
+    // HSE Clock not connected
+    // RCC->CR |= RCC_CR_HSEON;
+    // while (!(RCC->CR & RCC_CR_HSERDY));
+
+    // Only for RTC and Watchdog
+    // RCC->CR |= RCC_CSR_LSION;
+    // while (!(RCC->CR & RCC_CSR_LSIRDY));
+
+    // Modify HCLK (SYSCLK/HPRE)
+    RCC->CFGR &= CLEAR_HPRE; // No Prescale
+    // RCC->CFGR |= SET_HPRE_2;
+
+    // Set up PLL
+    RCC->CFGR &= SET_HSI_HALF; // PLL = (HSI/2)*PLLMUL
+    RCC->CFGR &= CLEAR_PLLMUL;
+    RCC->CFGR |= SET_PLLMUL_5;
+    RCC->CR |= RCC_CR_PLLON;
+
+    // MCO
     RCC->CFGR &= CLEAR_MCO;
-    RCC->CFGR |= SET_MCO_HSI;
+    RCC->CFGR |= SET_MCO_PLL;
 
     // APB2 Peripheral Clock Enable Register
     RCC->APB2ENR |= RCC_APB2ENR_IOCEN;
@@ -59,7 +100,7 @@ int main(void) {
     setup();
 
     for (;;) {
-        uint32_t timer, period = 500;
+        uint32_t timer, period = 1000;
         if (timer_expired(&timer, period, s_ticks)) {
             static uint32_t set;
             if (set) {
