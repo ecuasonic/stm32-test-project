@@ -193,7 +193,7 @@ struct rcc {
 #define RCC_APB2ENR_IOPCEN    (1U << 4)
 #define RCC_APB2ENR_IOPBEN    (1U << 3)
 #define RCC_APB2ENR_IOPAEN    (1U << 2)
-#define RCC_APB2ENR_AFIOEN   (1U << 0)
+#define RCC_APB2ENR_AFIOEN    (1U << 0)
     uint32_t APB2ENR;
 
     // ==========================================
