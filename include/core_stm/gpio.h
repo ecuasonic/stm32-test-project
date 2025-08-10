@@ -10,9 +10,9 @@ struct gpio {
     //        0x4444_4444
     //    Bits:
     //        CNFy[1:0] (Port x configuration bit (y=0..7)) (rw)
-#define GPIO_CRL_CNF(y, n) (((n)&0x3) << (((()&0x7)*4))+2)
+#define GPIO_CRL_CNF(y, n) (((n)&0x3U) << ((((y)&0x7U)*4))+2)
     //        MODEy[1:0] (Port x mode bit (y=0..7)) (rw)
-#define GPIO_CRL_MODE(y, n) (((n)&0x3) << (((y)&0x7)*4))
+#define GPIO_CRL_MODE(y, n) (((n)&0x3U) << (((y)&0x7U)*4))
     uint32_t CRL;
 
     // ==========================================
@@ -21,9 +21,9 @@ struct gpio {
     //        0x4444_4444
     //    Bits:
     //        CNFy[1:0] (Port x configuration bit (y=8..15)) (rw)
-#define GPIO_CRH_CNF(pin, cnf) (uint32_t)((cnf) << (((pin)&0x7)*4+2))
+#define GPIO_CRH_CNF(pin, cnf)  ((uint32_t)(cnf) << (((pin)&0x7U)*4+2))
     //        MODEy[1:0] (Port x mode bit (y=8..15)) (rw)
-#define GPIO_CRH_MODE(pin, mode) (uint32_t)((mode) << (((pin)&0x7)*4))
+#define GPIO_CRH_MODE(pin, mode) ((uint32_t)(mode) << (((pin)&0x7U)*4))
     uint32_t CRH;
 
     // ==========================================
@@ -32,7 +32,7 @@ struct gpio {
     //        0x0000_XXXX
     //    Bits:
     //        IDRy (Port input data (y=0..15)) (r)
-#define GPIO_IDR(n) ((n)&0xFFFF)
+#define GPIO_IDR(n) ((n)&0xFFFFU)
     uint32_t IDR;
 
     // ==========================================
@@ -41,7 +41,7 @@ struct gpio {
     //        0x0000_0000
     //    Bits:
     //        ODRy (Port output data (y=0..15)) (rw)
-#define GPIO_ODR(n) ((n)&0xFFFF)
+#define GPIO_ODR(n) ((n)&0xFFFFU)
     uint32_t ODR;
 
     // ==========================================
@@ -50,9 +50,9 @@ struct gpio {
     //        0x0000_0000
     //    Bits:
     //        BRy (Port x Reset bit y (y=0..15)) (w)
-#define GPIO_BSRR_BR(n) ((n)&0xFFFF)
+#define GPIO_BSRR_BR(n) ((n)&0xFFFFU)
     //        BSy (Port x Set bit y (y=0..15)) (w)
-#define GPIO_BSRR_SR(n) (((n)&0xFFFF) << 16)
+#define GPIO_BSRR_SR(n) (((n)&0xFFFFU) << 16)
     uint32_t BSRR;
 
     // ==========================================
@@ -61,7 +61,7 @@ struct gpio {
     //        0x0000_0000
     //    Bits:
     //        BRy (Port x Reset bit y (y=0..15)) (w)
-#define GPIO_BRR_BR(n) ((n)&0xFFFF)
+#define GPIO_BRR_BR(n) ((n)&0xFFFFU)
     uint32_t BRR;
 
     // ==========================================
@@ -70,9 +70,9 @@ struct gpio {
     //        0x0000_0000
     //    Bits:
     //        LCKK (Lock key) (rw)
-#define GPIO_LCKR_LCKK    (1 << 16)
+#define GPIO_LCKR_LCKK    (1U << 16)
     //        LCKy (Port x Lock bit y (y=0..15)) (rw)
-#define GPIO_LCKR_LCK(n)    (((n)&0x1) << 16)
+#define GPIO_LCKR_LCK(n)    (((n)&0x1U) << 16)
     uint32_t LCKR;
 };
 
