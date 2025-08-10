@@ -59,4 +59,6 @@ struct exti {
     uint32_t PR;
 };
 
+#define EXTI ((struct exti *)0x40010400)
+
 #endif

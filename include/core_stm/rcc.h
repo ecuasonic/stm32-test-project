@@ -186,13 +186,13 @@ struct rcc {
 #define RCC_APB2ENR_ADC2EN   (1U << 10)
 #define RCC_APB2ENR_ADC1EN   (1U << 9)
     //        GPIO Clock Enable  (rw) (0)
-#define RCC_APB2ENR_IOGEN    (1U << 8)
-#define RCC_APB2ENR_IOFEN    (1U << 7)
-#define RCC_APB2ENR_IOEEN    (1U << 6)
-#define RCC_APB2ENR_IODEN    (1U << 5)
-#define RCC_APB2ENR_IOCEN    (1U << 4)
-#define RCC_APB2ENR_IOBEN    (1U << 3)
-#define RCC_APB2ENR_IOAEN    (1U << 2)
+#define RCC_APB2ENR_IOPGEN    (1U << 8)
+#define RCC_APB2ENR_IOPFEN    (1U << 7)
+#define RCC_APB2ENR_IOPEEN    (1U << 6)
+#define RCC_APB2ENR_IOPDEN    (1U << 5)
+#define RCC_APB2ENR_IOPCEN    (1U << 4)
+#define RCC_APB2ENR_IOPBEN    (1U << 3)
+#define RCC_APB2ENR_IOPAEN    (1U << 2)
 #define RCC_APB2ENR_AFIOEN   (1U << 0)
     uint32_t APB2ENR;
 
@@ -280,6 +280,6 @@ struct rcc {
     uint32_t CSR;
 };
 
-#define RCC                   ((struct rcc *)0x40021000)
+#define RCC ((struct rcc *)0x40021000)
 
 #endif

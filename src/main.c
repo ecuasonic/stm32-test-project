@@ -3,6 +3,8 @@
 #include "systick.h"
 #include "core_stm/gpio.h"
 #include "core_stm/rcc.h"
+#include "core_stm/afio.h"
+#include "core_stm/exti.h"
 
 // =================================
 //              RCC
@@ -70,15 +72,10 @@ static void config_rcc(void) {
     RCC->CFGR &= SET_HSI_HALF; // PLL = (HSI/2)*PLLMUL
     RCC->CFGR &= CLEAR_PLLMUL;
     RCC->CFGR |= SET_PLLMUL_5;
-    RCC->CR |= RCC_CR_PLLON;
 
     // MCO
     RCC->CFGR &= CLEAR_MCO;
     RCC->CFGR |= SET_MCO_PLL;
-
-    // APB2 Peripheral Clock Enable Register
-    RCC->APB2ENR |= RCC_APB2ENR_IOCEN;
-    RCC->APB2ENR |= RCC_APB2ENR_IOAEN;
 }
 
 static void config_gpio(void) {
@@ -89,11 +86,34 @@ static void config_gpio(void) {
     // MCO AF Output
     GPIO('A')->CRH &= CLEAR_PIN(8);
     GPIO('A')->CRH |= SET_MODE_OUT_50MHZ(8) | SET_CNF_OUT_AF_PP(8);
+
+    // EXTI0 Line (Input Mode Pull-Down)
+    // GPIO('A')->CRL &= CLEAR_PIN(0);
+    // GPIO('A')->CRL &= SET_MODE_IN(0) | SET_CNF_IN_PUPD(0);
+    // GPIO('A')->ODR = GPIO_ODR(0);
+}
+
+static void config_intr(void) {
+    AFIO->EXTICR1 &= AFIO_EXTICR1_EXTI(0, 0);
+    EXTI->IMR |= EXTI_MR(0);
+    EXTI->RTSR |= EXTI_TR(0);
+}
+
+static void start_clocks(void) {
+    // PLL
+    RCC->CR |= RCC_CR_PLLON;
+
+    // APB2
+    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;
+    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
 }
 
 static void setup(void) {
     config_rcc();
     config_gpio();
+    // config_intr();
+
+    start_clocks();
 }
 
 int main(void) {
