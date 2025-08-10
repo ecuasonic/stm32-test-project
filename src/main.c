@@ -108,7 +108,8 @@ static void start_gpio_clocks(void) {
 static void start_rcc_clocks(void) {
     // PLL
     RCC->CR |= RCC_CR_PLLON;
-    while (!(RCC->CR & RCC_CR_PLLRDY));
+    vuint32_t *rcc_cr = &RCC->CR;
+    while (!(*rcc_cr & RCC_CR_PLLRDY));
 }
 
 static void setup(void) {
