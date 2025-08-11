@@ -1,10 +1,12 @@
 #include "types.h"
 #include "systick.h"
+#include "util.h"
+#include "core_stm/exti.h"
 
 extern int main(void);
 
 __attribute__((weak)) void Default_Handler(void) {
-    while (1);
+    while ((volatile uint32_t)1);
 }
 // Redefinition will replace weak alias for function.
 #define WEAK_ALIAS(x) __attribute__((weak, alias(#x)))
@@ -19,7 +21,7 @@ void DebugMonitor_Handler(void)     WEAK_ALIAS(Default_Handler);
 void PendSV_Handler(void)       WEAK_ALIAS(Default_Handler);
 
 // startup code
-__attribute__((noreturn)) void Reset_Handler(void) {
+static __attribute__((noreturn)) void Reset_Handler(void) {
     extern long _sbss, _ebss, _sdata, _edata, _sidata;
 
     // memset .bss to zero,
@@ -36,8 +38,23 @@ __attribute__((noreturn)) void Reset_Handler(void) {
 }
 
 extern volatile uint32_t s_ticks; // Defined in systick.c
-void SysTick_Handler(void) {
+static void SysTick_Handler(void) {
     s_ticks++;
+}
+
+static void EXTI0_Handler(void) {
+    // while ((volatile uint32_t)1);
+    if (EXTI->PR & EXTI_PR(0)) {
+        EXTI->PR = EXTI_PR(0);
+
+        static volatile uint32_t set;
+        if (set) {
+            gpio_set('B', 0);
+        } else {
+            gpio_clear('B', 0);
+        }
+        set = !set;
+    }
 }
 
 extern void _estack(void); // Defined in linker.ld
@@ -59,6 +76,17 @@ void (*const tab[16+91])(void) = {
     PendSV_Handler,
     SysTick_Handler,
 
+    Default_Handler,    // WWDG
+    Default_Handler,    // PVD
+    Default_Handler,    // TAMPER
+    Default_Handler,    // RTC
+    Default_Handler,    // FLASH
+    Default_Handler,    // RCC
+    EXTI0_Handler,      // EXTI0
+    Default_Handler,
+    Default_Handler,
+    Default_Handler,
+
     // Fill all 91 IRQ slots with Default_Handler
-    [16 ... 16+90] = Default_Handler
+    [26 ... 26+80] = Default_Handler
 };
