@@ -149,12 +149,18 @@ static void setup(void) {
     config_intr();
 }
 
+// Things to look into:
+//      Backup registers
+//      Events
+//      Power control
+//      I2C
 int main(void) {
     setup();
 
     for (;;) {
         uint32_t timer, period = 1000;
         if (timer_expired(&timer, period, s_ticks)) {
+            // EXTI->SWIER = EXTI_SWIER(0); // Software interrupt from EXTI0
             static uint32_t set;
             if (set) {
                 gpio_set('C', 13);
