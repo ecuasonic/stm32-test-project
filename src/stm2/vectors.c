@@ -1,7 +1,6 @@
 #include "types.h"
-#include "systick.h"
-#include "util.h"
 #include "core_stm/exti.h"
+#include "core_stm/gpio.h"
 
 extern int main(void);
 
@@ -11,17 +10,18 @@ __attribute__((weak)) void Default_Handler(void) {
 // Redefinition will replace weak alias for function.
 #define WEAK_ALIAS(x) __attribute__((weak, alias(#x)))
 
-void NMI_Handler(void)          WEAK_ALIAS(Default_Handler);
-void HardFault_Handler(void)    WEAK_ALIAS(Default_Handler);
-void MemManage_Handler(void)    WEAK_ALIAS(Default_Handler);
-void BusFault_Handler(void)     WEAK_ALIAS(Default_Handler);
-void UsageFault_Handler(void)   WEAK_ALIAS(Default_Handler);
-void SVCall_Handler(void)          WEAK_ALIAS(Default_Handler);
+void NMI_Handler(void)              WEAK_ALIAS(Default_Handler);
+void HardFault_Handler(void)        WEAK_ALIAS(Default_Handler);
+void MemManage_Handler(void)        WEAK_ALIAS(Default_Handler);
+void BusFault_Handler(void)         WEAK_ALIAS(Default_Handler);
+void UsageFault_Handler(void)       WEAK_ALIAS(Default_Handler);
+void SVCall_Handler(void)           WEAK_ALIAS(Default_Handler);
 void DebugMonitor_Handler(void)     WEAK_ALIAS(Default_Handler);
-void PendSV_Handler(void)       WEAK_ALIAS(Default_Handler);
+void PendSV_Handler(void)           WEAK_ALIAS(Default_Handler);
+void SysTick_Handler(void)           WEAK_ALIAS(Default_Handler);
 
 // startup code
-static __attribute__((noreturn)) void Reset_Handler(void) {
+__attribute__((noreturn)) void Reset_Handler(void) {
     extern long _sbss, _ebss, _sdata, _edata, _sidata;
 
     // memset .bss to zero,
@@ -30,16 +30,9 @@ static __attribute__((noreturn)) void Reset_Handler(void) {
     // copy .data section to RAM region
     for (long *dst = &_sdata, *src = &_sidata; dst < &_edata;) *dst++ = *src++;
 
-    systick_init(8000000 / 1000); // HSI (8 MHz)
-
     main();
 
     for (;;) (void) 0;
-}
-
-extern volatile uint32_t s_ticks; // Defined in systick.c
-static void SysTick_Handler(void) {
-    s_ticks++;
 }
 
 static void EXTI0_Handler(void) {

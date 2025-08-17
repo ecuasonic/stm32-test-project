@@ -81,4 +81,18 @@ struct gpio {
 #define DEC_PINNO(pin)        ((pin) & 0xFF)
 #define DEC_PINBANK(pin)      (((pin) >> 8) + 'A')
 
+// ======================================================================================================
+
+INLINE void
+gpio_set(uint32_t bank, uint32_t pin) {
+    struct gpio *gpio = GPIO(bank);
+    gpio->BSRR = 1 << pin;
+}
+
+INLINE void
+gpio_clear(uint32_t bank, uint32_t pin) {
+    struct gpio *gpio = GPIO(bank);
+    gpio->BSRR = 1 << (pin + 16);
+}
+
 #endif

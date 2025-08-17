@@ -1,3 +1,4 @@
 build
 tags
-firmware.bin
+firmware*
+.vscode
