@@ -18,7 +18,7 @@ void UsageFault_Handler(void)       WEAK_ALIAS(Default_Handler);
 void SVCall_Handler(void)           WEAK_ALIAS(Default_Handler);
 void DebugMonitor_Handler(void)     WEAK_ALIAS(Default_Handler);
 void PendSV_Handler(void)           WEAK_ALIAS(Default_Handler);
-void SysTick_Handler(void)           WEAK_ALIAS(Default_Handler);
+void SysTick_Handler(void)          WEAK_ALIAS(Default_Handler);
 
 // startup code
 __attribute__((noreturn)) void Reset_Handler(void) {

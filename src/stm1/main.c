@@ -1,6 +1,6 @@
 #include "types.h"
 #include "defines.h"
-#include "systick.h"
+#include "cortex-m3/nvic/systick.h"
 #include "core_stm/gpio.h"
 #include "core_stm/rcc.h"
 #include "core_stm/afio.h"

@@ -61,6 +61,7 @@ static void setup(void) {
 
 // Things to look into:
 //      Backup registers
+//      Sleep mode, then wake up (on event or interrupt)
 //      Events
 //      Power control
 //      I2C

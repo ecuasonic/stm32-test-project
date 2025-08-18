@@ -1,5 +1,5 @@
 #include "types.h"
-#include "systick.h"
+#include "cortex-m3/nvic/systick.h"
 #include "core_stm/exti.h"
 #include "core_stm/gpio.h"
 
@@ -16,8 +16,8 @@ void HardFault_Handler(void)    WEAK_ALIAS(Default_Handler);
 void MemManage_Handler(void)    WEAK_ALIAS(Default_Handler);
 void BusFault_Handler(void)     WEAK_ALIAS(Default_Handler);
 void UsageFault_Handler(void)   WEAK_ALIAS(Default_Handler);
-void SVCall_Handler(void)          WEAK_ALIAS(Default_Handler);
-void DebugMonitor_Handler(void)     WEAK_ALIAS(Default_Handler);
+void SVCall_Handler(void)       WEAK_ALIAS(Default_Handler);
+void DebugMonitor_Handler(void) WEAK_ALIAS(Default_Handler);
 void PendSV_Handler(void)       WEAK_ALIAS(Default_Handler);
 
 // startup code

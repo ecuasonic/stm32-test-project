@@ -1,5 +1,5 @@
 #include "types.h"
-#include "systick.h"
+#include "cortex-m3/nvic/systick.h"
 
 volatile uint32_t s_ticks;
 
