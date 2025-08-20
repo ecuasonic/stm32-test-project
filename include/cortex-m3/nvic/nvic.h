@@ -8,7 +8,7 @@ struct NVIC {
     // Interrupt Set Enable (ISER) (r/w)
     //    Reset value: 
     //        0x0000_0000
-#define NVIC_ISER_SETENA(n)     ((n)&0xFFFFFFFF)
+#define NVIC_ISER_SETENA(n)     (1 << ((n)&0x1F))
     uint32_t ISER[8];
     uint32_t RESERVED0[24];
 

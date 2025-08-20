@@ -1,10 +1,11 @@
 #include "types.h"
 #include "defines.h"
-#include "cortex-m3/nvic/systick.h"
 #include "core_stm/gpio.h"
 #include "core_stm/rcc.h"
 #include "core_stm/afio.h"
 #include "core_stm/exti.h"
+#include "cortex-m3/nvic/nvic.h"
+#include "cortex-m3/nvic/systick.h"
 
 static void config_rcc(void) {
     // -- Modify HCLK (SYSCLK/HPRE)
@@ -27,8 +28,9 @@ static void start_rcc_clocks(void) {
     // while (!(RCC->CR & RCC_CR_HSERDY));
 
     // -- Only for RTC and Watchdog
-    // RCC->CR |= RCC_CSR_LSION;
-    // while (!(RCC->CR & RCC_CSR_LSIRDY));
+    // RCC->CSR |= RCC_CSR_LSION;
+    // vuint32_t *rcc_csr = &RCC->CSR;
+    // while (!(*rcc_csr & RCC_CSR_LSIRDY));
 
     // -- PLLCLK
     // RCC->CR |= RCC_CR_PLLON;
@@ -78,7 +80,7 @@ static void config_intr(void) {
     EXTI->FTSR |= EXTI_TR(0);
 
     // Enable NVIC IRQ6 (EXTI0)
-    *((uint32_t *)0xE000E100) |= (1 << 6);
+    NVIC->ISER[0] = NVIC_ISER_SETENA(6);
 }
 
 // =================================================
@@ -108,7 +110,7 @@ int main(void) {
             } else {
                 gpio_clear('C', 13);
             }
-            set = ~set;
+            set = !set;
         }
     }
 }

@@ -1,6 +1,7 @@
 #include "types.h"
 #include "core_stm/exti.h"
 #include "core_stm/gpio.h"
+#include "cortex-m3/asm.h"
 #include "cortex-m3/nvic/systick.h"
 
 extern int main(void);
@@ -42,8 +43,7 @@ static void SysTick_Handler(void) {
     s_ticks++;
 }
 
-static uint32_t set;
-vuint32_t sleep_request = 0;
+uint32_t set;
 static void EXTI0_Handler(void) {
     // while ((volatile uint32_t)1);
     if (EXTI->PR & EXTI_PR(0)) {
@@ -56,7 +56,7 @@ static void EXTI0_Handler(void) {
         }
         set = !set;
 
-        sleep_request = 1;
+        wfe();
     }
 }
 

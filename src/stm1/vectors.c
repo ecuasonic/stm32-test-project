@@ -1,7 +1,7 @@
 #include "types.h"
-#include "cortex-m3/nvic/systick.h"
 #include "core_stm/exti.h"
 #include "core_stm/gpio.h"
+#include "cortex-m3/nvic/systick.h"
 
 extern int main(void);
 

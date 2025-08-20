@@ -50,9 +50,9 @@ struct gpio {
     //        0x0000_0000
     //    Bits:
     //        BRy (Port x Reset bit y (y=0..15)) (w)
-#define GPIO_BSRR_BR(n) ((n)&0xFFFFU)
+#define GPIO_BSRR_BR(n) (((n)&0xFFFFU) << 16)
     //        BSy (Port x Set bit y (y=0..15)) (w)
-#define GPIO_BSRR_BS(n) (((n)&0xFFFFU) << 16)
+#define GPIO_BSRR_BS(n) ((n)&0xFFFFU)
     uint32_t BSRR;
 
     // ==========================================

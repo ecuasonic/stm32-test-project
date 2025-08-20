@@ -4,13 +4,40 @@
 #include "types.h"
 
 struct SCB {
-    // CPUID Base
+    // ==========================================
+    // CPUID Base (CPUID) (r)
+    //    Reset value:
+    //        ???
+    //    Bits:
+#define SCB_CPUID_IMPLEMENTER   (0x0FF << 24)
+#define SCB_CPUID_VARIANT       (0x00F << 20)
+#define SCB_CPUID_Constant      (0x00F << 16)
+#define SCB_CPUID_PARTNO        (0xFFF << 4)
+#define SCB_CPUID_REVISION      (0x00F << 0)
     uint32_t CPUID;
 
-    // Interrupt Control and State
+    // ==========================================
+    // Interrupt Control State Register (ICSR)
+    //    Reset value:
+    //        0x0000_0000
+    //    Bits:
+#define SCB_ICSR_NMIPENDSET     (1 << 31)
+#define SCB_ICSR_PENDSVSET      (1 << 28)
+#define SCB_ICSR_PENDSVCLR      (1 << 27)
+#define SCB_ICSR_PENDSTSET      (1 << 26)
+#define SCB_ICSR_PENDSTCLR      (1 << 25)
+#define SCB_ICSR_ISRPREEMPT     (1 << 23)
+#define SCB_ICSR_ISPENDING      (1 << 22)
+#define SCB_ICSR_VECTPENDING(n) (((n)&3FF) << 12)
+#define SCB_ICSR_RETTOBASE      (1 << 11)
+#define SCB_ICSR_VECTACTIVE(n)  (((n)&0x1FF) << 0)
     uint32_t ICSR;
 
-    // Vector Table Offset
+    // ==========================================
+    // Vector Table Offset Register (VTOR)
+    //    Reset value:
+    //        ???
+    //    Bits:
     uint32_t VTOR;
 
     // Application Interrupt & Reset Control

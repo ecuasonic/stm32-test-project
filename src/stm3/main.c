@@ -6,7 +6,6 @@
 #include "core_stm/exti.h"
 #include "cortex-m3/nvic/nvic.h"
 #include "cortex-m3/nvic/systick.h"
-#include "cortex-m3/asm.h"
 
 static void config_rcc(void) {
 }
@@ -87,30 +86,23 @@ static void setup(void) {
     config_intr();
 }
 
+// Things to look into:
+//      Backup registers
+//      Power control
+//      I2C
+
 // The `main()` code stops when sleeping. Resumes when it wakes back up by event.
-extern vuint32_t sleep_request;
 int main(void) {
     setup();
 
     // 1. Put to sleep on button press
     // 2. Wakeup with another button press
 
-    static uint32_t set;
     for (;;) {
-        if (sleep_request) {
-            sleep_request = 0;
-
-            // wfe() will not go to sleep if event register is set, or pending interrupts
-            cpsid();
-            sev(); // set event register (no sleep)
-            wfe(); // clear event register (no sleep)
-            wfe(); // set event register (sleep)
-            cpsie();
-        }
-
         uint32_t timer, period = 1000;
         if (timer_expired(&timer, period, s_ticks)) {
             // EXTI->SWIER = EXTI_SWIER(0); // Software interrupt from EXTI0
+            static uint32_t set;
             if (set) {
                 gpio_set('C', 13);
             } else {
