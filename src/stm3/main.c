@@ -4,8 +4,10 @@
 #include "core_stm/rcc.h"
 #include "core_stm/afio.h"
 #include "core_stm/exti.h"
+#include "core_stm/i2c.h"
 #include "cortex-m3/nvic/nvic.h"
 #include "cortex-m3/nvic/systick.h"
+#include "strings.h"
 
 static void config_rcc(void) {
 }
@@ -18,15 +20,18 @@ static void start_rcc_clocks(void) {
 
 // =================================================
 //
-static void start_gpio_clocks(void) {
-    // APB2
+static void start_periph_clocks(void) {
+    // APB2 for GPIOs
     RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
     RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
     RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;
+
+    // APB1 for I2C
+    RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
 }
 
 static void config_gpio(void) {
-    // SysTick LED
+    // START pin (for Pulseview trigger)
     GPIO('C')->CRH &= CLEAR_PIN(13);
     GPIO('C')->CRH |= SET_MODE_OUT_2MHZ(13) | SET_CNF_OUT_PP(13);
 
@@ -43,6 +48,16 @@ static void config_gpio(void) {
     // EXTI0 LED
     GPIO('B')->CRL &= CLEAR_PIN(0);
     GPIO('B')->CRL |= SET_MODE_OUT_2MHZ(0) | SET_CNF_OUT_PP(0);
+
+    // ============================================================
+
+    // I2C1 SCL
+    GPIO('B')->CRL &= CLEAR_PIN(6);
+    GPIO('B')->CRL |= SET_MODE_OUT_2MHZ(6) | SET_CNF_OUT_AF_OD(6);
+
+    // I2C1 SDA
+    GPIO('B')->CRL &= CLEAR_PIN(7);
+    GPIO('B')->CRL |= SET_MODE_OUT_2MHZ(7) | SET_CNF_OUT_AF_OD(7);
 }
 
 // =================================================
@@ -74,41 +89,45 @@ static void config_intr(void) {
     NVIC->ISER[0] |= NVIC_ISER_SETENA(7); // Enable NVIC IRQ7 (EXTI1)
 }
 
+
 // =================================================
 
 static void setup(void) {
     config_rcc();
     start_rcc_clocks();
 
-    start_gpio_clocks();
+    start_periph_clocks();
     config_gpio();
 
     config_intr();
+
+    config_i2c();   // defined in i2c.c
 }
 
 // Things to look into:
 //      Backup registers
 //      Power control
 //      I2C
-
-// The `main()` code stops when sleeping. Resumes when it wakes back up by event.
+//      ADC/DAC
+//          Potentiometer into ADC.
+//          DAC into transistor powering LED.
 int main(void) {
     setup();
 
-    // 1. Put to sleep on button press
-    // 2. Wakeup with another button press
-
+    int32_t n = 0;
+    // n = 10;
+    // while (n) {
+    //     clear();
+    //     print("Num: ");
+    //     print(itoa(n--, 10));
+    //     delay(1000);
+    // }
+    // clear();
+    // TODO: Write a function for lseek next.
     for (;;) {
-        uint32_t timer, period = 1000;
-        if (timer_expired(&timer, period, s_ticks)) {
-            // EXTI->SWIER = EXTI_SWIER(0); // Software interrupt from EXTI0
-            static uint32_t set;
-            if (set) {
-                gpio_set('C', 13);
-            } else {
-                gpio_clear('C', 13);
-            }
-            set = !set;
-        }
+        clear();
+        print("Num: ");
+        print(itoa(n++, 10));
+        delay(10);
     }
 }

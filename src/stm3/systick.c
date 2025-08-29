@@ -1,7 +1,7 @@
 #include "types.h"
 #include "cortex-m3/nvic/systick.h"
 
-volatile uint32_t s_ticks;
+vuint32_t s_ticks;
 
 /**
  * @brief First call sets intial timer and automatically resets periodically.
@@ -19,4 +19,10 @@ uint32_t timer_expired(uint32_t *t, uint32_t prd, uint32_t now) {
     // If expired, automatically set next expiration time.
     *t = (now - *t) > prd ? now + prd : *t + prd;
     return 1;
+}
+
+void delay(uint32_t ms) {
+    static uint32_t now;
+    now = s_ticks;
+    while (s_ticks - now < ms);
 }

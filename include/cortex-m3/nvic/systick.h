@@ -9,7 +9,7 @@ struct systick {
     // Control and Status Register
     //    Reset value: 0x0000_0000
     //    Bits:
-    //        COUNTFLAG - Set when timer reaches 0 (cleared on read) 
+    //        COUNTFLAG - Set when timer reaches 0 (cleared on read)
 #define SYSTICK_CSR_COUNTFLAG   (1U << 16)
     //        CLKSOURCE - 0: External reference, 1: Processor clock
 #define SYSTICK_CSR_CLKSOURCE   (1U << 2)
@@ -21,7 +21,7 @@ struct systick {
 
     // ==========================================
     // Reload Value Register (r/w) (0)
-    //    Reset State: 
+    //    Reset State:
     //        N/A
     //    Holds the value to reload into CVR when it reaches 0
 #define SYSTICK_RVR_LOAD(n)     ((n)&0x00FFFFFFU)
@@ -29,7 +29,7 @@ struct systick {
 
     // ==========================================
     // Current Value Register (r/w) (0)
-    //    Reset State: 
+    //    Reset State:
     //        N/A
     //    Contains the current timer value (write clears to 0)
 #define SYSTICK_CVR_CURRENT(n) ((n)&0x00FFFFFFU)
@@ -37,7 +37,7 @@ struct systick {
 
     // ==========================================
     // Calibration Value Register (r) (0)
-    //    Reset State: 
+    //    Reset State:
     //        CALIB
     //    Provides reference value for 10ms at core clock
     //    Bits:
@@ -60,5 +60,6 @@ INLINE void systick_init(uint32_t ticks) {
 
 extern volatile uint32_t s_ticks;
 uint32_t timer_expired(uint32_t *t, uint32_t prd, uint32_t now);
+void delay(uint32_t ms);
 
 #endif // SYSTICK_H

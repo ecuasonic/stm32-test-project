@@ -40,7 +40,7 @@ static void start_rcc_clocks(void) {
 
 // =================================================
 //
-static void start_gpio_clocks(void) {
+static void start_periph_clocks(void) {
     // APB2
     RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
     RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
@@ -89,7 +89,7 @@ static void setup(void) {
     config_rcc();
     start_rcc_clocks();
 
-    start_gpio_clocks();
+    start_periph_clocks();
     config_gpio();
 
     config_intr();

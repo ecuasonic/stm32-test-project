@@ -12,7 +12,7 @@ msg() {
 
 main() {
     case $1 in
-        1|2)
+        1|2|3)
             TEST_NAME="stm$1"
             ;;
         *)
