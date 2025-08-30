@@ -116,17 +116,7 @@ static void setup(void) {
 int main(void) {
     setup();
 
-    int32_t n = 0;
-    char old[LCD_COLS+1];
-    char new[LCD_COLS+1];
+    print_lcd("RL later???");
 
-    print_lcd("Num: ");
-    itoa(n, 10, old, LCD_COLS+1);
-    print_lcd(old);
-    for (;;) {
-        itoa(n++, 10, new, LCD_COLS+1);
-        repl_str_lcd(old, new, 20);
-        strncpy(old, new, LCD_COLS+1);
-        delay(1);
-    }
+    for (;;);
 }

@@ -35,5 +35,6 @@ void tx_lcd_inst(uint32_t inst);
 void move_lcd_cursor(int32_t dx, int32_t dy, int32_t rel);
 void home_lcd_cursor(void);
 
+void counter_lcd(uint32_t max);
 
 #endif

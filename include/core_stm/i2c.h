@@ -139,6 +139,7 @@ void config_i2c(void);
 #define TX 0
 void start_comm(uint32_t addr, uint32_t rd);
 void end_comm(void);
+void tx(uint32_t byte);
 
 #endif
 

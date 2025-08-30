@@ -9,16 +9,8 @@ static const uint32_t lcd_line_addr[LCD_ROWS] = {0x00, 0x40, 0x14, 0x54};
 // Print rough byte as is (use macros in lcd.h).
 // Most basic form of sending information to LCD.
 void tx_lcd(uint32_t byte) {
-    vuint32_t *i2c1_dr = &I2C1->DR;
-    vuint32_t *i2c1_sr1 = &I2C1->SR1;
-
-    *i2c1_dr = byte;
-
-    *i2c1_dr |= LCD_E;
-    while (!(*i2c1_sr1 & I2C_SR1_TXE));
-
-    *i2c1_dr &= ~LCD_E;
-    while (!(*i2c1_sr1 & I2C_SR1_TXE));
+    tx(byte | LCD_E);
+    tx(byte & ~LCD_E);
 }
 
 // Send data to print on screen.
@@ -75,7 +67,6 @@ void print_lcd(char *str) {
     start_comm(LCD_I2C_ADDR, TX);
     tx_lcd_nstr(str, LCD_TOT);
     end_comm();
-    delay(5);
 }
 
 void clear_lcd(void) {
@@ -84,7 +75,7 @@ void clear_lcd(void) {
     start_comm(LCD_I2C_ADDR, TX);
     tx_lcd_inst(0x01);
     end_comm();
-    delay(5);
+    delay(2);
 }
 
 void move_lcd_cursor(int32_t dx, int32_t dy, int32_t rel) {
@@ -101,7 +92,6 @@ void move_lcd_cursor(int32_t dx, int32_t dy, int32_t rel) {
     start_comm(LCD_I2C_ADDR, TX);
     tx_lcd_inst(0x80 | lcd_line_addr[cursor_y] + cursor_x);
     end_comm();
-    delay(5);
 }
 
 void home_lcd_cursor(void) {
@@ -110,7 +100,6 @@ void home_lcd_cursor(void) {
     start_comm(LCD_I2C_ADDR, TX);
     tx_lcd_inst(0x2);
     end_comm();
-    delay(5);
 }
 
 // ===================================================================
@@ -123,3 +112,22 @@ void repl_str_lcd(char *old, char *new, uint32_t n) {
     move_lcd_cursor((int32_t)((uint32_t)dx - old_len), 0, REL);
     print_lcd(new_str);
 }
+
+// ===================================================================
+
+void counter_lcd(uint32_t max) {
+    int32_t n = 0;
+    char old[LCD_COLS+1];
+    char new[LCD_COLS+1];
+
+    itoa(n, 10, old, LCD_COLS+1);
+    print_lcd(old);
+    max++;
+    while(max--) {
+        itoa(n++, 10, new, LCD_COLS+1);
+        repl_str_lcd(old, new, 20);
+        strncpy(old, new, LCD_COLS+1);
+        delay(9);
+    }
+}
+
