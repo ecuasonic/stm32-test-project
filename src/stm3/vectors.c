@@ -55,8 +55,6 @@ static void EXTI0_Handler(void) {
             gpio_clear('B', 0);
         }
         set = !set;
-
-        wfe();
     }
 }
 

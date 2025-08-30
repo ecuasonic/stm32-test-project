@@ -134,8 +134,11 @@ struct i2c {
 #define I2C2 ((struct i2c *)0x40005800)
 
 void config_i2c(void);
-void print(char *str);
-void clear(void);
+
+#define RX 1
+#define TX 0
+void start_comm(uint32_t addr, uint32_t rd);
+void end_comm(void);
 
 #endif
 

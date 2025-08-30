@@ -5,6 +5,7 @@
 #include "core_stm/afio.h"
 #include "core_stm/exti.h"
 #include "core_stm/i2c.h"
+#include "periph/lcd.h"
 #include "cortex-m3/nvic/nvic.h"
 #include "cortex-m3/nvic/systick.h"
 #include "strings.h"
@@ -102,6 +103,7 @@ static void setup(void) {
     config_intr();
 
     config_i2c();   // defined in i2c.c
+    config_lcd();   // defined in lcd.c
 }
 
 // Things to look into:
@@ -115,19 +117,16 @@ int main(void) {
     setup();
 
     int32_t n = 0;
-    // n = 10;
-    // while (n) {
-    //     clear();
-    //     print("Num: ");
-    //     print(itoa(n--, 10));
-    //     delay(1000);
-    // }
-    // clear();
-    // TODO: Write a function for lseek next.
+    char old[LCD_COLS+1];
+    char new[LCD_COLS+1];
+
+    print_lcd("Num: ");
+    itoa(n, 10, old, LCD_COLS+1);
+    print_lcd(old);
     for (;;) {
-        clear();
-        print("Num: ");
-        print(itoa(n++, 10));
-        delay(10);
+        itoa(n++, 10, new, LCD_COLS+1);
+        repl_str_lcd(old, new, 20);
+        strncpy(old, new, LCD_COLS+1);
+        delay(1);
     }
 }

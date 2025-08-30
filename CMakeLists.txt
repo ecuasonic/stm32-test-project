@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 project(stm32_research C)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(TARGET_NAME firmware.elf)
 set(TEST_NAME "stm1" CACHE STRING "testname for compilation")
 
@@ -18,7 +20,7 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
-file(GLOB SRC_FILES CONFIGURE_DEPENDS "${SRC_DIR}/${TEST_NAME}/*.c")
+file(GLOB SRC_FILES CONFIGURE_DEPENDS "${SRC_DIR}/${TEST_NAME}/*.c" "${SRC_DIR}/*.c")
 
 # ------------------------
 #      Compiler flags

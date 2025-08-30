@@ -1,30 +1,38 @@
 [
-  {
-    "arguments": [
-      "/usr/bin/arm-none-eabi-gcc",
-      "-mcpu=cortex-m3",
-      "-c",
-      "-Iinclude",
-      "-o",
-      "build/main.o",
-      "src/main.c"
-    ],
-    "directory": "/home/ecuas/Documents/code/stm/test",
-    "file": "/home/ecuas/Documents/code/stm/test/src/main.c",
-    "output": "/home/ecuas/Documents/code/stm/test/build/main.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/arm-none-eabi-gcc",
-      "-mcpu=cortex-m3",
-      "-c",
-      "-Iinclude",
-      "-o",
-      "build/vectors.o",
-      "src/vectors.c"
-    ],
-    "directory": "/home/ecuas/Documents/code/stm/test",
-    "file": "/home/ecuas/Documents/code/stm/test/src/vectors.c",
-    "output": "/home/ecuas/Documents/code/stm/test/build/vectors.o"
-  }
+{
+  "directory": "/home/ecuas/Documents/code/stm/research/build",
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/i2c.c.o -c /home/ecuas/Documents/code/stm/research/src/i2c.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/i2c.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/i2c.c.o"
+},
+{
+  "directory": "/home/ecuas/Documents/code/stm/research/build",
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/lcd.c.o -c /home/ecuas/Documents/code/stm/research/src/lcd.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/lcd.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/lcd.c.o"
+},
+{
+  "directory": "/home/ecuas/Documents/code/stm/research/build",
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/stm3/main.c.o -c /home/ecuas/Documents/code/stm/research/src/stm3/main.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/stm3/main.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/stm3/main.c.o"
+},
+{
+  "directory": "/home/ecuas/Documents/code/stm/research/build",
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/stm3/vectors.c.o -c /home/ecuas/Documents/code/stm/research/src/stm3/vectors.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/stm3/vectors.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/stm3/vectors.c.o"
+},
+{
+  "directory": "/home/ecuas/Documents/code/stm/research/build",
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/strings.c.o -c /home/ecuas/Documents/code/stm/research/src/strings.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/strings.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/strings.c.o"
+},
+{
+  "directory": "/home/ecuas/Documents/code/stm/research/build",
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/systick.c.o -c /home/ecuas/Documents/code/stm/research/src/systick.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/systick.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/systick.c.o"
+}
 ]
