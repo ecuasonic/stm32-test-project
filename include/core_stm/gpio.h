@@ -32,7 +32,7 @@ struct gpio {
     //        0x0000_XXXX
     //    Bits:
     //        IDRy (Port input data (y=0..15)) (r)
-#define GPIO_IDR(n) ((n)&0xFFFFU)
+#define GPIO_IDR(n) (1 << ((n)&0xFU))
     uint32_t IDR;
 
     // ==========================================
@@ -41,7 +41,7 @@ struct gpio {
     //        0x0000_0000
     //    Bits:
     //        ODRy (Port output data (y=0..15)) (rw)
-#define GPIO_ODR(n) ((n)&0xFFFFU)
+#define GPIO_ODR(n) (1 << ((n)&0xFU))
     uint32_t ODR;
 
     // ==========================================

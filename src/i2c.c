@@ -128,6 +128,7 @@ static uint32_t *send_stop_rx(uint32_t *dest, int32_t nbytes) {
 uint32_t *i2c_rx(uint32_t addr, uint32_t *dest, int32_t nbytes) {
     send_start();
     if (send_address_rx(addr, nbytes)) {
+        send_stop();
         return 0;
     }
     return send_stop_rx(dest, nbytes);
@@ -166,6 +167,7 @@ uint32_t *i2c_tx(int32_t addr, uint32_t *src, int32_t nbytes) {
     if (addr != NO_COND) {
         send_start();
         if (send_address_tx((uint32_t)addr)) {
+            send_stop();
             return 0;
         }
     }

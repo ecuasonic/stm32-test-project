@@ -49,6 +49,10 @@ static void config_gpio(void) {
     GPIO('A')->CRL |= SET_MODE_IN(1) | SET_CNF_IN_PUPD(1);
     GPIO('A')->BSRR = GPIO_BSRR_BR(1);
 
+    // I2C Acceleartor DRDY
+    GPIO('A')->CRL &= CLEAR_PIN(5);
+    GPIO('A')->CRL |= SET_MODE_IN(5) | SET_CNF_IN_FLOAT(5);
+
     // EXTI0 LED
     GPIO('B')->CRL &= CLEAR_PIN(0);
     GPIO('B')->CRL |= SET_MODE_OUT_2MHZ(0) | SET_CNF_OUT_PP(0);
@@ -120,30 +124,53 @@ static void setup(void) {
 int main(void) {
     setup();
 
+    vuint32_t *gpio_a_idr = &GPIO('A')->IDR;
+
+    // ==============================================
+
+    uint32_t reg[2] = {0xA, 0x1};
+    i2c_tx(ACC_I2C_ADDR, reg, 2);
+    while (!(*gpio_a_idr & GPIO_ODR(5)));
+
+    reg[0] = 0x3;
+    i2c_tx(ACC_I2C_ADDR, reg, 1);
+
+    int32_t offset[6], raw[6], calibrated[3];
+    i2c_rx(ACC_I2C_ADDR, (uint32_t *)offset, 6);
+
+    // ==============================================
+
     for (;;) {
         print_lcd("Testing RX...\n");
 
-        uint32_t reg[2] = {0xA, 0x1};
-        while (i2c_tx(ACC_I2C_ADDR, reg, 2) == 0);
-
-        delay(10);
+        reg[0] = 0xA;
+        reg[1] = 0x1;
+        i2c_tx(ACC_I2C_ADDR, reg, 2);
+        while (!(*gpio_a_idr & GPIO_IDR(5)));
 
         reg[0] = 0x3;
-        while (i2c_tx(ACC_I2C_ADDR, reg, 1) == 0);
+        i2c_tx(ACC_I2C_ADDR, reg, 1);
 
-        int32_t dest[6];
-        // FIX: Poll DRDY instead
-        while (i2c_rx(ACC_I2C_ADDR, (uint32_t *)dest, 6) == 0);
+        i2c_rx(ACC_I2C_ADDR, (uint32_t *)raw, 6);
 
         for (uint32_t i = 0; i < 3; i++) {
-            print_lcd("0x");
-            print_num_lcd(dest[2*i], 16);
-
-            print_lcd(" 0x");
-            print_num_lcd(dest[2*i+1], 16);
-
-            print_lcd("\n");
+            int16_t raw_whole = (int16_t)(raw[2*i] | (raw[2*i+1] << 8));
+            int16_t offset_whole = (int16_t)(offset[2*i] | (offset[2*i+1] << 8));
+            calibrated[i] = raw_whole - offset_whole;
         }
+
+        print_lcd("x = ");
+        print_num_lcd(calibrated[0], 10);
+        print_lcd("\n");
+
+        print_lcd("y = ");
+        print_num_lcd(calibrated[1], 10);
+        print_lcd("\n");
+
+        print_lcd("z = ");
+        print_num_lcd(calibrated[2], 10);
+        print_lcd("\n");
+
         delay(1000);
         clear_lcd();
     }
