@@ -125,8 +125,9 @@ static void setup(void) {
 int main(void) {
     setup();
 
-    print_acc_data_lcd('A', 5, 3);
+    print_acc_data_lcd('A', 5, 100);
     print_acc_test_lcd('A', 5);
+
 
     for (;;) {
     }

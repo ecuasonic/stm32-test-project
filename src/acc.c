@@ -24,11 +24,11 @@ uint32_t config_acc(void) {
 }
 
 static uint32_t set_reg(uint32_t reg, uint32_t data) {
-    uint32_t tries = TRIES;
+    int32_t tries = TRIES;
 
     uint32_t tx[2] = {reg, data};
-    while (tries-- && i2c_tx(ACC_I2C_ADDR, tx, 2));
-    return (tries) ? SUCCESS : FAILURE;
+    while (tries-- && (i2c_tx(ACC_I2C_ADDR, tx, 2) == 0));
+    return (tries < 0) ? FAILURE : SUCCESS;
 }
 
 static uint32_t read_data(char port, uint32_t pin, int32_t *dest) {
