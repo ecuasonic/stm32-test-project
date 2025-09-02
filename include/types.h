@@ -2,6 +2,8 @@
 #define TYPES_H
 
 #define INLINE static inline
+#define SUCCESS 0
+#define FAILURE 1
 
 typedef unsigned int        uint32_t;
 typedef volatile uint32_t   vuint32_t;

@@ -13,6 +13,7 @@ struct i2c {
     //        ALERT (SMBus alert)
     //        PEC (Packet error checking)
     //        POS (ACK/PEC Position for data reception)
+#define I2C_CR1_POS     (1U << 11)
     //        ACK (ACK enable)
 #define I2C_CR1_ACK     (1U << 10)
     //        STOP (Stop generation)
@@ -79,6 +80,7 @@ struct i2c {
     //        PECERR (PEC Error in reception) (rc_w0)
     //        OVR (Overrun/Underrun) (rc_w0)
     //        AF (Acknowledgement failure) (rc_w0)
+#define I2C_SR1_AF      (1U << 10)
     //        ARLO (Arbitration failure [master mode]) (rc_w0)
     //        BERR (Bus error) (rc_w0)
     //        TxE (Data register empty [transmitters]) (r)
@@ -88,6 +90,7 @@ struct i2c {
     //        STOPF (Stop detection [slave mode]) (r)
     //        ADD10 (10-bit header sent [Master mode]) (r)
     //        BTF (Byte transfer finished) (r)
+#define I2C_SR1_BTF   (1U << 2)
     //        ADDR (Address sent [master mode] / Address matched [slave mode]) (r)
 #define I2C_SR1_ADDR  (1U << 1)
     //        SB (Start bit [master mode]) (r)
@@ -133,13 +136,26 @@ struct i2c {
 #define I2C1 ((struct i2c *)0x40005400)
 #define I2C2 ((struct i2c *)0x40005800)
 
+// =============================================================================
+// =============================================================================
+// =============================================================================
+
 void config_i2c(void);
 
-#define RX 1
-#define TX 0
-void start_comm(uint32_t addr, uint32_t rd);
-void end_comm(void);
-void tx(uint32_t byte);
+// Use cases:
+//      i2c_tx(ADDR, &SRC, N);
+//
+//      start_i2c_tx(ADDR);
+//      i2c_tx(NO_COND, &SRC, N);
+//      end_i2c_tx();
+#define NO_COND -1
+uint32_t    *i2c_tx(int32_t addr, uint32_t *src, int32_t nbytes);   // TX
+uint32_t    start_i2c_tx(uint32_t addr);                            // ADDR + START
+void        end_i2c_tx(void);                                       // STOP
+
+uint32_t    *i2c_rx(uint32_t addr, uint32_t *dest, int32_t nbytes);
+
+void        i2c_scan(void);
 
 #endif
 

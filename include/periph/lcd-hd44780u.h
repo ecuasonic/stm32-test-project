@@ -1,5 +1,5 @@
-#ifndef LCD_H
-#define LCD_H
+#ifndef LCD_HD44780U_H
+#define LCD_HD44780U_H
 
 // Refer to Sparkfun HD44780 datasheet
 // Must use 4-bit mode for I2C interface (specifically for I2C module installed on LCD).
@@ -32,7 +32,7 @@ void tx_lcd(uint32_t byte);
 void tx_lcd_data(uint32_t data);
 void tx_lcd_inst(uint32_t inst);
 
-void move_lcd_cursor(int32_t dx, int32_t dy, int32_t rel);
+void set_lcd_cursor(int32_t dx, int32_t dy, int32_t rel);
 void home_lcd_cursor(void);
 
 void counter_lcd(uint32_t max);

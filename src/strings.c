@@ -36,7 +36,7 @@ char *itoa(int32_t num, uint32_t base, char *str, uint32_t n) {
 
     while (num && n--) {
         char rem = (char)((uint32_t)num % base);
-        str[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        str[i++] = (rem > 9) ? (rem - 10) + 'A' : rem + '0';
         num /= base;
     }
 

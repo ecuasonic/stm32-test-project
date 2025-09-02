@@ -1,7 +1,7 @@
 #include "core_stm/i2c.h"
 #include "cortex-m3/nvic/systick.h"
 #include "types.h"
-#include "periph/lcd.h"
+#include "periph/lcd-hd44780u.h"
 #include "strings.h"
 
 static const uint32_t lcd_line_addr[LCD_ROWS] = {0x00, 0x40, 0x14, 0x54};
@@ -9,8 +9,10 @@ static const uint32_t lcd_line_addr[LCD_ROWS] = {0x00, 0x40, 0x14, 0x54};
 // Print rough byte as is (use macros in lcd.h).
 // Most basic form of sending information to LCD.
 void tx_lcd(uint32_t byte) {
-    tx(byte | LCD_E);
-    tx(byte & ~LCD_E);
+    byte |= LCD_E;
+    i2c_tx(NO_COND, &byte, 1);
+    byte &= ~LCD_E;
+    i2c_tx(NO_COND, &byte, 1);
 }
 
 // Send data to print on screen.
@@ -51,34 +53,43 @@ static void tx_lcd_nstr(char *str, uint32_t n) {
 // ===================================================================
 
 void config_lcd(void) {
-    delay(5);
-    start_comm(LCD_I2C_ADDR, TX);
+    delay(4);
+    if (start_i2c_tx(LCD_I2C_ADDR)) {
+        end_i2c_tx();
+        return;
+    }
     tx_lcd(LCD_DATA(0x2));      // Set to 4-bit operation
     tx_lcd_inst(0x2C);          // 2 lines, 5x10 dots
     tx_lcd_inst(0x0E);          // Display on, cursor on, blinking
     tx_lcd_inst(0x01);          // Clear screen
-    end_comm();
-    delay(5);
+    end_i2c_tx();
+    delay(4);
 }
 
 // ===================================================================
 
 void print_lcd(char *str) {
-    start_comm(LCD_I2C_ADDR, TX);
+    if (start_i2c_tx(LCD_I2C_ADDR)) {
+        end_i2c_tx();
+        return;
+    }
     tx_lcd_nstr(str, LCD_TOT);
-    end_comm();
+    end_i2c_tx();
 }
 
 void clear_lcd(void) {
     cursor_y = 0;
     cursor_x = 0;
-    start_comm(LCD_I2C_ADDR, TX);
+    if (start_i2c_tx(LCD_I2C_ADDR)) {
+        end_i2c_tx();
+        return;
+    }
     tx_lcd_inst(0x01);
-    end_comm();
+    end_i2c_tx();
     delay(2);
 }
 
-void move_lcd_cursor(int32_t dx, int32_t dy, int32_t rel) {
+void set_lcd_cursor(int32_t dx, int32_t dy, int32_t rel) {
     if (rel) {
         cursor_y += (uint32_t)dy;
         cursor_x += (uint32_t)dx;
@@ -89,17 +100,23 @@ void move_lcd_cursor(int32_t dx, int32_t dy, int32_t rel) {
     cursor_y %= LCD_ROWS;
     cursor_x %= LCD_COLS;
 
-    start_comm(LCD_I2C_ADDR, TX);
+    if (start_i2c_tx(LCD_I2C_ADDR)) {
+        end_i2c_tx();
+        return;
+    }
     tx_lcd_inst(0x80 | lcd_line_addr[cursor_y] + cursor_x);
-    end_comm();
+    end_i2c_tx();
 }
 
 void home_lcd_cursor(void) {
     cursor_y = 0;
     cursor_x = 0;
-    start_comm(LCD_I2C_ADDR, TX);
+    if (start_i2c_tx(LCD_I2C_ADDR)) {
+        end_i2c_tx();
+        return;
+    }
     tx_lcd_inst(0x2);
-    end_comm();
+    end_i2c_tx();
 }
 
 // ===================================================================
@@ -109,7 +126,7 @@ void repl_str_lcd(char *old, char *new, uint32_t n) {
     char *new_str = strndiff(old, new, n);
     int32_t dx = new_str - new;
 
-    move_lcd_cursor((int32_t)((uint32_t)dx - old_len), 0, REL);
+    set_lcd_cursor((int32_t)((uint32_t)dx - old_len), 0, REL);
     print_lcd(new_str);
 }
 

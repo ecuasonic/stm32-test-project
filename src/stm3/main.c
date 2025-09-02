@@ -5,10 +5,13 @@
 #include "core_stm/afio.h"
 #include "core_stm/exti.h"
 #include "core_stm/i2c.h"
-#include "periph/lcd.h"
 #include "cortex-m3/nvic/nvic.h"
 #include "cortex-m3/nvic/systick.h"
 #include "strings.h"
+
+#include "periph/lcd-hd44780u.h"
+#include "periph/oled-ssd1306.h"
+#include "periph/acc.h"
 
 static void config_rcc(void) {
 }
@@ -104,6 +107,7 @@ static void setup(void) {
 
     config_i2c();   // defined in i2c.c
     config_lcd();   // defined in lcd.c
+    config_oled();  // defined in oled.c
 }
 
 // Things to look into:
@@ -116,7 +120,21 @@ static void setup(void) {
 int main(void) {
     setup();
 
-    print_lcd("RL later???");
+    print_lcd("Testing RX...\n");
+
+    uint32_t dest[10];
+    i2c_rx(ACC_I2C_ADDR, dest, 2);
+
+    char str[10];
+    print_lcd("0x");
+    itoa((int32_t)dest[0], 16, str, 10);
+    print_lcd(str);
+
+    print_lcd("\n");
+
+    print_lcd("0x");
+    itoa((int32_t)dest[1], 16, str, 10);
+    print_lcd(str);
 
     for (;;);
 }
