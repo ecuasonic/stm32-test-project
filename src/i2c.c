@@ -174,7 +174,7 @@ uint32_t *i2c_tx(int32_t addr, uint32_t *src, int32_t nbytes) {
 
     src = tx(src, nbytes);
 
-    if (addr != NO_COND) {
+    if (addr != NO_COND && addr != NO_STOP) {
         send_stop();
     }
     return src;
@@ -182,7 +182,9 @@ uint32_t *i2c_tx(int32_t addr, uint32_t *src, int32_t nbytes) {
 
 uint32_t start_i2c_tx(uint32_t addr) {
     send_start();
-    return send_address_tx(addr);
+    CHECK_ERROR_ENDTX(send_address_tx(addr));
+
+    return SUCCESS;
 }
 
 void end_i2c_tx(void) {

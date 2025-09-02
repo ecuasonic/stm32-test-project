@@ -14,4 +14,7 @@ typedef short               int16_t;
 typedef volatile uint16_t   vuint16_t;
 typedef unsigned char       uint8_t;
 
+#define CHECK_ERROR(n)      if (n) return FAILURE
+#define CHECK_NULLPTR(n)    if (!n) return FAILURE
+
 #endif

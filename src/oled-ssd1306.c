@@ -5,9 +5,18 @@
 
 #define TRIES 150
 
-void config_oled(void) {
-    vuint32_t tries = TRIES;
+uint32_t oled_configured;
+
+uint32_t config_oled(void) {
+    vint32_t tries = TRIES;
     while (tries-- && start_i2c_tx(OLED_I2C_ADDR1));
-    end_i2c_tx();
-    delay(4);
+
+    if (tries < 0) {
+        return FAILURE;
+    } else {
+        delay(4);
+        end_i2c_tx();
+        oled_configured = 1;
+        return SUCCESS;
+    }
 }

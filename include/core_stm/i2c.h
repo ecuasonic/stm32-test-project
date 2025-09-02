@@ -140,6 +140,11 @@ struct i2c {
 // =============================================================================
 // =============================================================================
 
+#define CHECK_ERROR_ENDTX(n)    if (n) { \
+                                    end_i2c_tx(); \
+                                    return FAILURE; \
+                                }
+
 void config_i2c(void);
 
 // Use cases:
@@ -149,9 +154,10 @@ void config_i2c(void);
 //      i2c_tx(NO_COND, &SRC, N);
 //      end_i2c_tx();
 #define NO_COND -1
-uint32_t    *i2c_tx(int32_t addr, uint32_t *src, int32_t nbytes);   // TX
-uint32_t    start_i2c_tx(uint32_t addr);                            // ADDR + START
-void        end_i2c_tx(void);                                       // STOP
+#define NO_STOP -2
+uint32_t    *i2c_tx(int32_t addr, uint32_t *src, int32_t nbytes);
+uint32_t    start_i2c_tx(uint32_t addr);
+void        end_i2c_tx(void);
 
 uint32_t    *i2c_rx(uint32_t addr, uint32_t *dest, int32_t nbytes);
 

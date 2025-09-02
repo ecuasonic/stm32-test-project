@@ -19,27 +19,33 @@
 
 extern uint32_t cursor_x;
 extern uint32_t cursor_y;
+extern uint32_t lcd_configured;
 
 // =============================================================================
 // =============================================================================
 // =============================================================================
 
-void print_lcd(char *str);
-void print_num_lcd(int32_t num, uint32_t base);
-void clear_lcd(void);
-void repl_str_lcd(char *old, char *new, uint32_t n);
+uint32_t print_lcd(char *str);
+uint32_t print_num_lcd(int32_t num, uint32_t base);
+uint32_t clear_lcd(void);
+uint32_t repl_str_lcd(char *old, char *new, uint32_t n);
 
 #define REL 1
 #define ABS 0
-void config_lcd(void);
+uint32_t config_lcd(void);
 
-void tx_lcd(uint32_t byte);
-void tx_lcd_data(uint32_t data);
-void tx_lcd_inst(uint32_t inst);
+uint32_t tx_lcd(uint32_t byte);
+uint32_t tx_lcd_data(uint32_t data);
+uint32_t tx_lcd_inst(uint32_t inst);
 
-void set_lcd_cursor(int32_t dx, int32_t dy, int32_t rel);
-void home_lcd_cursor(void);
+uint32_t set_lcd_cursor(int32_t dx, int32_t dy, int32_t rel);
+uint32_t home_lcd_cursor(void);
 
-void counter_lcd(uint32_t max);
+uint32_t counter_lcd(uint32_t max);
+
+// =============================================================================
+
+void print_acc_data_lcd(char port, uint32_t pin, uint32_t n);
+void print_acc_test_lcd(char port, uint32_t pin);
 
 #endif
