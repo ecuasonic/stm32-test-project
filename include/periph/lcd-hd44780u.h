@@ -20,7 +20,12 @@
 extern uint32_t cursor_x;
 extern uint32_t cursor_y;
 
+// =============================================================================
+// =============================================================================
+// =============================================================================
+
 void print_lcd(char *str);
+void print_num_lcd(int32_t num, uint32_t base);
 void clear_lcd(void);
 void repl_str_lcd(char *old, char *new, uint32_t n);
 

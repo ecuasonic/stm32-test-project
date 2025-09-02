@@ -77,6 +77,12 @@ void print_lcd(char *str) {
     end_i2c_tx();
 }
 
+void print_num_lcd(int32_t num, uint32_t base) {
+    static char str[LCD_COLS/2];
+    itoa(num, base, str, LCD_COLS/2);
+    print_lcd(str);
+}
+
 void clear_lcd(void) {
     cursor_y = 0;
     cursor_x = 0;

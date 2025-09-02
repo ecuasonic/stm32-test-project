@@ -120,21 +120,31 @@ static void setup(void) {
 int main(void) {
     setup();
 
-    print_lcd("Testing RX...\n");
+    for (;;) {
+        print_lcd("Testing RX...\n");
 
-    uint32_t dest[10];
-    i2c_rx(ACC_I2C_ADDR, dest, 2);
+        uint32_t reg[2] = {0xA, 0x1};
+        while (i2c_tx(ACC_I2C_ADDR, reg, 2) == 0);
 
-    char str[10];
-    print_lcd("0x");
-    itoa((int32_t)dest[0], 16, str, 10);
-    print_lcd(str);
+        delay(10);
 
-    print_lcd("\n");
+        reg[0] = 0x3;
+        while (i2c_tx(ACC_I2C_ADDR, reg, 1) == 0);
 
-    print_lcd("0x");
-    itoa((int32_t)dest[1], 16, str, 10);
-    print_lcd(str);
+        int32_t dest[6];
+        // FIX: Poll DRDY instead
+        while (i2c_rx(ACC_I2C_ADDR, (uint32_t *)dest, 6) == 0);
 
-    for (;;);
+        for (uint32_t i = 0; i < 3; i++) {
+            print_lcd("0x");
+            print_num_lcd(dest[2*i], 16);
+
+            print_lcd(" 0x");
+            print_num_lcd(dest[2*i+1], 16);
+
+            print_lcd("\n");
+        }
+        delay(1000);
+        clear_lcd();
+    }
 }

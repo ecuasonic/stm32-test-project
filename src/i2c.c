@@ -87,6 +87,9 @@ static uint32_t *send_stop_rx(uint32_t *dest, int32_t nbytes) {
         while (!(*i2c1_sr1 & I2C_SR1_BTF));
 
         // Clear ACK
+        *i2c1_cr1 &= ~I2C_CR1_ACK;
+
+        // Clear ADDR
         temp = *i2c1_sr1;
         temp = *i2c1_sr2;
 
