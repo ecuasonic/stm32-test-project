@@ -1,3 +1,4 @@
+#include "periph/nfc.h"
 #include "types.h"
 #include "defines.h"
 #include "core_stm/gpio.h"
@@ -109,10 +110,12 @@ static void setup(void) {
 
     config_intr();
 
+    // Add structs here to assign to use struct instead of addr
     config_i2c();   // defined in i2c.c
     config_lcd();   // defined in lcd.c
-    config_oled();  // defined in oled.c
     config_acc();   // defined in acc.c
+    config_oled(OLED_I2C_ADDR1, OLED_PAGE32);  // defined in oled.c
+    config_oled(OLED_I2C_ADDR2, OLED_PAGE64);  // defined in oled.c
 }
 
 // Things to look into:
@@ -125,10 +128,18 @@ static void setup(void) {
 int main(void) {
     setup();
 
-    print_acc_data_lcd('A', 5, 100);
-    print_acc_test_lcd('A', 5);
+    // print_acc_data_lcd('A', 5, 100);
+    // print_acc_test_lcd('A', 5);
+
+    print_oled(OLED_I2C_ADDR2, OLED_TOT64, "Printing on OLED2");
+    print_oled(OLED_I2C_ADDR1, OLED_TOT32, "Printing on OLED1");
+    print_lcd("Printing on LCD");
+
+    delay(5000);
+
+    clear_oled(OLED_I2C_ADDR2);
+    print_oled(OLED_I2C_ADDR2, OLED_TOT64, "Very nice\nI like this");
 
 
-    for (;;) {
-    }
+    for (;;);
 }

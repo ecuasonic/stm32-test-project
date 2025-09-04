@@ -2,6 +2,8 @@
 #define ACC_H
 
 #include "types.h"
+
+// Refer to the AsahiKASEI AK8975 datasheet
 #define ACC_I2C_ADDR 0x0C
 
 extern uint32_t acc_configured;
