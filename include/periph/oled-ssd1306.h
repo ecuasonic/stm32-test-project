@@ -22,16 +22,16 @@
 #define OLED_PAGE32  4
 #define OLED_PAGE64  8
 
-extern uint32_t oled_configured;
-
 struct oled {
     uint32_t cursor_x;
     uint32_t cursor_y;
     uint32_t rows;
     uint32_t addr;
     uint32_t configured;
+    uint32_t on;
 };
 
+uint32_t toggle_oled(struct oled *oled);
 uint32_t send_cmd_oled(struct oled *oled, uint32_t *cmd, uint32_t n);
 uint32_t send_data_oled(struct oled *oled, uint32_t *data, uint32_t n);
 

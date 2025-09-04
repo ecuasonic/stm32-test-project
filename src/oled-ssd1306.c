@@ -1,12 +1,9 @@
 #include "periph/oled-ssd1306.h"
-#include "periph/lcd-hd44780u.h"
 #include "types.h"
 #include "core_stm/i2c.h"
 #include "cortex-m3/nvic/systick.h"
 #include "font.h"
 #include "oled_images/flower.h"
-
-uint32_t oled_configured;
 
 uint32_t send_cmd_oled(struct oled *oled, uint32_t *cmd, uint32_t n) {
     uint32_t start_cmd = 0x00;
@@ -60,6 +57,8 @@ uint32_t config_oled(struct oled *oled, uint32_t addr, uint32_t rows) {
     uint32_t src[8];
 
     oled->configured = 0;
+    oled->on = 0;
+
     if (tries < 0) {
         return FAILURE;
     } else {
@@ -73,19 +72,20 @@ uint32_t config_oled(struct oled *oled, uint32_t addr, uint32_t rows) {
         if (rows == OLED_ROW32) {
             src[0] = OLED_DATA(0xA8);
             src[1] = OLED_DATA(0x1F); // 31
-            send_cmd_oled(oled, src, 2);
+            CHECK_ERROR(send_cmd_oled(oled, src, 2));
         }
 
         // Charge pump ON (MUST)
         src[0] = OLED_DATA(0x8D);
         src[1] = OLED_DATA(0x14);
-        send_cmd_oled(oled, src, 2);
+        CHECK_ERROR(send_cmd_oled(oled, src, 2));
 
         // Display ON
         src[0] = OLED_DATA(0xAF);
-        send_cmd_oled(oled, src, 1);
+        CHECK_ERROR(send_cmd_oled(oled, src, 1));
+        oled->on = 1;
 
-        clear_oled(oled);
+        CHECK_ERROR(clear_oled(oled));
 
         oled->configured = 1;
         return SUCCESS;
@@ -96,6 +96,7 @@ uint32_t clear_oled(struct oled *oled) {
     uint32_t start_data = 0x40;
     uint32_t data = 0;
 
+    toggle_oled(oled);
     for (uint32_t y = 0; y < OLED_PAGE; y++) {
         start_i2c_tx(oled->addr);
         CHECK_NULLPTR_ENDTX(i2c_tx(NO_COND, &start_data, 1));
@@ -106,6 +107,7 @@ uint32_t clear_oled(struct oled *oled) {
 
         CHECK_ERROR(set_oled_cursor(oled, 0, y+1));
     }
+    toggle_oled(oled);
 
     return SUCCESS;
 }
@@ -165,8 +167,24 @@ static uint32_t tx_oled_nstr(struct oled *oled,char *str, uint32_t n) {
     return SUCCESS;
 }
 
+uint32_t toggle_oled(struct oled *oled) {
+
+    uint32_t cmd;
+    if (oled->on) {
+        cmd = 0xAE;
+        oled->on = 0;
+    } else {
+        cmd = 0xAF;
+        oled->on = 1;
+    }
+    CHECK_ERROR(send_cmd_oled(oled, &cmd, 1));
+    return SUCCESS;
+}
+
 uint32_t print_oled(struct oled *oled, char *str) {
+    toggle_oled(oled);
     CHECK_ERROR(tx_oled_nstr(oled, str, OLED_COL * oled->rows));
+    toggle_oled(oled);
     return SUCCESS;
 }
 
@@ -174,6 +192,7 @@ uint32_t print_image_oled(struct oled *oled, const uint32_t *image) {
 
     clear_oled(oled);
 
+    toggle_oled(oled);
     uint32_t start_data = 0x40;
     for (uint32_t y = 0; y < OLED_PAGE; y++) {
         start_i2c_tx(oled->addr);
@@ -185,6 +204,7 @@ uint32_t print_image_oled(struct oled *oled, const uint32_t *image) {
 
         CHECK_ERROR(set_oled_cursor(oled, 0, y+1));
     }
+    toggle_oled(oled);
 
     return SUCCESS;
 }
