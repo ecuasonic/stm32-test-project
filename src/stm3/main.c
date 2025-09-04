@@ -146,6 +146,8 @@ int main(void) {
 
     delay(1000);
 
+    clear_oled(&oled32);
+    print_oled(&oled32, "Very nice\nThis finally works");
     clear_oled(&oled64);
     print_oled(&oled64, "Very nice\nThis finally works");
     set_scroll_oled(&oled64);

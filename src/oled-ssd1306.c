@@ -119,18 +119,16 @@ uint32_t print_char_oled(struct oled *oled, uint32_t c) {
             // 32 rows only sees odd bits of data byte.
             // 4 bits per page
 
-            // Lower nibble
+            // Lower nibble (0x X D3 X D2 X D1 X D0) on page n
             data4 = data&0xF;
             proc = 0;
             for (uint32_t i = 0; i < 4; i++) {
                 proc |= ((data4 >> i)&0x1) << i*2;
             }
-
-            // set_oled_cursor(oled, oled->cursor_x, oled->cursor_y);
             CHECK_ERROR(send_data_oled(oled, &proc, 1));
             set_oled_cursor(oled, oled->cursor_x, oled->cursor_y+1);
 
-            // Higher nibble
+            // Higher nibble (0x X D7 X D6 X D5 X D4) on page n+1
             data4 = (data >> 4)&0xF;
             proc = 0;
             for (uint32_t i = 0; i < 4; i++) {
@@ -148,14 +146,16 @@ uint32_t print_char_oled(struct oled *oled, uint32_t c) {
 
 // Similar to tx_lcd_nstr, might combine both and add general function to i2c.c
 static uint32_t tx_oled_nstr(struct oled *oled,char *str, uint32_t n) {
+    uint32_t dy = (oled->rows == OLED_ROW32) ? 2 : 1;
+
     while (n-- && *str) {
         if (oled->cursor_x >= OLED_COL) {
-            CHECK_ERROR(set_oled_cursor(oled, 0, (oled->cursor_y + 1)&0x7));
+            CHECK_ERROR(set_oled_cursor(oled, 0, (oled->cursor_y + dy)&0x7));
             return SUCCESS;
         }
 
         if (*str == '\n') {
-            CHECK_ERROR(set_oled_cursor(oled, 0, (oled->cursor_y + 1)&0x7));
+            CHECK_ERROR(set_oled_cursor(oled, 0, (oled->cursor_y + dy)&0x7));
         } else {
             CHECK_ERROR(print_char_oled(oled, *str));
         }
@@ -166,7 +166,7 @@ static uint32_t tx_oled_nstr(struct oled *oled,char *str, uint32_t n) {
 }
 
 uint32_t print_oled(struct oled *oled, char *str) {
-    CHECK_ERROR_ENDTX(tx_oled_nstr(oled, str, OLED_COL * oled->rows));
+    CHECK_ERROR(tx_oled_nstr(oled, str, OLED_COL * oled->rows));
     return SUCCESS;
 }
 
