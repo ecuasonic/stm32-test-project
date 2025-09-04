@@ -37,21 +37,21 @@ uint32_t tx_lcd_inst(uint32_t inst) {
 }
 
 // Send string up to n characters.
-static uint32_t tx_lcd_nstr(char *str, uint32_t n) {
+static uint32_t tx_lcd_nstr(struct lcd *lcd, char *str, uint32_t n) {
     uint32_t stop = 0;
     while (n-- && *str) {
-        if (cursor_x >= LCD_COLS)
+        if (lcd->cursor_x >= LCD_COLS)
             stop = 1;
         if (*str == '\n' || stop) {
-            cursor_y = (cursor_y + 1) % LCD_ROWS;
-            CHECK_ERROR(tx_lcd_inst(0x80 | lcd_line_addr[cursor_y]));
-            cursor_x = 0;
+            lcd->cursor_y = (lcd->cursor_y + 1) % LCD_ROWS;
+            CHECK_ERROR(tx_lcd_inst(0x80 | lcd_line_addr[lcd->cursor_y]));
+            lcd->cursor_x = 0;
             if (stop) {
                 return SUCCESS;
             }
         } else {
             CHECK_ERROR(tx_lcd_data(*str));
-            cursor_x++;
+            lcd->cursor_x++;
         }
         str++;
     }
@@ -61,9 +61,10 @@ static uint32_t tx_lcd_nstr(char *str, uint32_t n) {
 
 // ===================================================================
 
-uint32_t config_lcd(void) {
+uint32_t config_lcd(struct lcd *lcd, uint32_t addr) {
     delay(4);
-    start_i2c_tx(LCD_I2C_ADDR);
+    lcd->configured = 0;
+    start_i2c_tx(addr);
     CHECK_ERROR_ENDTX(tx_lcd(LCD_DATA(0x2)));   // Set to 4-bit operation
     CHECK_ERROR_ENDTX(tx_lcd_inst(0x2C));       // 2 lines, 5x10 dots
     CHECK_ERROR_ENDTX(tx_lcd_inst(0x0C));       // Display on, cursor off, blinking
@@ -71,32 +72,36 @@ uint32_t config_lcd(void) {
     end_i2c_tx();
     delay(4);
 
-    lcd_configured = 1;
+    lcd->cursor_x = 0;
+    lcd->cursor_y = 0;
+    lcd->addr = addr;
+    lcd->configured = 1;
+
     return SUCCESS;
 }
 
 // ===================================================================
 
-uint32_t print_lcd(char *str) {
-    start_i2c_tx(LCD_I2C_ADDR);
-    CHECK_ERROR_ENDTX(tx_lcd_nstr(str, LCD_TOT));
+uint32_t print_lcd(struct lcd *lcd, char *str) {
+    start_i2c_tx(lcd->addr);
+    CHECK_ERROR_ENDTX(tx_lcd_nstr(lcd, str, LCD_TOT));
     end_i2c_tx();
 
     return SUCCESS;
 }
 
-uint32_t print_num_lcd(int32_t num, uint32_t base) {
+uint32_t print_num_lcd(struct lcd *lcd, int32_t num, uint32_t base) {
     static char str[LCD_COLS/2];
     itoa(num, base, str, LCD_COLS/2);
-    CHECK_ERROR(print_lcd(str));
+    CHECK_ERROR(print_lcd(lcd, str));
 
     return SUCCESS;
 }
 
-uint32_t clear_lcd(void) {
-    cursor_y = 0;
-    cursor_x = 0;
-    start_i2c_tx(LCD_I2C_ADDR);
+uint32_t clear_lcd(struct lcd *lcd) {
+    lcd->cursor_y = 0;
+    lcd->cursor_x = 0;
+    start_i2c_tx(lcd->addr);
     CHECK_ERROR_ENDTX(tx_lcd_inst(0x01));
     end_i2c_tx();
     delay(2);
@@ -104,27 +109,20 @@ uint32_t clear_lcd(void) {
     return SUCCESS;
 }
 
-uint32_t set_lcd_cursor(int32_t dx, int32_t dy, int32_t rel) {
-    if (rel) {
-        cursor_y += (uint32_t)dy;
-        cursor_x += (uint32_t)dx;
-    } else {
-        cursor_y = (uint32_t)dy;
-        cursor_y = (uint32_t)dx;
-    }
-    cursor_y %= LCD_ROWS;
-    cursor_x %= LCD_COLS;
+uint32_t set_lcd_cursor(struct lcd *lcd, uint32_t dx, uint32_t dy) {
+    lcd->cursor_y = dy % LCD_ROWS;
+    lcd->cursor_x = dx % LCD_COLS;
 
     start_i2c_tx(LCD_I2C_ADDR);
-    CHECK_ERROR_ENDTX(tx_lcd_inst(0x80 | lcd_line_addr[cursor_y] + cursor_x));
+    CHECK_ERROR_ENDTX(tx_lcd_inst(0x80 | lcd_line_addr[lcd->cursor_y] + lcd->cursor_x));
     end_i2c_tx();
 
     return SUCCESS;
 }
 
-uint32_t home_lcd_cursor(void) {
-    cursor_y = 0;
-    cursor_x = 0;
+uint32_t home_lcd_cursor(struct lcd *lcd) {
+    lcd->cursor_y = 0;
+    lcd->cursor_x = 0;
     start_i2c_tx(LCD_I2C_ADDR);
     CHECK_ERROR_ENDTX(tx_lcd_inst(0x2));
     end_i2c_tx();
@@ -134,30 +132,30 @@ uint32_t home_lcd_cursor(void) {
 
 // ===================================================================
 
-uint32_t repl_str_lcd(char *old, char *new, uint32_t n) {
+uint32_t repl_str_lcd(struct lcd *lcd, char *old, char *new, uint32_t n) {
     uint32_t old_len = strnlen(old, n);
     char *new_str = strndiff(old, new, n);
     int32_t dx = new_str - new;
 
-    CHECK_ERROR(set_lcd_cursor((int32_t)((uint32_t)dx - old_len), 0, REL));
-    CHECK_ERROR(print_lcd(new_str));
+    CHECK_ERROR(set_lcd_cursor(lcd, lcd->cursor_x + dx - old_len, lcd->cursor_y));
+    CHECK_ERROR(print_lcd(lcd, new_str));
 
     return SUCCESS;
 }
 
 // ===================================================================
 
-uint32_t counter_lcd(uint32_t max) {
+uint32_t counter_lcd(struct lcd *lcd, uint32_t max) {
     int32_t n = 0;
     char old[LCD_COLS+1];
     char new[LCD_COLS+1];
 
     itoa(n, 10, old, LCD_COLS+1);
-    CHECK_ERROR(print_lcd(old));
+    CHECK_ERROR(print_lcd(lcd, old));
     max++;
     while(max--) {
         itoa(n++, 10, new, LCD_COLS+1);
-        CHECK_ERROR(repl_str_lcd(old, new, 20));
+        CHECK_ERROR(repl_str_lcd(lcd, old, new, 20));
         strncpy(old, new, LCD_COLS+1);
         delay(9);
     }
@@ -168,7 +166,7 @@ uint32_t counter_lcd(uint32_t max) {
 // ===================================================================
 
 #include "periph/acc.h"
-void print_acc_data_lcd(char port, uint32_t pin, uint32_t n) {
+void print_acc_data_lcd(struct lcd *lcd, char port, uint32_t pin, uint32_t n) {
     int32_t offset[6], raw[6], formatted[3];
 
     if (!acc_configured)
@@ -177,60 +175,60 @@ void print_acc_data_lcd(char port, uint32_t pin, uint32_t n) {
     get_single_data_acc(port, pin, offset);
 
     while (n--) {
-        print_lcd("ACC data...\n");
+        print_lcd(lcd, "ACC data...\n");
 
         get_single_data_acc(port, pin, raw);
         format_data_acc(raw, offset, formatted);
 
-        print_lcd("x = ");
-        print_num_lcd(formatted[0], 10);
-        print_lcd("\n");
+        print_lcd(lcd, "x = ");
+        print_num_lcd(lcd, formatted[0], 10);
+        print_lcd(lcd, "\n");
 
-        print_lcd("y = ");
-        print_num_lcd(formatted[1], 10);
-        print_lcd("\n");
+        print_lcd(lcd, "y = ");
+        print_num_lcd(lcd, formatted[1], 10);
+        print_lcd(lcd, "\n");
 
-        print_lcd("z = ");
-        print_num_lcd(formatted[2], 10);
-        print_lcd("\n");
+        print_lcd(lcd, "z = ");
+        print_num_lcd(lcd, formatted[2], 10);
+        print_lcd(lcd, "\n");
 
         delay(1000);
-        clear_lcd();
+        clear_lcd(lcd);
     }
 }
 
-void print_acc_test_lcd(char port, uint32_t pin) {
+void print_acc_test_lcd(struct lcd *lcd, char port, uint32_t pin) {
     int32_t raw[6], formatted[3];
 
     if (!acc_configured)
         return;
 
-    print_lcd("ACC self-test...\n");
+    print_lcd(lcd, "ACC self-test...\n");
 
     get_test_acc(port, pin, raw);
     format_data_acc(raw, 0, formatted);
 
-    print_lcd("x = ");
-    print_num_lcd(formatted[0], 10);
+    print_lcd(lcd, "x = ");
+    print_num_lcd(lcd, formatted[0], 10);
     if (-100 <= formatted[0] && formatted[0] <= 100) {
-        print_lcd(" [GOOD]\n");
+        print_lcd(lcd, " [GOOD]\n");
     } else {
-        print_lcd(" [BAD]\n");
+        print_lcd(lcd, " [BAD]\n");
     }
 
-    print_lcd("y = ");
-    print_num_lcd(formatted[1], 10);
+    print_lcd(lcd, "y = ");
+    print_num_lcd(lcd, formatted[1], 10);
     if (-100 <= formatted[1] && formatted[1] <= 100) {
-        print_lcd(" [GOOD]\n");
+        print_lcd(lcd, " [GOOD]\n");
     } else {
-        print_lcd(" [BAD]\n");
+        print_lcd(lcd, " [BAD]\n");
     }
 
-    print_lcd("z = ");
-    print_num_lcd(formatted[2], 10);
+    print_lcd(lcd, "z = ");
+    print_num_lcd(lcd, formatted[2], 10);
     if (-1000 <= formatted[2] && formatted[2] <= -300) {
-        print_lcd(" [GOOD]\n");
+        print_lcd(lcd, " [GOOD]\n");
     } else {
-        print_lcd(" [BAD]\n");
+        print_lcd(lcd, " [BAD]\n");
     }
 }

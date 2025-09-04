@@ -5,9 +5,6 @@
 
 #define TIMEOUT 100000
 
-uint32_t cursor_x;
-uint32_t cursor_y;
-
 static vuint32_t *const i2c1_dr = &I2C1->DR;
 static vuint32_t *const i2c1_sr1 = &I2C1->SR1;
 static vuint32_t *const i2c1_sr2 = &I2C1->SR2;

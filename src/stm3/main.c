@@ -1,5 +1,7 @@
 #include "oled_images/flower.h"
 #include "oled_images/flower2.h"
+#include "font.h"
+
 #include "periph/nfc.h"
 #include "types.h"
 #include "defines.h"
@@ -103,6 +105,9 @@ static void config_intr(void) {
 
 // =================================================
 
+static struct oled oled32, oled64;
+static struct lcd lcd;
+
 static void setup(void) {
     config_rcc();
     start_rcc_clocks();
@@ -114,10 +119,10 @@ static void setup(void) {
 
     // Add structs here to assign to use struct instead of addr
     config_i2c();   // defined in i2c.c
-    config_lcd();   // defined in lcd.c
+    config_lcd(&lcd, LCD_I2C_ADDR);   // defined in lcd.c
     config_acc();   // defined in acc.c
-    config_oled(OLED_I2C_ADDR1, OLED_PAGE32);  // defined in oled.c
-    config_oled(OLED_I2C_ADDR2, OLED_PAGE64);  // defined in oled.c
+    config_oled(&oled32, OLED_I2C_ADDR1, OLED_ROW32);  // defined in oled.c
+    config_oled(&oled64, OLED_I2C_ADDR2, OLED_ROW64);  // defined in oled.c
 }
 
 // Things to look into:
@@ -130,29 +135,31 @@ static void setup(void) {
 int main(void) {
     setup();
 
-    // print_acc_data_lcd('A', 5, 100);
-    // print_acc_test_lcd('A', 5);
-
-    print_oled(OLED_I2C_ADDR2, OLED_TOT64, "Printing on OLED2");
-    print_oled(OLED_I2C_ADDR1, OLED_TOT32, "Printing on OLED1");
-    print_lcd("Printing on LCD");
+    // print_acc_data_lcd(&lcd, 'A', 5, 100);
+    // print_acc_test_lcd(&lcd, 'A', 5);
 
     delay(1000);
 
-    clear_oled(OLED_I2C_ADDR2);
-    print_oled(OLED_I2C_ADDR2, OLED_TOT64, "Very nice\nI like this");
-    set_scroll_oled(OLED_I2C_ADDR2);
+    print_oled(&oled32, "Printing on OLED 32");
+    print_oled(&oled64, "Printing on OLED 64");
+    print_lcd(&lcd, "Printing on LCD");
 
     delay(1000);
 
-    unset_scroll_oled(OLED_I2C_ADDR2);
-    print_image_oled(OLED_I2C_ADDR2, flower);
+    clear_oled(&oled64);
+    print_oled(&oled64, "Very nice\nThis finally works");
+    set_scroll_oled(&oled64);
 
     delay(1000);
 
-    print_image_oled(OLED_I2C_ADDR2, flower2);
-    config_scroll_oled(OLED_I2C_ADDR2, 0, 7);
-    set_scroll_oled(OLED_I2C_ADDR2);
+    unset_scroll_oled(&oled64);
+    print_image_oled(&oled64, flower);
+
+    delay(1000);
+
+    print_image_oled(&oled64, flower2);
+    config_scroll_oled(&oled64, 0, 7);
+    set_scroll_oled(&oled64);
 
     for (;;);
 }
