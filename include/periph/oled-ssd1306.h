@@ -29,5 +29,10 @@ uint32_t set_oled_cursor(uint32_t addr, uint32_t x, uint32_t y);
 uint32_t clear_oled(uint32_t addr);
 uint32_t print_char_oled(uint32_t addr, uint32_t c);
 uint32_t print_oled(uint32_t addr, uint32_t rows, char *str);
+uint32_t print_image_oled(uint32_t addr, const uint32_t *image);
+
+uint32_t set_scroll_oled(uint32_t addr);
+uint32_t unset_scroll_oled(uint32_t addr);
+uint32_t config_scroll_oled(uint32_t addr, uint32_t start_page, uint32_t end_page);
 
 #endif

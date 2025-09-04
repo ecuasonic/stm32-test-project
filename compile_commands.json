@@ -1,15 +1,45 @@
 [
 {
   "directory": "/home/ecuas/Documents/code/stm/research/build",
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/acc.c.o -c /home/ecuas/Documents/code/stm/research/src/acc.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/acc.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/acc.c.o"
+},
+{
+  "directory": "/home/ecuas/Documents/code/stm/research/build",
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/font.c.o -c /home/ecuas/Documents/code/stm/research/src/font.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/font.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/font.c.o"
+},
+{
+  "directory": "/home/ecuas/Documents/code/stm/research/build",
   "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/i2c.c.o -c /home/ecuas/Documents/code/stm/research/src/i2c.c",
   "file": "/home/ecuas/Documents/code/stm/research/src/i2c.c",
   "output": "CMakeFiles/firmware.elf.dir/src/i2c.c.o"
 },
 {
   "directory": "/home/ecuas/Documents/code/stm/research/build",
-  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/lcd.c.o -c /home/ecuas/Documents/code/stm/research/src/lcd.c",
-  "file": "/home/ecuas/Documents/code/stm/research/src/lcd.c",
-  "output": "CMakeFiles/firmware.elf.dir/src/lcd.c.o"
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/lcd-hd44780u.c.o -c /home/ecuas/Documents/code/stm/research/src/lcd-hd44780u.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/lcd-hd44780u.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/lcd-hd44780u.c.o"
+},
+{
+  "directory": "/home/ecuas/Documents/code/stm/research/build",
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/nfc.c.o -c /home/ecuas/Documents/code/stm/research/src/nfc.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/nfc.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/nfc.c.o"
+},
+{
+  "directory": "/home/ecuas/Documents/code/stm/research/build",
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/oled-ssd1306.c.o -c /home/ecuas/Documents/code/stm/research/src/oled-ssd1306.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/oled-ssd1306.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/oled-ssd1306.c.o"
+},
+{
+  "directory": "/home/ecuas/Documents/code/stm/research/build",
+  "command": "/usr/bin/arm-none-eabi-gcc -I/home/ecuas/Documents/code/stm/research/include -g -mcpu=cortex-m3 -mthumb -Os -ffreestanding -o CMakeFiles/firmware.elf.dir/src/oled_images/flower.c.o -c /home/ecuas/Documents/code/stm/research/src/oled_images/flower.c",
+  "file": "/home/ecuas/Documents/code/stm/research/src/oled_images/flower.c",
+  "output": "CMakeFiles/firmware.elf.dir/src/oled_images/flower.c.o"
 },
 {
   "directory": "/home/ecuas/Documents/code/stm/research/build",

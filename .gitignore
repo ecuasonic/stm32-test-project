@@ -2,3 +2,5 @@ build
 tags
 firmware*
 .vscode
+compile_commands.json
+oled_images

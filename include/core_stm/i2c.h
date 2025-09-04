@@ -200,9 +200,9 @@ void config_i2c(void);
 //      end_i2c_tx();
 #define NO_COND -1
 #define NO_STOP -2
-uint32_t    *i2c_tx(int32_t addr, uint32_t *src, uint32_t nbytes);
-uint32_t    start_i2c_tx(uint32_t addr);
-void        end_i2c_tx(void);
+const uint32_t *i2c_tx(uint32_t addr, const uint32_t *src, uint32_t nbytes);
+uint32_t        start_i2c_tx(uint32_t addr);
+void            end_i2c_tx(void);
 
 uint32_t    *i2c_rx(uint32_t addr, uint32_t *dest, int32_t nbytes);
 

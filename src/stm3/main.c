@@ -1,3 +1,5 @@
+#include "oled_images/flower.h"
+#include "oled_images/flower2.h"
 #include "periph/nfc.h"
 #include "types.h"
 #include "defines.h"
@@ -135,11 +137,22 @@ int main(void) {
     print_oled(OLED_I2C_ADDR1, OLED_TOT32, "Printing on OLED1");
     print_lcd("Printing on LCD");
 
-    delay(5000);
+    delay(1000);
 
     clear_oled(OLED_I2C_ADDR2);
     print_oled(OLED_I2C_ADDR2, OLED_TOT64, "Very nice\nI like this");
+    set_scroll_oled(OLED_I2C_ADDR2);
 
+    delay(1000);
+
+    unset_scroll_oled(OLED_I2C_ADDR2);
+    print_image_oled(OLED_I2C_ADDR2, flower);
+
+    delay(1000);
+
+    print_image_oled(OLED_I2C_ADDR2, flower2);
+    config_scroll_oled(OLED_I2C_ADDR2, 0, 7);
+    set_scroll_oled(OLED_I2C_ADDR2);
 
     for (;;);
 }

@@ -155,7 +155,7 @@ static uint32_t send_address_tx(uint32_t addr) {
     return FAILURE;
 }
 
-static uint32_t *tx(uint32_t *src, uint32_t nbytes) {
+static const uint32_t *tx(const uint32_t *src, uint32_t nbytes) {
     while (nbytes--) {
         *i2c1_dr = *src++;
         while (!(*i2c1_sr1 & I2C_SR1_TXE));
@@ -163,10 +163,10 @@ static uint32_t *tx(uint32_t *src, uint32_t nbytes) {
     return src;
 }
 
-uint32_t *i2c_tx(int32_t addr, uint32_t *src, uint32_t nbytes) {
-    if (addr != NO_COND) {
+const uint32_t *i2c_tx(uint32_t addr, const uint32_t *src, uint32_t nbytes) {
+    if ((int32_t)addr != NO_COND) {
         send_start();
-        if (send_address_tx((uint32_t)addr)) {
+        if (send_address_tx(addr)) {
             send_stop();
             return 0;
         }
@@ -174,7 +174,7 @@ uint32_t *i2c_tx(int32_t addr, uint32_t *src, uint32_t nbytes) {
 
     src = tx(src, nbytes);
 
-    if (addr != NO_COND && addr != NO_STOP) {
+    if ((int32_t)addr != NO_COND) {
         send_stop();
     }
     return src;
