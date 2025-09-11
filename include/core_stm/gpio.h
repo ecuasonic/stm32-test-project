@@ -10,9 +10,9 @@ struct gpio {
     //        0x4444_4444
     //    Bits:
     //        CNFy[1:0] (Port x configuration bit (y=0..7)) (rw)
-#define GPIO_CRL_CNF(y, n) (((n)&0x3U) << ((((y)&0x7U)*4))+2)
+#define GPIO_CNF(pin, cnf)      (((cnf)&0x3U) << (((pin)%8U)*4+2))
     //        MODEy[1:0] (Port x mode bit (y=0..7)) (rw)
-#define GPIO_CRL_MODE(y, n) (((n)&0x3U) << (((y)&0x7U)*4))
+#define GPIO_MODE(pin, mode)    (((mode)&0x3U) << (((pin)%8U)*4))
     uint32_t CRL;
 
     // ==========================================
@@ -21,9 +21,7 @@ struct gpio {
     //        0x4444_4444
     //    Bits:
     //        CNFy[1:0] (Port x configuration bit (y=8..15)) (rw)
-#define GPIO_CRH_CNF(pin, cnf)  ((uint32_t)(cnf) << (((pin)&0x7U)*4+2))
     //        MODEy[1:0] (Port x mode bit (y=8..15)) (rw)
-#define GPIO_CRH_MODE(pin, mode) ((uint32_t)(mode) << (((pin)&0x7U)*4))
     uint32_t CRH;
 
     // ==========================================
@@ -81,18 +79,32 @@ struct gpio {
 #define DEC_PINNO(pin)        ((pin) & 0xFF)
 #define DEC_PINBANK(pin)      (((pin) >> 8) + 'A')
 
-// ======================================================================================================
+// =============================================================================
 
-INLINE void
-gpio_set(uint32_t bank, uint32_t pin) {
-    struct gpio *gpio = GPIO(bank);
-    gpio->BSRR = 1 << pin;
-}
+// PU/PD are 0x2, but use bit[3] as differentiator
+enum GPIO_CNF_IN {
+    IN_ANALOG = 0x0,
+    IN_FLOAT,
+    IN_PD = 0x2,
+    IN_PU = 0x2 | (1 << 3),
+};
 
-INLINE void
-gpio_clear(uint32_t bank, uint32_t pin) {
-    struct gpio *gpio = GPIO(bank);
-    gpio->BSRR = 1 << (pin + 16);
-}
+enum GPIO_CNF_OUT {
+    OUT_PP = 0x0,
+    OUT_OD,
+    OUT_AF_PP,
+    OUT_AF_OD
+};
+
+enum GPIO_MODE {
+    IN = 0x0,
+    OUT_10MHZ,
+    OUT_2MHZ,
+    OUT_50MHZ
+};
+
+void gpio_set(uint32_t bank, uint32_t pin);
+void gpio_clear(uint32_t bank, uint32_t pin);
+void set_gpio(uint32_t bank, uint32_t pin, uint32_t mode, uint32_t cnf);
 
 #endif

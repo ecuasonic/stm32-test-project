@@ -41,36 +41,34 @@ static void start_periph_clocks(void) {
 
 static void config_gpio(void) {
     // START pin (for Pulseview trigger)
-    GPIO('C')->CRH &= CLEAR_PIN(13);
-    GPIO('C')->CRH |= SET_MODE_OUT_2MHZ(13) | SET_CNF_OUT_PP(13);
+    set_gpio('C', 13, OUT_2MHZ, OUT_PP);
 
     // EXTI0 Line (Input Mode Pull-Down)
-    GPIO('A')->CRL &= CLEAR_PIN(0);
-    GPIO('A')->CRL |= SET_MODE_IN(0) | SET_CNF_IN_PUPD(0);
-    GPIO('A')->BSRR = GPIO_BSRR_BR(0);
+    set_gpio('A', 0, IN, IN_PD);
 
     // EXTI1 Line (Input Mode Pull-Down)
-    GPIO('A')->CRL &= CLEAR_PIN(1);
-    GPIO('A')->CRL |= SET_MODE_IN(1) | SET_CNF_IN_PUPD(1);
-    GPIO('A')->BSRR = GPIO_BSRR_BR(1);
-
-    // I2C Acceleartor DRDY
-    GPIO('A')->CRL &= CLEAR_PIN(5);
-    GPIO('A')->CRL |= SET_MODE_IN(5) | SET_CNF_IN_FLOAT(5);
+    set_gpio('A', 1, IN, IN_PD);
 
     // EXTI0 LED
-    GPIO('B')->CRL &= CLEAR_PIN(0);
-    GPIO('B')->CRL |= SET_MODE_OUT_2MHZ(0) | SET_CNF_OUT_PP(0);
+    set_gpio('B', 0, OUT_2MHZ, OUT_PP);
 
     // ============================================================
+    //                          I2C1
+    // ============================================================
 
-    // I2C1 SCL
-    GPIO('B')->CRL &= CLEAR_PIN(6);
-    GPIO('B')->CRL |= SET_MODE_OUT_2MHZ(6) | SET_CNF_OUT_AF_OD(6);
+    set_gpio('B', 6, OUT_2MHZ, OUT_AF_OD);  // SCL
+    set_gpio('B', 7, OUT_2MHZ, OUT_AF_OD);  // SDA
+    set_gpio('A', 5, IN, IN_FLOAT);         // Accelerator DRDY
 
-    // I2C1 SDA
-    GPIO('B')->CRL &= CLEAR_PIN(7);
-    GPIO('B')->CRL |= SET_MODE_OUT_2MHZ(7) | SET_CNF_OUT_AF_OD(7);
+    // ============================================================
+    //                          UART
+    // ============================================================
+
+    set_gpio('B', 10, OUT_2MHZ, OUT_AF_PP); // TX
+    set_gpio('B', 11, IN, IN_PU);           // RX
+    set_gpio('B', 12, OUT_2MHZ, OUT_AF_PP); // CK
+    set_gpio('B', 13, IN, IN_PU);           // CTS
+    set_gpio('B', 14, OUT_2MHZ, OUT_AF_PP); // RTS
 }
 
 // =================================================
@@ -132,6 +130,8 @@ static void setup(void) {
 //      ADC/DAC
 //          Potentiometer into ADC.
 //          DAC into transistor powering LED.
+//      CRC then print on LCD/USART.
+//      USART to computer
 int main(void) {
     setup();
 
@@ -159,6 +159,7 @@ int main(void) {
 
     delay(1000);
 
+    // TODO: Use DMA to print image.
     print_image_oled(&oled64, flower2);
     config_scroll_oled(&oled64, 0, 7);
     set_scroll_oled(&oled64);

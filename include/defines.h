@@ -1,5 +1,5 @@
 #ifndef DEFINES_H
-#define DEFINES
+#define DEFINES_H
 
 // =================================
 //              RCC
@@ -35,8 +35,8 @@
 //              GPIO
 // =================================
 // -- CNF
-#define CLEAR_CNF(pin)          (~GPIO_CRH_CNF(pin, 0x3))
-#define SET_CNF(pin, cnf)       GPIO_CRH_CNF(pin, cnf)
+#define CLEAR_CNF(pin)          (~GPIO_CNF(pin, 0x3))
+#define SET_CNF(pin, cnf)       GPIO_CNF(pin, cnf)
 #define SET_CNF_IN_ANALOG(pin)  SET_CNF(pin, 0x0)
 #define SET_CNF_IN_FLOAT(pin)   SET_CNF(pin, 0x1)
 #define SET_CNF_IN_PUPD(pin)    SET_CNF(pin, 0x2)
@@ -45,8 +45,8 @@
 #define SET_CNF_OUT_AF_PP(pin)  SET_CNF(pin, 0x2)
 #define SET_CNF_OUT_AF_OD(pin)  SET_CNF(pin, 0x3)
 // -- MODE
-#define SET_MODE(pin, mode)     GPIO_CRH_MODE(pin, mode)
-#define CLEAR_MODE(pin)         (~GPIO_CRH_MODE(pin, 0x3))
+#define SET_MODE(pin, mode)     GPIO_MODE(pin, mode)
+#define CLEAR_MODE(pin)         (~GPIO_MODE(pin, 0x3))
 #define SET_MODE_IN(pin)        SET_MODE(pin, 0x0)
 #define SET_MODE_OUT_10MHZ(pin) SET_MODE(pin, 0x1)
 #define SET_MODE_OUT_2MHZ(pin)  SET_MODE(pin, 0x2)
