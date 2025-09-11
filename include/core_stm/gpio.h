@@ -105,6 +105,6 @@ enum GPIO_MODE {
 
 void gpio_set(uint32_t bank, uint32_t pin);
 void gpio_clear(uint32_t bank, uint32_t pin);
-void set_gpio(uint32_t bank, uint32_t pin, uint32_t mode, uint32_t cnf);
+void config_gpio(uint32_t bank, uint32_t pin, uint32_t mode, uint32_t cnf);
 
 #endif

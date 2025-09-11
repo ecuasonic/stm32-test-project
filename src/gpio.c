@@ -1,7 +1,7 @@
 #include "core_stm/gpio.h"
 #include "defines.h"
 
-void set_gpio(uint32_t bank, uint32_t pin, uint32_t mode, uint32_t cnf) {
+void config_gpio(uint32_t bank, uint32_t pin, uint32_t mode, uint32_t cnf) {
     uint32_t *gpio_cr = (pin > 7) ? &GPIO(bank)->CRH : &GPIO(bank)->CRL;
     *gpio_cr &= CLEAR_PIN(pin);
     *gpio_cr |= GPIO_MODE(pin, mode) | GPIO_CNF(pin, cnf);

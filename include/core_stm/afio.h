@@ -3,11 +3,6 @@
 
 #include "types.h"
 
-struct mapr {
-    vuint32_t A;
-    vuint32_t B;
-};
-
 // To read/write AFIO_EVCR, AFIO_MAPR, and AFIO_EXTICRX registers, AFIO clock must be on.
 struct afio {
     // ==========================================
@@ -21,7 +16,7 @@ struct afio {
 #define AFIO_PORT(n)  (((n)&0x7U) << 4)
     //        PIN[3:0] (Pin selection (x=A..E))
 #define AFIO_PIN(n)   (((n)&0xFU) << 0)
-    vuint32_t EVCR;
+    uint32_t EVCR;
 
     // ==========================================
     // AF remap and debug I/O configuration register (AFIO_EVCR) (rw)
@@ -55,7 +50,7 @@ struct afio {
 #define AFIO_MAPR_USART1_REMAP        (1U << 2)
 #define AFIO_MAPR_I2C1_REMAP          (1U << 1)
 #define AFIO_MAPR_SPI1_REMAP          (1U << 0)
-    struct mapr MAPR;
+    uint32_t MAPR;
 
     // ==========================================
     // External Interrupt Configuration Register 1 (AFIO_EXTICR1)
@@ -63,8 +58,8 @@ struct afio {
     //        0x0000
     //    Bits:
     //        EXTIx[3:0] (EXTI x configuration (x=0..3)) (rw) (0)
-#define AFIO_EXTICR1_EXTI(x, n)   (((n)&0xFU) << ((x)&0x3)*4)
-    vuint32_t EXTICR1;
+#define AFIO_EXTICR_EXTI(port, line)      ((((port)-'A')&0xFU) << (((line)&0x3)*4))
+    uint32_t EXTICR1;
 
     // ==========================================
     // External Interrupt Configuration Register 2 (AFIO_EXTICR1):
@@ -72,8 +67,7 @@ struct afio {
     //        0x0000
     //    Bits:
     //        EXTIx[3:0] (EXTI x configuration (x=4..7)) (rw) (0)
-#define AFIO_EXTICR2_EXTI(x, n)   (((n)&0xFU) << ((x)&0x3)*4)
-    vuint32_t EXTICR2;
+    uint32_t EXTICR2;
 
     // ==========================================
     // External Interrupt Configuration Register 3 (AFIO_EXTICR1):
@@ -81,8 +75,7 @@ struct afio {
     //        0x0000
     //    Bits:
     //        EXTIx[3:0] (EXTI x configuration (x=8..11)) (rw) (0)
-#define AFIO_EXTICR3_EXTI(x, n)   (((n)&0xFU) << ((x)&0x3)*4)
-    vuint32_t EXTICR3;
+    uint32_t EXTICR3;
 
     // ==========================================
     // External Interrupt Configuration Register 4 (AFIO_EXTICR1):
@@ -90,8 +83,7 @@ struct afio {
     //        0x0000
     //    Bits:
     //        EXTIx[3:0] (EXTI x configuration (x=12..15)) (rw) (0)
-#define AFIO_EXTICR4_EXTI(x, n)   (((n)&0xFU) << ((x)&0x3)*4)
-    vuint32_t EXTICR4;
+    uint32_t EXTICR4;
 
     // ==========================================
     // AF remap and debug I/O configuration register 2 (AFIO_MAPR2):
@@ -106,7 +98,7 @@ struct afio {
 #define AFIO_MAPR2_TIM12_REMAP  (1U << 7)
 #define AFIO_MAPR2_TIM10_REMAP  (1U << 6)
 #define AFIO_MAPR2_TIM9_REMAP   (1U << 5)
-    struct mapr MAPR2;
+    uint32_t MAPR2;
 };
 
 #define AFIO ((struct afio *)0x40010000)

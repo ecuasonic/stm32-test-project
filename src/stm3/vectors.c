@@ -43,16 +43,15 @@ static void SysTick_Handler(void) {
     s_ticks++;
 }
 
-uint32_t set;
+static vuint32_t set;
 static void EXTI0_Handler(void) {
-    // while ((volatile uint32_t)1);
     if (EXTI->PR & EXTI_PR(0)) {
         EXTI->PR = EXTI_PR(0);
 
         if (set) {
-            gpio_set('B', 0);
+            gpio_set('B', 10);
         } else {
-            gpio_clear('B', 0);
+            gpio_clear('B', 10);
         }
         set = !set;
     }
@@ -63,9 +62,9 @@ static void EXTI1_Handler(void) {
         EXTI->PR = EXTI_PR(1);
 
         if (set) {
-            gpio_set('B', 0);
+            gpio_set('B', 10);
         } else {
-            gpio_clear('B', 0);
+            gpio_clear('B', 10);
         }
         set = !set;
     }

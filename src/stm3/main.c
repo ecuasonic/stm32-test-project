@@ -21,67 +21,72 @@
 static void config_rcc(void) {
 }
 
-static void start_rcc_clocks(void) {
+// =================================================
+//
+static void start_rcc(void) {
     // RCC->CSR |= RCC_CSR_LSION;
     // vuint32_t *rcc_csr = &RCC->CSR;
     // while (!(*rcc_csr & RCC_CSR_LSIRDY));
-}
 
-// =================================================
-//
-static void start_periph_clocks(void) {
-    // APB2 for GPIOs
+    // Enable GPIO port domain
     RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
     RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
     RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;
 
-    // APB1 for I2C
+    // Enable AFIO domain
+    RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
+
+    // Enable I2C1 domain
     RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
 }
 
-static void config_gpio(void) {
+static void setup_gpio(void) {
     // START pin (for Pulseview trigger)
-    set_gpio('C', 13, OUT_2MHZ, OUT_PP);
+    config_gpio('C', 13, OUT_2MHZ, OUT_PP);
 
     // EXTI0 Line (Input Mode Pull-Down)
-    set_gpio('A', 0, IN, IN_PD);
+    config_gpio('B', 0, IN, IN_PD);
 
     // EXTI1 Line (Input Mode Pull-Down)
-    set_gpio('A', 1, IN, IN_PD);
+    config_gpio('B', 1, IN, IN_PD);
 
     // EXTI0 LED
-    set_gpio('B', 0, OUT_2MHZ, OUT_PP);
+    config_gpio('B', 10, OUT_2MHZ, OUT_PP);
+
+    config_gpio('A', 0, IN, IN_PD);
+    config_gpio('A', 1, IN, IN_PD);
 
     // ============================================================
     //                          I2C1
     // ============================================================
 
-    set_gpio('B', 6, OUT_2MHZ, OUT_AF_OD);  // SCL
-    set_gpio('B', 7, OUT_2MHZ, OUT_AF_OD);  // SDA
-    set_gpio('A', 5, IN, IN_FLOAT);         // Accelerator DRDY
+    config_gpio('B', 6, OUT_2MHZ, OUT_AF_OD);  // SCL
+    config_gpio('B', 7, OUT_2MHZ, OUT_AF_OD);  // SDA
+    config_gpio('A', 5, IN, IN_FLOAT);         // Accelerator DRDY
 
     // ============================================================
     //                          UART
     // ============================================================
 
-    set_gpio('B', 10, OUT_2MHZ, OUT_AF_PP); // TX
-    set_gpio('B', 11, IN, IN_PU);           // RX
-    set_gpio('B', 12, OUT_2MHZ, OUT_AF_PP); // CK
-    set_gpio('B', 13, IN, IN_PU);           // CTS
-    set_gpio('B', 14, OUT_2MHZ, OUT_AF_PP); // RTS
+    config_gpio('A', 0, IN, IN_PU);           // CTS
+    config_gpio('A', 1, OUT_2MHZ, OUT_AF_PP); // RTS
+    config_gpio('A', 2, OUT_2MHZ, OUT_AF_PP); // TX
+    config_gpio('A', 3, IN, IN_PU);           // RX
+    config_gpio('A', 4, OUT_2MHZ, OUT_AF_PP); // CK
 }
 
 // =================================================
 
 static void config_intr(void) {
-    AFIO->EXTICR1 &= CLEAR_EXTICR1;
+
+    vuint32_t *exticr1 = &AFIO->EXTICR1;
 
     // ===================
     //      EXTI0
     // ===================
 
-    AFIO->EXTICR1 |= AFIO_EXTICR1_EXTI(0, 0); // Map EXTI0 to A0
-    // Configure EXTI0
+    *exticr1 &= CLEAR_EXTICR(0);
+    *exticr1 |= AFIO_EXTICR_EXTI('B', 0); // Map EXTI0 to B0
     EXTI->PR = EXTI_MR(0);
     EXTI->IMR |= EXTI_MR(0);
     EXTI->RTSR |= EXTI_TR(0);
@@ -91,8 +96,8 @@ static void config_intr(void) {
     //      EXTI1
     // ===================
 
-    AFIO->EXTICR1 |= AFIO_EXTICR1_EXTI(1, 0); // Map EXTI1 to A1
-    // Configure EXTI1
+    *exticr1 &= CLEAR_EXTICR(1);
+    *exticr1 |= AFIO_EXTICR_EXTI('B', 1); // Map EXTI1 to B1
     EXTI->PR = EXTI_MR(1);
     EXTI->EMR |= EXTI_MR(1); // Event
     EXTI->IMR |= EXTI_MR(1); // Interrupt
@@ -108,14 +113,11 @@ static struct lcd lcd;
 
 static void setup(void) {
     config_rcc();
-    start_rcc_clocks();
-
-    start_periph_clocks();
-    config_gpio();
+    start_rcc();
+    setup_gpio();
 
     config_intr();
 
-    // Add structs here to assign to use struct instead of addr
     config_i2c();   // defined in i2c.c
     config_lcd(&lcd, LCD_I2C_ADDR);   // defined in lcd.c
     config_acc();   // defined in acc.c
