@@ -1,22 +1,23 @@
 #include "oled_images/flower.h"
 #include "oled_images/flower2.h"
-#include "font.h"
 
-#include "periph/nfc.h"
 #include "types.h"
 #include "defines.h"
+#include "strings.h"
 #include "core_stm/gpio.h"
 #include "core_stm/rcc.h"
 #include "core_stm/afio.h"
 #include "core_stm/exti.h"
 #include "core_stm/i2c.h"
 #include "cortex-m3/nvic/nvic.h"
+
 #include "cortex-m3/nvic/systick.h"
-#include "strings.h"
+#include "core_stm/rtc.h"
 
 #include "periph/lcd-hd44780u.h"
 #include "periph/oled-ssd1306.h"
 #include "periph/acc.h"
+#include "periph/nfc.h"
 
 static void config_rcc(void) {
     // -- Modify HCLK (SYSCLK/HPRE)
@@ -36,13 +37,16 @@ static void config_rcc(void) {
 // =================================================
 //
 static void start_rcc(void) {
-    // -- HSE Clock not connected
-    // RCC->CR |= RCC_CR_HSEON;
-    // while (!(RCC->CR & RCC_CR_HSERDY));
+    // -- HSI Clock (8 MHz) (Default)
 
-    // -- Only for RTC and Watchdog
-    // RCC->CSR |= RCC_CSR_LSION;
+    // -- HSE Clock (4-16 MHz)
+    // vuint32_t *rcc_cr = &RCC->CR;
+    // *rcc_cr |= RCC_CR_HSEON;
+    // while (!(*rcc_cr & RCC_CR_HSERDY));
+
+    // -- LSI Clock (40 kHz)
     // vuint32_t *rcc_csr = &RCC->CSR;
+    // *rcc_csr |= RCC_CSR_LSION;
     // while (!(*rcc_csr & RCC_CSR_LSIRDY));
 
     // -- PLLCLK
@@ -60,6 +64,10 @@ static void start_rcc(void) {
 
     // Enable I2C1 domain
     RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
+
+    // Enable RTC domain
+    RCC->APB1ENR |= RCC_APB1ENR_PWREN;
+    RCC->APB1ENR |= RCC_APB1ENR_BKPEN;
 }
 
 static void setup_gpio(void) {
@@ -135,11 +143,12 @@ static void setup(void) {
     start_rcc();
     setup_gpio();
 
+    config_rtc();   // defined in rtc.c
     config_intr();
 
-    config_i2c();   // defined in i2c.c
-    config_lcd(&lcd, LCD_I2C_ADDR);   // defined in lcd.c
-    config_acc();   // defined in acc.c
+    config_i2c();                       // defined in i2c.c
+    config_lcd(&lcd, LCD_I2C_ADDR);     // defined in lcd.c
+    config_acc();                       // defined in acc.c
     config_oled(&oled32, OLED_I2C_ADDR1, OLED_ROW32);  // defined in oled.c
     config_oled(&oled64, OLED_I2C_ADDR2, OLED_ROW64);  // defined in oled.c
 }
@@ -147,25 +156,25 @@ static void setup(void) {
 // Things to look into:
 //      Backup registers
 //      Power control
-//      I2C
 //      ADC/DAC
 //          Potentiometer into ADC.
 //          DAC into transistor powering LED.
+//      DMA to print image on LCD.
 //      CRC then print on LCD/USART.
-//      USART to computer
+//      USART to computer through Uart-USB
 int main(void) {
     setup();
 
     // print_acc_data_lcd(&lcd, 'A', 5, 100);
     // print_acc_test_lcd(&lcd, 'A', 5);
 
-    delay(1000);
+    // delay(1000);
 
     print_oled(&oled32, "Printing on OLED 32");
     print_oled(&oled64, "Printing on OLED 64");
     print_lcd(&lcd, "Printing on LCD");
 
-    delay(1000);
+    sleep_ms(1000);
 
     clear_oled(&oled32);
     print_oled(&oled32, "Very nice\nThis finally works");
@@ -173,14 +182,13 @@ int main(void) {
     print_oled(&oled64, "Very nice\nThis finally works");
     set_scroll_oled(&oled64);
 
-    delay(1000);
+    sleep_ms(1000);
 
     unset_scroll_oled(&oled64);
     print_image_oled(&oled64, flower);
 
-    delay(1000);
+    sleep_ms(1000);
 
-    // TODO: Use DMA to print image.
     print_image_oled(&oled64, flower2);
     config_scroll_oled(&oled64, 0, 7);
     set_scroll_oled(&oled64);

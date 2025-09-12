@@ -60,6 +60,7 @@ INLINE void systick_init(uint32_t ticks) {
 
 extern volatile uint32_t s_ticks;
 uint32_t timer_expired(uint32_t *t, uint32_t prd, uint32_t now);
-void delay(uint32_t ms);
+void delay_ms(uint32_t ms);
+void sleep_ms(uint32_t ms);
 
 #endif // SYSTICK_H

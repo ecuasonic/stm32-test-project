@@ -1,5 +1,6 @@
 #include "types.h"
 #include "cortex-m3/nvic/systick.h"
+#include "cortex-m3/asm.h"
 
 vuint32_t s_ticks;
 
@@ -21,8 +22,16 @@ uint32_t timer_expired(uint32_t *t, uint32_t prd, uint32_t now) {
     return 1;
 }
 
-void delay(uint32_t ms) {
-    static uint32_t now;
-    now = s_ticks;
+void delay_ms(uint32_t ms) {
+    uint32_t now = s_ticks;
     while (s_ticks - now < ms);
+}
+
+void sleep_ms(uint32_t ms) {
+    uint32_t now = s_ticks;
+    while (s_ticks - now < ms) {
+        sev(); // set event register (no sleep)
+        wfe(); // clear event register (no sleep)
+        wfe(); // set event register (sleep)
+    }
 }

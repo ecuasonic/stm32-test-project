@@ -63,7 +63,7 @@ uint32_t config_oled(struct oled *oled, uint32_t addr, uint32_t rows) {
         return FAILURE;
     } else {
         end_i2c_tx();
-        delay(1);
+        delay_ms(1);
         oled->addr = addr;
         oled->rows = rows;
         oled->cursor_x = 0;
@@ -159,7 +159,9 @@ static uint32_t tx_oled_nstr(struct oled *oled,char *str, uint32_t n) {
         if (*str == '\n') {
             CHECK_ERROR(set_oled_cursor(oled, 0, (oled->cursor_y + dy)&0x7));
         } else {
+            toggle_oled(oled);
             CHECK_ERROR(print_char_oled(oled, *str));
+            toggle_oled(oled);
         }
         str++;
     }
@@ -182,9 +184,7 @@ uint32_t toggle_oled(struct oled *oled) {
 }
 
 uint32_t print_oled(struct oled *oled, char *str) {
-    toggle_oled(oled);
     CHECK_ERROR(tx_oled_nstr(oled, str, OLED_COL * oled->rows));
-    toggle_oled(oled);
     return SUCCESS;
 }
 

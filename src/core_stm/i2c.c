@@ -1,7 +1,6 @@
 #include "core_stm/i2c.h"
 #include "cortex-m3/nvic/systick.h"
 #include "types.h"
-#include "periph/lcd-hd44780u.h"
 
 #define TIMEOUT 100000
 
@@ -211,7 +210,7 @@ void i2c_scan(void) {
                 // ACK
                 temp = *i2c1_sr1;
                 temp = *i2c1_sr2;
-                delay(1);
+                delay_ms(1);
                 break;
             } else if (*i2c1_sr1 & I2C_SR1_AF) {
                 // NACK

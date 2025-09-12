@@ -16,7 +16,7 @@ uint32_t config_acc(void) {
     if (tries < 0) {
         return FAILURE;
     } else {
-        delay(1);
+        delay_ms(1);
         end_i2c_tx();
         acc_configured = 1;
         return SUCCESS;

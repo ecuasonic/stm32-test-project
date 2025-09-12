@@ -3,6 +3,7 @@
 #include "core_stm/gpio.h"
 #include "cortex-m3/asm.h"
 #include "cortex-m3/nvic/systick.h"
+#include "core_stm/rtc.h"
 
 extern int main(void);
 
@@ -38,7 +39,7 @@ __attribute__((noreturn)) void Reset_Handler(void) {
     for (;;) (void) 0;
 }
 
-extern volatile uint32_t s_ticks; // Defined in systick.c
+extern vuint32_t s_ticks; // Defined in systick.c
 static void SysTick_Handler(void) {
     s_ticks++;
 }
@@ -70,6 +71,15 @@ static void EXTI1_Handler(void) {
     }
 }
 
+vuint32_t rtc_ticks;
+static void RTC_Handler(void) {
+    vuint32_t *rtc_crl = &RTC->CRL;
+    if (*rtc_crl & RTC_CRL_SECF) {
+        rtc_ticks++;
+        *rtc_crl &= ~RTC_CRL_SECF;
+    }
+}
+
 extern void _estack(void); // Defined in linker.ld
 
 // 16 standard and 91 STM32-specific handlers
@@ -92,7 +102,7 @@ void (*const tab[16+91])(void) = {
     Default_Handler,    // WWDG
     Default_Handler,    // PVD
     Default_Handler,    // TAMPER
-    Default_Handler,    // RTC
+    RTC_Handler,        // RTC
     Default_Handler,    // FLASH
     Default_Handler,    // RCC
     EXTI0_Handler,      // EXTI0

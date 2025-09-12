@@ -62,7 +62,7 @@ static uint32_t tx_lcd_nstr(struct lcd *lcd, char *str, uint32_t n) {
 // ===================================================================
 
 uint32_t config_lcd(struct lcd *lcd, uint32_t addr) {
-    delay(4);
+    delay_ms(4);
     lcd->configured = 0;
     start_i2c_tx(addr);
     CHECK_ERROR_ENDTX(tx_lcd(LCD_DATA(0x2)));   // Set to 4-bit operation
@@ -70,7 +70,7 @@ uint32_t config_lcd(struct lcd *lcd, uint32_t addr) {
     CHECK_ERROR_ENDTX(tx_lcd_inst(0x0C));       // Display on, cursor off, blinking
     CHECK_ERROR_ENDTX(tx_lcd_inst(0x01));       // Clear screen
     end_i2c_tx();
-    delay(4);
+    delay_ms(4);
 
     lcd->cursor_x = 0;
     lcd->cursor_y = 0;
@@ -104,7 +104,7 @@ uint32_t clear_lcd(struct lcd *lcd) {
     start_i2c_tx(lcd->addr);
     CHECK_ERROR_ENDTX(tx_lcd_inst(0x01));
     end_i2c_tx();
-    delay(2);
+    delay_ms(2);
 
     return SUCCESS;
 }
@@ -157,7 +157,7 @@ uint32_t counter_lcd(struct lcd *lcd, uint32_t max) {
         itoa(n++, 10, new, LCD_COLS+1);
         CHECK_ERROR(repl_str_lcd(lcd, old, new, 20));
         strncpy(old, new, LCD_COLS+1);
-        delay(9);
+        delay_ms(9);
     }
 
     return SUCCESS;
@@ -192,7 +192,7 @@ void print_acc_data_lcd(struct lcd *lcd, char port, uint32_t pin, uint32_t n) {
         print_num_lcd(lcd, formatted[2], 10);
         print_lcd(lcd, "\n");
 
-        delay(1000);
+        delay_ms(1000);
         clear_lcd(lcd);
     }
 }
