@@ -6,7 +6,7 @@
 #include "types.h"
 
 // Dont forget to set 1 second
-void config_rtc(void) {
+void setup_rtc(void) {
     vuint32_t *rtc_crh = &RTC->CRH;
     vuint32_t *rtc_crl = &RTC->CRL;
     vuint32_t *rtc_prlh = &RTC->PRLH;

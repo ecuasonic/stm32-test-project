@@ -19,7 +19,7 @@
 #include "periph/acc.h"
 #include "periph/nfc.h"
 
-static void config_rcc(void) {
+static void setup_rcc(void) {
     // -- Modify HCLK (SYSCLK/HPRE)
     // RCC->CFGR &= CLEAR_HPRE; // No Prescale
     // RCC->CFGR |= SET_HPRE_2;
@@ -65,7 +65,7 @@ static void start_rcc(void) {
     // Enable I2C1 domain
     RCC->APB1ENR |= RCC_APB1ENR_I2C1EN;
 
-    // Enable RTC domain
+    // Enable PWR/BKP domain
     RCC->APB1ENR |= RCC_APB1ENR_PWREN;
     RCC->APB1ENR |= RCC_APB1ENR_BKPEN;
 }
@@ -104,7 +104,7 @@ static void setup_gpio(void) {
 
 // =================================================
 
-static void config_intr(void) {
+static void setup_intr(void) {
 
     vuint32_t *exticr1 = &AFIO->EXTICR1;
 
@@ -137,23 +137,26 @@ static void config_intr(void) {
 
 static struct oled oled32, oled64;
 static struct lcd lcd;
+static struct acc acc;
 
 static void setup(void) {
-    config_rcc();
+    setup_rcc();
     start_rcc();
     setup_gpio();
 
-    config_rtc();   // defined in rtc.c
-    config_intr();
+    setup_rtc();   // defined in rtc.c
+    setup_intr();
 
-    config_i2c();                       // defined in i2c.c
-    config_lcd(&lcd, LCD_I2C_ADDR);     // defined in lcd.c
-    config_acc();                       // defined in acc.c
-    config_oled(&oled32, OLED_I2C_ADDR1, OLED_ROW32);  // defined in oled.c
-    config_oled(&oled64, OLED_I2C_ADDR2, OLED_ROW64);  // defined in oled.c
+    setup_i2c(I2C1);                                            // defined in i2c.c
+    config_lcd(&lcd, I2C1, LCD_I2C_ADDR);                       // defined in lcd.c
+    config_acc(&acc, I2C1, ACC_I2C_ADDR);                       // defined in acc.c
+    config_oled(&oled32, I2C1, OLED_I2C_ADDR1, OLED_ROW32);     // defined in oled.c
+    config_oled(&oled64, I2C1, OLED_I2C_ADDR2, OLED_ROW64);     // defined in oled.c
+
 }
 
 // Things to look into:
+//      Scheduler
 //      Backup registers
 //      Power control
 //      ADC/DAC
@@ -165,10 +168,10 @@ static void setup(void) {
 int main(void) {
     setup();
 
-    // print_acc_data_lcd(&lcd, 'A', 5, 100);
-    // print_acc_test_lcd(&lcd, 'A', 5);
-
-    // delay(1000);
+    print_acc_data_lcd(&lcd, &acc, 'A', 5, 100);
+    print_acc_test_lcd(&lcd, &acc, 'A', 5);
+    //
+    // sleep_ms(1000);
 
     print_oled(&oled32, "Printing on OLED 32");
     print_oled(&oled64, "Printing on OLED 64");

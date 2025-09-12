@@ -29,7 +29,10 @@ struct oled {
     uint32_t addr;
     uint32_t configured;
     uint32_t on;
+    struct i2c *i2c;
 };
+
+uint32_t config_oled(struct oled *oled, struct i2c *i2c, uint32_t addr, uint32_t rows);
 
 uint32_t toggle_oled(struct oled *oled);
 uint32_t send_cmd_oled(struct oled *oled, uint32_t *cmd, uint32_t n);
@@ -38,7 +41,6 @@ uint32_t send_data_oled(struct oled *oled, uint32_t *data, uint32_t n);
 uint32_t set_oled_cursor(struct oled *oled, uint32_t x, uint32_t y);
 uint32_t print_char_oled(struct oled *oled, uint32_t c);
 
-uint32_t config_oled(struct oled *oled, uint32_t addr, uint32_t rows);
 uint32_t clear_oled(struct oled *oled);
 uint32_t print_oled(struct oled *oled, char *str);
 uint32_t print_image_oled(struct oled *oled, const uint32_t *image);

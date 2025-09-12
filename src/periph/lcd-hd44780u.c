@@ -5,71 +5,17 @@
 #include "strings.h"
 
 static const uint32_t lcd_line_addr[LCD_ROWS] = {0x00, 0x40, 0x14, 0x54};
-uint32_t lcd_configured;
 
-// Print rough byte as is (use macros in lcd.h).
-// Most basic form of sending information to LCD.
-uint32_t tx_lcd(uint32_t byte) {
-    byte |= LCD_E;
-    CHECK_NULLPTR(i2c_tx(NO_COND, &byte, 1));
-    byte &= ~LCD_E;
-    CHECK_NULLPTR(i2c_tx(NO_COND, &byte, 1));
-
-    return SUCCESS;
-}
-
-// Send data to print on screen.
-// ex: 'A', 'B', etc.
-uint32_t tx_lcd_data(uint32_t data) {
-    CHECK_ERROR(tx_lcd(LCD_BL | LCD_RS | (data & 0xF0)));
-    CHECK_ERROR(tx_lcd(LCD_BL | LCD_RS | ((data & 0x0F) << 4)));
-
-    return SUCCESS;
-}
-
-// Send instructions
-// Look at trm of HD44780 for instructions.
-uint32_t tx_lcd_inst(uint32_t inst) {
-    CHECK_ERROR(tx_lcd(LCD_BL | (inst & 0xF0)));
-    CHECK_ERROR(tx_lcd(LCD_BL | ((inst & 0x0F) << 4)));
-
-    return SUCCESS;
-}
-
-// Send string up to n characters.
-static uint32_t tx_lcd_nstr(struct lcd *lcd, char *str, uint32_t n) {
-    uint32_t stop = 0;
-    while (n-- && *str) {
-        if (lcd->cursor_x >= LCD_COLS)
-            stop = 1;
-        if (*str == '\n' || stop) {
-            lcd->cursor_y = (lcd->cursor_y + 1) % LCD_ROWS;
-            CHECK_ERROR(tx_lcd_inst(0x80 | lcd_line_addr[lcd->cursor_y]));
-            lcd->cursor_x = 0;
-            if (stop) {
-                return SUCCESS;
-            }
-        } else {
-            CHECK_ERROR(tx_lcd_data(*str));
-            lcd->cursor_x++;
-        }
-        str++;
-    }
-
-    return SUCCESS;
-}
-
-// ===================================================================
-
-uint32_t config_lcd(struct lcd *lcd, uint32_t addr) {
+uint32_t config_lcd(struct lcd *lcd, struct i2c *i2c, uint32_t addr) {
     delay_ms(4);
     lcd->configured = 0;
-    start_i2c_tx(addr);
-    CHECK_ERROR_ENDTX(tx_lcd(LCD_DATA(0x2)));   // Set to 4-bit operation
-    CHECK_ERROR_ENDTX(tx_lcd_inst(0x2C));       // 2 lines, 5x10 dots
-    CHECK_ERROR_ENDTX(tx_lcd_inst(0x0C));       // Display on, cursor off, blinking
-    CHECK_ERROR_ENDTX(tx_lcd_inst(0x01));       // Clear screen
-    end_i2c_tx();
+    lcd->i2c = i2c;
+    start_i2c_tx(i2c, addr);
+    CHECK_ERROR_ENDTX(tx_lcd(lcd, LCD_DATA(0x2)), i2c);   // Set to 4-bit operation
+    CHECK_ERROR_ENDTX(tx_lcd_inst(lcd, 0x2C), i2c);       // 2 lines, 5x10 dots
+    CHECK_ERROR_ENDTX(tx_lcd_inst(lcd, 0x0C), i2c);       // Display on, cursor off, blinking
+    CHECK_ERROR_ENDTX(tx_lcd_inst(lcd,0x01), i2c);       // Clear screen
+    end_i2c_tx(i2c);
     delay_ms(4);
 
     lcd->cursor_x = 0;
@@ -82,10 +28,64 @@ uint32_t config_lcd(struct lcd *lcd, uint32_t addr) {
 
 // ===================================================================
 
+// Print rough byte as is (use macros in lcd.h).
+// Most basic form of sending information to LCD.
+uint32_t tx_lcd(struct lcd *lcd, uint32_t byte) {
+    byte |= LCD_E;
+    CHECK_NULLPTR(i2c_tx(lcd->i2c, NO_COND, &byte, 1));
+    byte &= ~LCD_E;
+    CHECK_NULLPTR(i2c_tx(lcd->i2c, NO_COND, &byte, 1));
+
+    return SUCCESS;
+}
+
+// Send data to print on screen.
+// ex: 'A', 'B', etc.
+uint32_t tx_lcd_data(struct lcd *lcd, uint32_t data) {
+    CHECK_ERROR(tx_lcd(lcd, LCD_BL | LCD_RS | (data & 0xF0)));
+    CHECK_ERROR(tx_lcd(lcd, LCD_BL | LCD_RS | ((data & 0x0F) << 4)));
+
+    return SUCCESS;
+}
+
+// Send instructions
+// Look at trm of HD44780 for instructions.
+uint32_t tx_lcd_inst(struct lcd *lcd, uint32_t inst) {
+    CHECK_ERROR(tx_lcd(lcd, LCD_BL | (inst & 0xF0)));
+    CHECK_ERROR(tx_lcd(lcd, LCD_BL | ((inst & 0x0F) << 4)));
+
+    return SUCCESS;
+}
+
+// Send string up to n characters.
+static uint32_t tx_lcd_nstr(struct lcd *lcd, char *str, uint32_t n) {
+    uint32_t stop = 0;
+    while (n-- && *str) {
+        if (lcd->cursor_x >= LCD_COLS)
+            stop = 1;
+        if (*str == '\n' || stop) {
+            lcd->cursor_y = (lcd->cursor_y + 1) % LCD_ROWS;
+            CHECK_ERROR(tx_lcd_inst(lcd, 0x80 | lcd_line_addr[lcd->cursor_y]));
+            lcd->cursor_x = 0;
+            if (stop) {
+                return SUCCESS;
+            }
+        } else {
+            CHECK_ERROR(tx_lcd_data(lcd, *str));
+            lcd->cursor_x++;
+        }
+        str++;
+    }
+
+    return SUCCESS;
+}
+
+// ===================================================================
+
 uint32_t print_lcd(struct lcd *lcd, char *str) {
-    start_i2c_tx(lcd->addr);
-    CHECK_ERROR_ENDTX(tx_lcd_nstr(lcd, str, LCD_TOT));
-    end_i2c_tx();
+    start_i2c_tx(lcd->i2c, lcd->addr);
+    CHECK_ERROR_ENDTX(tx_lcd_nstr(lcd, str, LCD_TOT), lcd->i2c);
+    end_i2c_tx(lcd->i2c);
 
     return SUCCESS;
 }
@@ -101,9 +101,9 @@ uint32_t print_num_lcd(struct lcd *lcd, int32_t num, uint32_t base) {
 uint32_t clear_lcd(struct lcd *lcd) {
     lcd->cursor_y = 0;
     lcd->cursor_x = 0;
-    start_i2c_tx(lcd->addr);
-    CHECK_ERROR_ENDTX(tx_lcd_inst(0x01));
-    end_i2c_tx();
+    start_i2c_tx(lcd->i2c, lcd->addr);
+    CHECK_ERROR_ENDTX(tx_lcd_inst(lcd, 0x01), lcd->i2c);
+    end_i2c_tx(lcd->i2c);
     delay_ms(2);
 
     return SUCCESS;
@@ -113,9 +113,9 @@ uint32_t set_lcd_cursor(struct lcd *lcd, uint32_t dx, uint32_t dy) {
     lcd->cursor_y = dy % LCD_ROWS;
     lcd->cursor_x = dx % LCD_COLS;
 
-    start_i2c_tx(LCD_I2C_ADDR);
-    CHECK_ERROR_ENDTX(tx_lcd_inst(0x80 | lcd_line_addr[lcd->cursor_y] + lcd->cursor_x));
-    end_i2c_tx();
+    start_i2c_tx(lcd->i2c, lcd->addr);
+    CHECK_ERROR_ENDTX(tx_lcd_inst(lcd, 0x80 | lcd_line_addr[lcd->cursor_y] + lcd->cursor_x), lcd->i2c);
+    end_i2c_tx(lcd->i2c);
 
     return SUCCESS;
 }
@@ -123,9 +123,9 @@ uint32_t set_lcd_cursor(struct lcd *lcd, uint32_t dx, uint32_t dy) {
 uint32_t home_lcd_cursor(struct lcd *lcd) {
     lcd->cursor_y = 0;
     lcd->cursor_x = 0;
-    start_i2c_tx(LCD_I2C_ADDR);
-    CHECK_ERROR_ENDTX(tx_lcd_inst(0x2));
-    end_i2c_tx();
+    start_i2c_tx(lcd->i2c, lcd->addr);
+    CHECK_ERROR_ENDTX(tx_lcd_inst(lcd, 0x2), lcd->i2c);
+    end_i2c_tx(lcd->i2c);
 
     return SUCCESS;
 }
@@ -166,18 +166,18 @@ uint32_t counter_lcd(struct lcd *lcd, uint32_t max) {
 // ===================================================================
 
 #include "periph/acc.h"
-void print_acc_data_lcd(struct lcd *lcd, char port, uint32_t pin, uint32_t n) {
+void print_acc_data_lcd(struct lcd *lcd, struct acc *acc, char port, uint32_t pin, uint32_t n) {
     int32_t offset[6], raw[6], formatted[3];
 
-    if (!acc_configured)
+    if (!acc->configured)
         return;
 
-    get_single_data_acc(port, pin, offset);
+    get_single_data_acc(acc, port, pin, offset);
 
     while (n--) {
         print_lcd(lcd, "ACC data...\n");
 
-        get_single_data_acc(port, pin, raw);
+        get_single_data_acc(acc, port, pin, raw);
         format_data_acc(raw, offset, formatted);
 
         print_lcd(lcd, "x = ");
@@ -197,15 +197,15 @@ void print_acc_data_lcd(struct lcd *lcd, char port, uint32_t pin, uint32_t n) {
     }
 }
 
-void print_acc_test_lcd(struct lcd *lcd, char port, uint32_t pin) {
+void print_acc_test_lcd(struct lcd *lcd, struct acc *acc, char port, uint32_t pin) {
     int32_t raw[6], formatted[3];
 
-    if (!acc_configured)
+    if (!acc->configured)
         return;
 
     print_lcd(lcd, "ACC self-test...\n");
 
-    get_test_acc(port, pin, raw);
+    get_test_acc(acc, port, pin, raw);
     format_data_acc(raw, 0, formatted);
 
     print_lcd(lcd, "x = ");

@@ -180,17 +180,17 @@ struct i2c {
 // =============================================================================
 // =============================================================================
 
-#define CHECK_ERROR_ENDTX(n)    if (n) { \
-                                    end_i2c_tx(); \
-                                    return FAILURE; \
-                                }
+#define CHECK_ERROR_ENDTX(n, i2c)   if (n) { \
+                                        end_i2c_tx(i2c); \
+                                        return FAILURE; \
+                                    }
 
-#define CHECK_NULLPTR_ENDTX(n)  if (!n) { \
-                                    end_i2c_tx(); \
-                                    return FAILURE; \
-                                }
+#define CHECK_NULLPTR_ENDTX(n, i2c) if (!n) { \
+                                        end_i2c_tx(i2c); \
+                                        return FAILURE; \
+                                    }
 
-void config_i2c(void);
+void setup_i2c(struct i2c *i2c);
 
 // Use cases:
 //      i2c_tx(ADDR, &SRC, N);
@@ -200,13 +200,13 @@ void config_i2c(void);
 //      end_i2c_tx();
 #define NO_COND -1
 #define NO_STOP -2
-const uint32_t *i2c_tx(uint32_t addr, const uint32_t *src, uint32_t nbytes);
-uint32_t        start_i2c_tx(uint32_t addr);
-void            end_i2c_tx(void);
+const uint32_t *i2c_tx(struct i2c *i2c, uint32_t addr, const uint32_t *src, uint32_t nbytes);
+uint32_t        start_i2c_tx(struct i2c *i2c, uint32_t addr);
+void            end_i2c_tx(struct i2c *i2c);
 
-uint32_t    *i2c_rx(uint32_t addr, uint32_t *dest, int32_t nbytes);
+uint32_t    *i2c_rx(struct i2c *i2c, uint32_t addr, uint32_t *dest, int32_t nbytes);
 
-void        i2c_scan(void);
+void        i2c_scan(struct i2c *i2c);
 
 #endif
 

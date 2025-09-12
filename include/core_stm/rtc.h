@@ -112,7 +112,7 @@ struct rtc {
 #define RTC ((struct rtc *)0x40002800)
 
 extern vuint32_t rtc_ticks;
-void config_rtc(void);
+void setup_rtc(void);
 void delay_s(uint32_t s);
 void sleep_s(uint32_t s);
 

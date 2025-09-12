@@ -5,13 +5,59 @@
 #include "font.h"
 #include "oled_images/flower.h"
 
+#include "core_stm/gpio.h"
+
+#define TRIES 150
+uint32_t config_oled(struct oled *oled, struct i2c *i2c, uint32_t addr, uint32_t rows) {
+    vint32_t tries = TRIES;
+    while (tries-- && start_i2c_tx(i2c, addr));
+
+    uint32_t src[8];
+
+    oled->configured = 0;
+    oled->on = 0;
+
+    if (tries < 0) {
+        return FAILURE;
+    } else {
+        end_i2c_tx(i2c);
+        delay_ms(1);
+        oled->addr = addr;
+        oled->rows = rows;
+        oled->cursor_x = 0;
+        oled->cursor_y = 0;
+        oled->i2c = i2c;
+
+        if (rows == OLED_ROW32) {
+            src[0] = OLED_DATA(0xA8);
+            src[1] = OLED_DATA(0x1F); // 31
+            CHECK_ERROR(send_cmd_oled(oled, src, 2));
+        }
+
+        // Charge pump ON (MUST)
+        src[0] = OLED_DATA(0x8D);
+        src[1] = OLED_DATA(0x14);
+        CHECK_ERROR(send_cmd_oled(oled, src, 2));
+
+        // Display ON
+        src[0] = OLED_DATA(0xAF);
+        CHECK_ERROR(send_cmd_oled(oled, src, 1));
+        oled->on = 1;
+
+        CHECK_ERROR(clear_oled(oled));
+
+        oled->configured = 1;
+        return SUCCESS;
+    }
+}
+
 uint32_t send_cmd_oled(struct oled *oled, uint32_t *cmd, uint32_t n) {
     uint32_t start_cmd = 0x00;
 
-    start_i2c_tx(oled->addr);
-    CHECK_NULLPTR_ENDTX(i2c_tx(NO_COND, &start_cmd, 1));
-    CHECK_NULLPTR_ENDTX(i2c_tx(NO_COND, cmd, n));
-    end_i2c_tx();
+    start_i2c_tx(oled->i2c, oled->addr);
+    CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &start_cmd, 1), oled->i2c);
+    CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, cmd, n), oled->i2c);
+    end_i2c_tx(oled->i2c);
 
     return SUCCESS;
 }
@@ -19,10 +65,10 @@ uint32_t send_cmd_oled(struct oled *oled, uint32_t *cmd, uint32_t n) {
 uint32_t send_data_oled(struct oled* oled, uint32_t *data, uint32_t n) {
     uint32_t start_data = 0x40;
 
-    start_i2c_tx(oled->addr);
-    CHECK_NULLPTR_ENDTX(i2c_tx(NO_COND, &start_data, 1));
-    CHECK_NULLPTR_ENDTX(i2c_tx(NO_COND, data, n));
-    end_i2c_tx();
+    start_i2c_tx(oled->i2c, oled->addr);
+    CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &start_data, 1), oled->i2c);
+    CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, data, n), oled->i2c);
+    end_i2c_tx(oled->i2c);
 
     return SUCCESS;
 }
@@ -49,61 +95,18 @@ uint32_t set_oled_cursor(struct oled *oled, uint32_t x, uint32_t y) {
     return SUCCESS;
 }
 
-#define TRIES 150
-uint32_t config_oled(struct oled *oled, uint32_t addr, uint32_t rows) {
-    vint32_t tries = TRIES;
-    while (tries-- && start_i2c_tx(addr));
-
-    uint32_t src[8];
-
-    oled->configured = 0;
-    oled->on = 0;
-
-    if (tries < 0) {
-        return FAILURE;
-    } else {
-        end_i2c_tx();
-        delay_ms(1);
-        oled->addr = addr;
-        oled->rows = rows;
-        oled->cursor_x = 0;
-        oled->cursor_y = 0;
-
-        if (rows == OLED_ROW32) {
-            src[0] = OLED_DATA(0xA8);
-            src[1] = OLED_DATA(0x1F); // 31
-            CHECK_ERROR(send_cmd_oled(oled, src, 2));
-        }
-
-        // Charge pump ON (MUST)
-        src[0] = OLED_DATA(0x8D);
-        src[1] = OLED_DATA(0x14);
-        CHECK_ERROR(send_cmd_oled(oled, src, 2));
-
-        // Display ON
-        src[0] = OLED_DATA(0xAF);
-        CHECK_ERROR(send_cmd_oled(oled, src, 1));
-        oled->on = 1;
-
-        CHECK_ERROR(clear_oled(oled));
-
-        oled->configured = 1;
-        return SUCCESS;
-    }
-}
-
 uint32_t clear_oled(struct oled *oled) {
     uint32_t start_data = 0x40;
     uint32_t data = 0;
 
     toggle_oled(oled);
     for (uint32_t y = 0; y < OLED_PAGE; y++) {
-        start_i2c_tx(oled->addr);
-        CHECK_NULLPTR_ENDTX(i2c_tx(NO_COND, &start_data, 1));
+        start_i2c_tx(oled->i2c, oled->addr);
+        CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &start_data, 1), oled->i2c);
         for (uint32_t x = 0; x < OLED_COL; x++) {
-            CHECK_NULLPTR_ENDTX(i2c_tx(NO_COND, &data, 1));
+            CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &data, 1), oled->i2c);
         }
-        end_i2c_tx();
+        end_i2c_tx(oled->i2c);
 
         CHECK_ERROR(set_oled_cursor(oled, 0, y+1));
     }
@@ -195,12 +198,12 @@ uint32_t print_image_oled(struct oled *oled, const uint32_t *image) {
     toggle_oled(oled);
     uint32_t start_data = 0x40;
     for (uint32_t y = 0; y < OLED_PAGE; y++) {
-        start_i2c_tx(oled->addr);
-        CHECK_NULLPTR_ENDTX(i2c_tx(NO_COND, &start_data, 1));
+        start_i2c_tx(oled->i2c, oled->addr);
+        CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &start_data, 1), oled->i2c);
         for (uint32_t x = 0; x < OLED_COL; x++) {
-            CHECK_NULLPTR_ENDTX(i2c_tx(NO_COND, image++, 1));
+            CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, image++, 1), oled->i2c);
         }
-        end_i2c_tx();
+        end_i2c_tx(oled->i2c);
 
         CHECK_ERROR(set_oled_cursor(oled, 0, y+1));
     }
@@ -228,7 +231,7 @@ uint32_t set_scroll_oled(struct oled *oled) {
     uint32_t src[2];
     src[0] = 0x00;
     src[1] = 0x2F; // Enable scrolling
-    CHECK_NULLPTR(i2c_tx(oled->addr, src, 2));
+    CHECK_NULLPTR(i2c_tx(oled->i2c, oled->addr, src, 2));
 
     return SUCCESS;
 }
@@ -237,7 +240,7 @@ uint32_t unset_scroll_oled(struct oled *oled) {
     uint32_t src[2];
     src[0] = 0x00;
     src[1] = 0x2E; // Disable scrolling
-    CHECK_NULLPTR(i2c_tx(oled->addr, src, 2));
+    CHECK_NULLPTR(i2c_tx(oled->i2c, oled->addr, src, 2));
 
     return SUCCESS;
 }
