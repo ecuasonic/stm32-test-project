@@ -4,6 +4,7 @@
 #include "cortex-m3/asm.h"
 #include "cortex-m3/nvic/systick.h"
 #include "core_stm/rtc.h"
+#include "types.h"
 
 extern int main(void);
 
@@ -73,10 +74,18 @@ static void EXTI1_Handler(void) {
 
 vuint32_t rtc_ticks;
 static void RTC_Handler(void) {
+    static uint32_t led_set;
     vuint32_t *rtc_crl = &RTC->CRL;
     if (*rtc_crl & RTC_CRL_SECF) {
         rtc_ticks++;
         *rtc_crl &= ~RTC_CRL_SECF;
+
+        if (led_set) {
+            gpio_set('C', 13);
+        } else {
+            gpio_clear('C', 13);
+        }
+        led_set = !led_set;
     }
 }
 

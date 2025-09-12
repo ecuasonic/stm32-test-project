@@ -6,8 +6,7 @@
 #include "strings.h"
 #include "core_stm/gpio.h"
 #include "core_stm/rcc.h"
-#include "core_stm/afio.h"
-#include "core_stm/exti.h"
+#include "intr.h"
 #include "core_stm/i2c.h"
 #include "cortex-m3/nvic/nvic.h"
 
@@ -71,17 +70,12 @@ static void start_rcc(void) {
 }
 
 static void setup_gpio(void) {
-    // START pin (for Pulseview trigger)
-    config_gpio('C', 13, OUT_2MHZ, OUT_PP);
+    // ============================================================
+    //                           LED
+    // ============================================================
 
-    // EXTI0 Line (Input Mode Pull-Down)
-    config_gpio('B', 0, IN, IN_PD);
-
-    // EXTI1 Line (Input Mode Pull-Down)
-    config_gpio('B', 1, IN, IN_PD);
-
-    // EXTI0 LED
-    config_gpio('B', 10, OUT_2MHZ, OUT_PP);
+    config_gpio('C', 13, OUT_2MHZ, OUT_PP); // RTC Clock LED
+    config_gpio('B', 10, OUT_2MHZ, OUT_PP); // EXTI0 LED
 
     // ============================================================
     //                          I2C1
@@ -105,33 +99,16 @@ static void setup_gpio(void) {
 // =================================================
 
 static void setup_intr(void) {
-
-    vuint32_t *exticr1 = &AFIO->EXTICR1;
-
-    // ===================
-    //      EXTI0
-    // ===================
-
-    *exticr1 &= CLEAR_EXTICR(0);
-    *exticr1 |= AFIO_EXTICR_EXTI('B', 0); // Map EXTI0 to B0
-    EXTI->PR = EXTI_MR(0);
-    EXTI->IMR |= EXTI_MR(0);
-    EXTI->RTSR |= EXTI_TR(0);
+    // EXTI0 to B0
+    config_gpio('B', 0, IN, IN_PD);
+    config_intr(0, 'B', IMR_bit | RTSR_bit);
     NVIC->ISER[0] |= NVIC_ISER_SETENA(6); // Enable NVIC IRQ6 (EXTI0)
 
-    // ===================
-    //      EXTI1
-    // ===================
-
-    *exticr1 &= CLEAR_EXTICR(1);
-    *exticr1 |= AFIO_EXTICR_EXTI('B', 1); // Map EXTI1 to B1
-    EXTI->PR = EXTI_MR(1);
-    EXTI->EMR |= EXTI_MR(1); // Event
-    EXTI->IMR |= EXTI_MR(1); // Interrupt
-    EXTI->RTSR |= EXTI_TR(1);
+    // EXTI1 to B1
+    config_gpio('B', 1, IN, IN_PD);
+    config_intr(1, 'B', EMR_bit | IMR_bit | RTSR_bit);
     NVIC->ISER[0] |= NVIC_ISER_SETENA(7); // Enable NVIC IRQ7 (EXTI1)
 }
-
 
 // =================================================
 
@@ -144,9 +121,9 @@ static void setup(void) {
     start_rcc();
     setup_gpio();
 
-    setup_rtc();   // defined in rtc.c
     setup_intr();
 
+    gpio_set('B', 10);
     setup_i2c(I2C1);                                            // defined in i2c.c
     delay_ms(4);
     config_lcd(&lcd, I2C1, LCD_I2C_ADDR);                       // defined in lcd.c
@@ -157,6 +134,10 @@ static void setup(void) {
     delay_ms(1);
     config_oled(&oled64, I2C1, OLED_I2C_ADDR2, OLED_ROW64);     // defined in oled.c
     delay_ms(1);
+
+    gpio_clear('B', 10);
+    setup_rtc();   // defined in rtc.c
+    gpio_set('B', 10);
 }
 
 // Things to look into:
@@ -172,8 +153,8 @@ static void setup(void) {
 int main(void) {
     setup();
 
-    print_acc_data_lcd(&lcd, &acc, 'A', 5, 100);
-    print_acc_test_lcd(&lcd, &acc, 'A', 5);
+    // print_acc_data_lcd(&lcd, &acc, 'A', 5, 100);
+    // print_acc_test_lcd(&lcd, &acc, 'A', 5);
     //
     // sleep_ms(1000);
 
@@ -199,6 +180,9 @@ int main(void) {
     print_image_oled(&oled64, flower2);
     config_scroll_oled(&oled64, 0, 7);
     set_scroll_oled(&oled64);
+
+    sleep_s(5);
+    unset_scroll_oled(&oled64);
 
     for (;;);
 }

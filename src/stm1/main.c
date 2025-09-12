@@ -2,8 +2,7 @@
 #include "defines.h"
 #include "core_stm/gpio.h"
 #include "core_stm/rcc.h"
-#include "core_stm/afio.h"
-#include "core_stm/exti.h"
+#include "intr.h"
 #include "cortex-m3/nvic/nvic.h"
 #include "cortex-m3/nvic/systick.h"
 #include "cortex-m3/asm.h"
@@ -53,44 +52,21 @@ static void setup_gpio(void) {
     // MCO AF Output
     // config_gpio('A', 8, OUT_50MHZ, OUT_AF_PP);
 
-    // SysTick LED
-    config_gpio('C', 13, OUT_2MHZ, OUT_PP);
-
-    // EXTI0 Line (Input Mode Pull-Down)
-    config_gpio('B', 0, IN, IN_PD);
-
-    // EXTI1 Line (Input Mode Pull-Down)
-    config_gpio('B', 1, IN, IN_PD);
-
-    // EXTI0 LED
-    config_gpio('B', 10, OUT_2MHZ, OUT_PP);
+    config_gpio('C', 13, OUT_2MHZ, OUT_PP); // SysTick LED
+    config_gpio('B', 10, OUT_2MHZ, OUT_PP); // EXTI0 LED
 }
 
 // =================================================
 
-static void config_intr(void) {
-
-    // ===================
-    //      EXTI0
-    // ===================
-
-    AFIO->EXTICR1 &= CLEAR_EXTICR(0);
-    AFIO->EXTICR1 |= AFIO_EXTICR_EXTI('B', 0); // Map EXTI0 to B0
-    EXTI->PR = EXTI_MR(0);
-    EXTI->IMR |= EXTI_MR(0);
-    EXTI->RTSR |= EXTI_TR(0);
+static void setup_intr(void) {
+    // EXTI0
+    config_gpio('B', 0, IN, IN_PD);
+    config_intr(0, 'B', IMR_bit | RTSR_bit);
     NVIC->ISER[0] |= NVIC_ISER_SETENA(6); // Enable NVIC IRQ6 (EXTI0)
 
-    // ===================
-    //      EXTI1
-    // ===================
-
-    AFIO->EXTICR1 &= CLEAR_EXTICR(1);
-    AFIO->EXTICR1 |= AFIO_EXTICR_EXTI('B', 1); // Map EXTI1 to A1
-    EXTI->PR = EXTI_MR(1);
-    EXTI->EMR |= EXTI_MR(1); // Event
-    EXTI->IMR |= EXTI_MR(1); // Interrupt
-    EXTI->RTSR |= EXTI_TR(1);
+    // EXTI1
+    config_gpio('B', 1, IN, IN_PD);
+    config_intr(1, 'B', IMR_bit | RTSR_bit);
     NVIC->ISER[0] |= NVIC_ISER_SETENA(7); // Enable NVIC IRQ7 (EXTI1)
 }
 
@@ -102,7 +78,7 @@ static void setup(void) {
 
     setup_gpio();
 
-    config_intr();
+    setup_intr();
 }
 
 // The `main()` code stops when sleeping. Resumes when it wakes back up by event.
