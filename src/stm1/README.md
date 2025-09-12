@@ -1,43 +1,36 @@
 ### Overview
 
-## RCC
+## Things to look into
 
-***Must configure clocks then enable them.***
+1. Backup registers
+3. Sleep then wakeup (on interrupt or event)
+    RTC to wakeup from low-power mode
+        Similar to sleep().
+2. Events
+3. Power control
+4. I2C (for screen peripherals)
 
-Don't forget volatile when checking for bits set by hardware.
+## Success
 
-Refer to Clock Tree in technical reference manual for HCLK, SYSCLK, PLL.
+1. Sleep using `wfe`.
+2. Wakeup with EXTI1 (interrupt+event).
 
-Has code to enable HSE+LSI and wait for it to be ready (HSE is not installed on board).
+## Observations
 
-Set up PLL and connect to MCO to output on pin. MCO output interfers with pins on same port, so turn it off when not testing MCO.
+I need to make the code easier to write, such as setup functions for gpio, interrupts, etc.
 
+Apparently, it's not good to call `wfe`/`wfi` from interrupt subroutines. Call them in `main()` instead.
 
-## GPIO
+```c
+// This is the recommended sleep handshake.
+// wfe() will not go to sleep if event register is set, or if there are pending interrupts
+void sleep() {
+    cpsid();
+    sev(); // set event register (no sleep)
+    wfe(); // clear event register (no sleep)
+    wfe(); // set event register (sleep)
+    cpsie();
+}
+```
 
-***Must enable clocks then configure gpio registers***
-
-Has code to enable Ports used by pins.
-
-Refer to GPIO input/output types in technical reference manual.
-
-Alternate function io used to output MCO and for EXTI0 input.
-
-
-## SYSTICK
-
-1 ms ticks (calculated using the Clock Tree).
-
-SysTick interrupt increments global tick, which is used by main().
-
-Refer to Cortex-m3 reference manual.
-
-## INTERRUPTS
-
-SysTick and EXTI0.
-
-EXTI0 uses Pin A0 for external hardware interrupt, which triggers ISR that toggles Pin B0.
-
-Can set trigger for risng and/or falling signal edge to Pin A0.
-
-Refer to Cortex-M3 for enabling NVIC IRQ for EXTI.
+The `main()` code stops when sleeping. Resumes when it wakes back up.

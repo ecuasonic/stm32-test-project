@@ -1,8 +1,8 @@
 #include "types.h"
 #include "core_stm/exti.h"
 #include "core_stm/gpio.h"
-#include "cortex-m3/nvic/systick.h"
 #include "cortex-m3/asm.h"
+#include "cortex-m3/nvic/systick.h"
 
 extern int main(void);
 
@@ -43,24 +43,30 @@ static void SysTick_Handler(void) {
     s_ticks++;
 }
 
-// Puts CPU to sleep
-vuint32_t sleep_request = 0;
+static vuint32_t set;
 static void EXTI0_Handler(void) {
-    // while ((volatile uint32_t)1);
     if (EXTI->PR & EXTI_PR(0)) {
         EXTI->PR = EXTI_PR(0);
 
-        gpio_clear('B', 0);
-        sleep_request = 1;
+        if (set) {
+            gpio_set('B', 10);
+        } else {
+            gpio_clear('B', 10);
+        }
+        set = !set;
     }
 }
 
-// Set as interrupt+event
-// Wakes up CPU from sleep
 static void EXTI1_Handler(void) {
     if (EXTI->PR & EXTI_PR(1)) {
         EXTI->PR = EXTI_PR(1);
-        gpio_set('B', 0);
+
+        if (set) {
+            gpio_set('B', 10);
+        } else {
+            gpio_clear('B', 10);
+        }
+        set = !set;
     }
 }
 

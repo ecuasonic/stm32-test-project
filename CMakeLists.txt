@@ -22,8 +22,10 @@ set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
 file(GLOB SRC_FILES CONFIGURE_DEPENDS 
     "${SRC_DIR}/${TEST_NAME}/*.c" 
-    "${SRC_DIR}/*.c" 
     "${SRC_DIR}/oled_images/*.c"
+    "${SRC_DIR}/periph/*.c"
+    "${SRC_DIR}/core_stm/*.c"
+    "${SRC_DIR}/*.c" 
 )
 
 # ------------------------
