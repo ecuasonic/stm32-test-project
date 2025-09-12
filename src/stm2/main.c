@@ -148,11 +148,15 @@ static void setup(void) {
     setup_intr();
 
     setup_i2c(I2C1);                                            // defined in i2c.c
+    delay_ms(4);
     config_lcd(&lcd, I2C1, LCD_I2C_ADDR);                       // defined in lcd.c
+    delay_ms(4);
     config_acc(&acc, I2C1, ACC_I2C_ADDR);                       // defined in acc.c
+    delay_ms(1);
     config_oled(&oled32, I2C1, OLED_I2C_ADDR1, OLED_ROW32);     // defined in oled.c
+    delay_ms(1);
     config_oled(&oled64, I2C1, OLED_I2C_ADDR2, OLED_ROW64);     // defined in oled.c
-
+    delay_ms(1);
 }
 
 // Things to look into:

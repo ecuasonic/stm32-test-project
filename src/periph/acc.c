@@ -7,7 +7,6 @@
 #define TRIES 150
 
 uint32_t config_acc(struct acc *acc, struct i2c *i2c, uint32_t addr) {
-
     vint32_t tries = TRIES;
     while (tries-- && start_i2c_tx(i2c, addr));
 
@@ -15,7 +14,6 @@ uint32_t config_acc(struct acc *acc, struct i2c *i2c, uint32_t addr) {
         acc->configured = 0;
         return FAILURE;
     } else {
-        delay_ms(1);
         end_i2c_tx(i2c);
         acc->addr = addr;
         acc->i2c = i2c;

@@ -21,7 +21,6 @@ uint32_t config_oled(struct oled *oled, struct i2c *i2c, uint32_t addr, uint32_t
         return FAILURE;
     } else {
         end_i2c_tx(i2c);
-        delay_ms(1);
         oled->addr = addr;
         oled->rows = rows;
         oled->cursor_x = 0;

@@ -7,7 +7,6 @@
 static const uint32_t lcd_line_addr[LCD_ROWS] = {0x00, 0x40, 0x14, 0x54};
 
 uint32_t config_lcd(struct lcd *lcd, struct i2c *i2c, uint32_t addr) {
-    delay_ms(4);
     lcd->configured = 0;
     lcd->i2c = i2c;
     start_i2c_tx(i2c, addr);
@@ -16,7 +15,6 @@ uint32_t config_lcd(struct lcd *lcd, struct i2c *i2c, uint32_t addr) {
     CHECK_ERROR_ENDTX(tx_lcd_inst(lcd, 0x0C), i2c);       // Display on, cursor off, blinking
     CHECK_ERROR_ENDTX(tx_lcd_inst(lcd,0x01), i2c);       // Clear screen
     end_i2c_tx(i2c);
-    delay_ms(4);
 
     lcd->cursor_x = 0;
     lcd->cursor_y = 0;
