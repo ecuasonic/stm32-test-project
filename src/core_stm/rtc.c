@@ -4,6 +4,8 @@
 #include "cortex-m3/nvic/nvic.h"
 #include "cortex-m3/asm.h"
 #include "types.h"
+#include "vectors.h"
+#include "core_stm/gpio.h"
 
 // Dont forget to set 1 second
 void setup_rtc(void) {
@@ -41,7 +43,7 @@ void setup_rtc(void) {
 
     // ===========================================
 
-    // Enable NVIC IRQ5 (RCC global interrupt)
+    // Enable NVIC IRQ3 (RTC global interrupt)
     NVIC->ISER[0] |= NVIC_ISER_SETENA(3);
 
     // Enable BKP write protection.
@@ -60,6 +62,23 @@ void sleep_s(uint32_t s) {
         sev(); // set event register (no sleep)
         wfe(); // clear event register (no sleep)
         wfe(); // set event register (sleep)
+    }
+}
+
+vuint32_t rtc_ticks;
+void RTC_Handler(void) {
+    static uint32_t led_set;
+    vuint32_t *rtc_crl = &RTC->CRL;
+    if (*rtc_crl & RTC_CRL_SECF) {
+        rtc_ticks++;
+        *rtc_crl &= ~RTC_CRL_SECF;
+
+        if (led_set) {
+            gpio_set('C', 13);
+        } else {
+            gpio_clear('C', 13);
+        }
+        led_set = !led_set;
     }
 }
 

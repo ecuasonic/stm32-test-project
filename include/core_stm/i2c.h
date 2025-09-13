@@ -201,10 +201,12 @@ void setup_i2c(struct i2c *i2c);
 #define NO_COND -1
 #define NO_STOP -2
 const uint32_t *i2c_tx(struct i2c *i2c, uint32_t addr, const uint32_t *src, uint32_t nbytes);
+void            i2c_tx_dma(struct i2c *i2c, const uint32_t *src, uint32_t n);
 uint32_t        start_i2c_tx(struct i2c *i2c, uint32_t addr);
 void            end_i2c_tx(struct i2c *i2c);
 
 uint32_t    *i2c_rx(struct i2c *i2c, uint32_t addr, uint32_t *dest, int32_t nbytes);
+void        i2c_rx_dma(struct i2c *i2c, uint32_t *dest, uint32_t n);
 
 void        i2c_scan(struct i2c *i2c);
 

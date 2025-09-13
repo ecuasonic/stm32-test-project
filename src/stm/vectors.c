@@ -5,6 +5,7 @@
 #include "cortex-m3/nvic/systick.h"
 #include "core_stm/rtc.h"
 #include "types.h"
+#include "vectors.h"
 
 extern int main(void);
 
@@ -40,55 +41,6 @@ __attribute__((noreturn)) void Reset_Handler(void) {
     for (;;) (void) 0;
 }
 
-extern vuint32_t s_ticks; // Defined in systick.c
-static void SysTick_Handler(void) {
-    s_ticks++;
-}
-
-static vuint32_t set;
-static void EXTI0_Handler(void) {
-    if (EXTI->PR & EXTI_PR(0)) {
-        EXTI->PR = EXTI_PR(0);
-
-        if (set) {
-            gpio_set('B', 10);
-        } else {
-            gpio_clear('B', 10);
-        }
-        set = !set;
-    }
-}
-
-static void EXTI1_Handler(void) {
-    if (EXTI->PR & EXTI_PR(1)) {
-        EXTI->PR = EXTI_PR(1);
-
-        if (set) {
-            gpio_set('B', 10);
-        } else {
-            gpio_clear('B', 10);
-        }
-        set = !set;
-    }
-}
-
-vuint32_t rtc_ticks;
-static void RTC_Handler(void) {
-    static uint32_t led_set;
-    vuint32_t *rtc_crl = &RTC->CRL;
-    if (*rtc_crl & RTC_CRL_SECF) {
-        rtc_ticks++;
-        *rtc_crl &= ~RTC_CRL_SECF;
-
-        if (led_set) {
-            gpio_set('C', 13);
-        } else {
-            gpio_clear('C', 13);
-        }
-        led_set = !led_set;
-    }
-}
-
 extern void _estack(void); // Defined in linker.ld
 
 // 16 standard and 91 STM32-specific handlers
@@ -111,14 +63,61 @@ void (*const tab[16+91])(void) = {
     Default_Handler,    // WWDG
     Default_Handler,    // PVD
     Default_Handler,    // TAMPER
-    RTC_Handler,        // RTC
+    RTC_Handler,
     Default_Handler,    // FLASH
     Default_Handler,    // RCC
-    EXTI0_Handler,      // EXTI0
-    EXTI1_Handler,      // EXTI1
-    Default_Handler,
-    Default_Handler,
-
-    // Fill all 91 IRQ slots with Default_Handler
-    [26 ... 26+80] = Default_Handler
+    EXTI0_Handler,
+    EXTI1_Handler,
+    Default_Handler,    // EXTI2
+    Default_Handler,    // EXTI3
+    Default_Handler,    // EXTI4
+    Default_Handler,    // DMA1_Channel1
+    Default_Handler,    // DMA1_Channel2
+    Default_Handler,    // DMA1_Channel3
+    DMA1_Channel4_Handler,
+    Default_Handler,    // DMA1_Channel5
+    DMA1_Channel6_Handler,
+    Default_Handler,    // DMA1_Channel7
+    Default_Handler,    // ADC1_2
+    Default_Handler,    // USB_HP_CAN_TX
+    Default_Handler,    // USB_HP_CAN_RX0
+    Default_Handler,    // CAN_RX1
+    Default_Handler,    // CAN_SCE
+    Default_Handler,    // EXTI9_5
+    Default_Handler,    // TIM1_BRK
+    Default_Handler,    // TIM1_UP
+    Default_Handler,    // TIM_TRG_COM
+    Default_Handler,    // TIM1_CC
+    Default_Handler,    // TIM2
+    Default_Handler,    // TIM3
+    Default_Handler,    // TIM4
+    Default_Handler,    // I2C1_EV
+    Default_Handler,    // I2C1_ER
+    Default_Handler,    // I2C2_EV
+    Default_Handler,    // I2C2_ER
+    Default_Handler,    // SPI1
+    Default_Handler,    // SPI2
+    Default_Handler,    // USART1
+    Default_Handler,    // USART2
+    Default_Handler,    // USART3
+    Default_Handler,    // EXTI5_10
+    Default_Handler,    // RTCAlarm
+    Default_Handler,    // USBWakeup
+    Default_Handler,    // TIM8_BRK
+    Default_Handler,    // TIM8_UP
+    Default_Handler,    // TIM8_TRG_COM
+    Default_Handler,    // TIM8_CC
+    Default_Handler,    // ADC3
+    Default_Handler,    // FSMC
+    Default_Handler,    // SDIO
+    Default_Handler,    // TIM5
+    Default_Handler,    // SPI3
+    Default_Handler,    // UART4
+    Default_Handler,    // UART5
+    Default_Handler,    // TIM6
+    Default_Handler,    // TIM7
+    Default_Handler,    // DMA2_Channel1
+    Default_Handler,    // DMA2_Channel2
+    Default_Handler,    // DMA2_Channel3
+    Default_Handler,    // DMA2_Channel4_5
 };

@@ -1,9 +1,8 @@
 #include "periph/oled-ssd1306.h"
 #include "types.h"
 #include "core_stm/i2c.h"
-#include "cortex-m3/nvic/systick.h"
 #include "font.h"
-#include "oled_images/flower.h"
+#include "cortex-m3/nvic/systick.h"
 
 #include "core_stm/gpio.h"
 
@@ -21,6 +20,7 @@ uint32_t config_oled(struct oled *oled, struct i2c *i2c, uint32_t addr, uint32_t
         return FAILURE;
     } else {
         end_i2c_tx(i2c);
+        delay_ms(1);
         oled->addr = addr;
         oled->rows = rows;
         oled->cursor_x = 0;
@@ -172,7 +172,6 @@ static uint32_t tx_oled_nstr(struct oled *oled,char *str, uint32_t n) {
 }
 
 uint32_t toggle_oled(struct oled *oled) {
-
     uint32_t cmd;
     if (oled->on) {
         cmd = 0xAE;
@@ -191,7 +190,6 @@ uint32_t print_oled(struct oled *oled, char *str) {
 }
 
 uint32_t print_image_oled(struct oled *oled, const uint32_t *image) {
-
     clear_oled(oled);
 
     toggle_oled(oled);
@@ -211,8 +209,35 @@ uint32_t print_image_oled(struct oled *oled, const uint32_t *image) {
     return SUCCESS;
 }
 
-uint32_t config_scroll_oled(struct oled *oled, uint32_t start_page, uint32_t end_page) {
+uint32_t print_image_oled_dma(struct oled *oled, const uint32_t *image) {
+    toggle_oled(oled);
 
+    // change to horizontal addressing mode
+    uint32_t data[2];
+    data[0] = 0x20;
+    data[1] = 0x00;
+    send_cmd_oled(oled, data, 2);
+
+    // Start DMA transfer
+    data[0] = 0x40;
+    start_i2c_tx(oled->i2c, oled->addr);
+    i2c_tx(oled->i2c, NO_COND, data, 1);
+    i2c_tx_dma(oled->i2c, image, 1024);
+
+    // This makes DMA useless, but I just want to learn how to enable DMA
+    vuint32_t *cr2 = &oled->i2c->CR2;
+    while (*cr2 & I2C_CR2_DMAEN);
+    toggle_oled(oled);
+
+    // change back to page addressing mode
+    data[0] = 0x20;
+    data[1] = 0x02;
+    send_cmd_oled(oled, data, 2);
+
+    return SUCCESS;
+}
+
+uint32_t config_scroll_oled(struct oled *oled, uint32_t start_page, uint32_t end_page) {
     uint32_t src[7];
     src[0] = 0x26; // Continuous horizontal scroll setup
     src[1] = 0x00;

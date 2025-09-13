@@ -1,6 +1,7 @@
 #include "types.h"
 #include "cortex-m3/nvic/systick.h"
 #include "cortex-m3/asm.h"
+#include "vectors.h"
 
 vuint32_t s_ticks;
 
@@ -34,4 +35,8 @@ void sleep_ms(uint32_t ms) {
         wfe(); // clear event register (no sleep)
         wfe(); // set event register (sleep)
     }
+}
+
+void SysTick_Handler(void) {
+    s_ticks++;
 }

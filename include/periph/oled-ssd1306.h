@@ -44,6 +44,7 @@ uint32_t print_char_oled(struct oled *oled, uint32_t c);
 uint32_t clear_oled(struct oled *oled);
 uint32_t print_oled(struct oled *oled, char *str);
 uint32_t print_image_oled(struct oled *oled, const uint32_t *image);
+uint32_t print_image_oled_dma(struct oled *oled, const uint32_t *image);
 
 uint32_t config_scroll_oled(struct oled *oled, uint32_t start_page, uint32_t end_page);
 uint32_t set_scroll_oled(struct oled *oled);

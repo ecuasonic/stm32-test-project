@@ -1,7 +1,7 @@
 #include "core_stm/gpio.h"
 #include "defines.h"
 #include "types.h"
-#include "intr.h"
+#include "core_stm/exti.h"
 
 // 16 pins / port
 // 7 ports

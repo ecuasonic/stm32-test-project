@@ -2,11 +2,9 @@
 #include "oled_images/flower2.h"
 
 #include "types.h"
-#include "defines.h"
-#include "strings.h"
 #include "core_stm/gpio.h"
 #include "core_stm/rcc.h"
-#include "intr.h"
+#include "core_stm/exti.h"
 #include "core_stm/i2c.h"
 #include "cortex-m3/nvic/nvic.h"
 
@@ -67,6 +65,10 @@ static void start_rcc(void) {
     // Enable PWR/BKP domain
     RCC->APB1ENR |= RCC_APB1ENR_PWREN;
     RCC->APB1ENR |= RCC_APB1ENR_BKPEN;
+
+    // Enable DMA domain
+    RCC->AHBENR |= RCC_AHBENR_DMA1EN;
+    RCC->AHBENR |= RCC_AHBENR_DMA2EN;
 }
 
 static void setup_gpio(void) {
@@ -101,13 +103,17 @@ static void setup_gpio(void) {
 static void setup_intr(void) {
     // EXTI0 to B0
     config_gpio('B', 0, IN, IN_PD);
-    config_intr(0, 'B', IMR_bit | RTSR_bit);
+    config_exti(0, 'B', IMR_bit | RTSR_bit);
     NVIC->ISER[0] |= NVIC_ISER_SETENA(6); // Enable NVIC IRQ6 (EXTI0)
 
     // EXTI1 to B1
     config_gpio('B', 1, IN, IN_PD);
-    config_intr(1, 'B', EMR_bit | IMR_bit | RTSR_bit);
+    config_exti(1, 'B', EMR_bit | IMR_bit | RTSR_bit);
     NVIC->ISER[0] |= NVIC_ISER_SETENA(7); // Enable NVIC IRQ7 (EXTI1)
+
+    // DMA intr
+    NVIC->ISER[0] |= NVIC_ISER_SETENA(14); // Enable DMA1_Channel4
+    NVIC->ISER[0] |= NVIC_ISER_SETENA(16); // Enable DMA1_Channel6
 }
 
 // =================================================
@@ -147,7 +153,6 @@ static void setup(void) {
 //      ADC/DAC
 //          Potentiometer into ADC.
 //          DAC into transistor powering LED.
-//      DMA to print image on OLED.
 //      CRC then print on LCD/USART.
 //      USART to computer through Uart-USB
 int main(void) {
@@ -173,18 +178,20 @@ int main(void) {
     sleep_ms(1000);
 
     unset_scroll_oled(&oled64);
-    print_image_oled(&oled64, flower);
+    // print_image_oled(&oled64, flower);
+    print_image_oled_dma(&oled64, flower);
 
     sleep_ms(1000);
 
-    print_image_oled(&oled64, flower2);
-    config_scroll_oled(&oled64, 0, 7);
-    set_scroll_oled(&oled64);
-
+    // print_image_oled(&oled64, flower2);
+    print_image_oled_dma(&oled64, flower2);
+    // config_scroll_oled(&oled64, 0, 7);
+    // set_scroll_oled(&oled64);
+    //
     for (;;) {
-        delay_s(1);
-        unset_scroll_oled(&oled64);
-        delay_s(1);
-        set_scroll_oled(&oled64);
+        // delay_s(1);
+        // unset_scroll_oled(&oled64);
+        // delay_s(1);
+        // set_scroll_oled(&oled64);
     }
 }

@@ -86,13 +86,13 @@ struct dma {
     //        0x0000_0000
     //    Bits:
     //        CTEIFx (Channel x transfer error clear) (x=1..7)
-#define DMA_ISR_CTEIF(x)   (1 << ((x)*4))
+#define DMA_IFCR_CTEIF(x)   (1 << ((x)*4))
     //        CHEIFx (Channel x half transfer clear) (x=1..7)
-#define DMA_ISR_CHTIF(x)   (1 << (((x)*4)+1))
+#define DMA_IFCR_CHTIF(x)   (1 << (((x)*4)+1))
     //        CTCIFx (Channel x transfer complete clear) (x=1..7)
-#define DMA_ISR_CTCIF(x)   (1 << (((x)*4)+2))
+#define DMA_IFCR_CTCIF(x)   (1 << (((x)*4)+2))
     //        CGIFx (Channel x global interrupt clear) (x=1..7)
-#define DMA_ISR_CGIF(x)    (1 << (((x)*4)+3))
+#define DMA_IFCR_CGIF(x)    (1 << (((x)*4)+3))
     uint32_t IFCR;
     struct channel C[7];
 };
@@ -100,6 +100,7 @@ struct dma {
 #define DMA1 ((struct dma *)0x40020000)
 #define DMA2 ((struct dma *)0x40020400)
 
-void setup_channel(uint32_t c, uint32_t cpar, uint32_t cmar, uint32_t cndtr, uint16_t ccr);
+void enable_dma_channel(uint32_t c, uint32_t *cpar, uint32_t *cmar, uint32_t cndtr, uint32_t ccr);
+void disable_dma_channel(uint32_t c);
 
 #endif
