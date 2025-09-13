@@ -4,7 +4,7 @@
 #include "font.h"
 #include "cortex-m3/nvic/systick.h"
 
-#include "core_stm/gpio.h"
+uint32_t pa = 1; // Page Addressing / Horizontal Addressing
 
 #define TRIES 150
 uint32_t config_oled(struct oled *oled, struct i2c *i2c, uint32_t addr, uint32_t rows) {
@@ -26,6 +26,7 @@ uint32_t config_oled(struct oled *oled, struct i2c *i2c, uint32_t addr, uint32_t
         oled->cursor_x = 0;
         oled->cursor_y = 0;
         oled->i2c = i2c;
+        oled->pa_mem = 1;
 
         if (rows == OLED_ROW32) {
             src[0] = OLED_DATA(0xA8);
@@ -39,10 +40,7 @@ uint32_t config_oled(struct oled *oled, struct i2c *i2c, uint32_t addr, uint32_t
         CHECK_ERROR(send_cmd_oled(oled, src, 2));
 
         // Display ON
-        src[0] = OLED_DATA(0xAF);
-        CHECK_ERROR(send_cmd_oled(oled, src, 1));
-        oled->on = 1;
-
+        CHECK_ERROR(oled_cmd_toggle_display(oled));
         CHECK_ERROR(clear_oled(oled));
 
         oled->configured = 1;
@@ -73,20 +71,12 @@ uint32_t send_data_oled(struct oled* oled, uint32_t *data, uint32_t n) {
 }
 
 uint32_t set_oled_cursor(struct oled *oled, uint32_t x, uint32_t y) {
-    uint32_t cmd;
-
     if (x >= OLED_COL) {
         return FAILURE;
     }
 
-    cmd = 0xB0 | (y&0x7);
-    CHECK_ERROR(send_cmd_oled(oled, &cmd, 1));
-
-    cmd = 0x00 | (x&0xF);
-    CHECK_ERROR(send_cmd_oled(oled, &cmd, 1));
-
-    cmd = 0x10 | ((x >> 4)&0xF);
-    CHECK_ERROR(send_cmd_oled(oled, &cmd, 1));
+    oled_cmd_set_col_pa(oled, x);
+    oled_cmd_set_page_start_pa(oled, y);
 
     oled->cursor_x = x&0xFF;
     oled->cursor_y = y&0x7;
@@ -98,7 +88,7 @@ uint32_t clear_oled(struct oled *oled) {
     uint32_t start_data = 0x40;
     uint32_t data = 0;
 
-    toggle_oled(oled);
+    oled_cmd_toggle_display(oled);
     for (uint32_t y = 0; y < OLED_PAGE; y++) {
         start_i2c_tx(oled->i2c, oled->addr);
         CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &start_data, 1), oled->i2c);
@@ -109,7 +99,7 @@ uint32_t clear_oled(struct oled *oled) {
 
         CHECK_ERROR(set_oled_cursor(oled, 0, y+1));
     }
-    toggle_oled(oled);
+    oled_cmd_toggle_display(oled);
 
     return SUCCESS;
 }
@@ -161,26 +151,13 @@ static uint32_t tx_oled_nstr(struct oled *oled,char *str, uint32_t n) {
         if (*str == '\n') {
             CHECK_ERROR(set_oled_cursor(oled, 0, (oled->cursor_y + dy)&0x7));
         } else {
-            toggle_oled(oled);
+            oled_cmd_toggle_display(oled);
             CHECK_ERROR(print_char_oled(oled, *str));
-            toggle_oled(oled);
+            oled_cmd_toggle_display(oled);
         }
         str++;
     }
 
-    return SUCCESS;
-}
-
-uint32_t toggle_oled(struct oled *oled) {
-    uint32_t cmd;
-    if (oled->on) {
-        cmd = 0xAE;
-        oled->on = 0;
-    } else {
-        cmd = 0xAF;
-        oled->on = 1;
-    }
-    CHECK_ERROR(send_cmd_oled(oled, &cmd, 1));
     return SUCCESS;
 }
 
@@ -191,25 +168,10 @@ uint32_t print_oled(struct oled *oled, char *str) {
 
 uint32_t print_image_oled(struct oled *oled, const uint32_t *image) {
 
-    toggle_oled(oled);
-
-    // change to horizontal addressing mode
-    uint32_t cmd[3];
-    cmd[0] = 0x20;
-    cmd[1] = 0x00;
-    send_cmd_oled(oled, cmd, 2);
-
-    // Set col
-    cmd[0] = 0x21;
-    cmd[1] = 0;
-    cmd[2] = OLED_COL - 1;
-    send_cmd_oled(oled, cmd, 3);
-
-    // Set row
-    cmd[0] = 0x22;
-    cmd[1] = 0;
-    cmd[2] = OLED_PAGE - 1;
-    send_cmd_oled(oled, cmd, 3);
+    oled_cmd_toggle_display(oled);
+    oled_cmd_toggle_mem(oled);
+    oled_cmd_set_col(oled, 0, OLED_COL-1);
+    oled_cmd_set_page(oled, 0, OLED_PAGE-1);
 
     uint32_t start_data = 0x40;
     start_i2c_tx(oled->i2c, oled->addr);
@@ -217,36 +179,17 @@ uint32_t print_image_oled(struct oled *oled, const uint32_t *image) {
     CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, image, OLED_COL * OLED_PAGE), oled->i2c);
     end_i2c_tx(oled->i2c);
 
-    toggle_oled(oled);
-
-    // change back to page addressing mode
-    cmd[0] = 0x20;
-    cmd[1] = 0x02;
-    send_cmd_oled(oled, cmd, 2);
+    oled_cmd_toggle_display(oled);
+    oled_cmd_toggle_mem(oled);
 
     return SUCCESS;
 }
 
 uint32_t print_image_oled_dma(struct oled *oled, const uint32_t *image) {
-    toggle_oled(oled);
-
-    // change to horizontal addressing mode
-    uint32_t cmd[3];
-    cmd[0] = 0x20;
-    cmd[1] = 0x00;
-    send_cmd_oled(oled, cmd, 2);
-
-    // Set col
-    cmd[0] = 0x21;
-    cmd[1] = 0;
-    cmd[2] = OLED_COL - 1;
-    send_cmd_oled(oled, cmd, 3);
-
-    // Set row
-    cmd[0] = 0x22;
-    cmd[1] = 0;
-    cmd[2] = OLED_PAGE - 1;
-    send_cmd_oled(oled, cmd, 3);
+    oled_cmd_toggle_display(oled);
+    oled_cmd_toggle_mem(oled);
+    oled_cmd_set_col(oled, 0, OLED_COL-1);
+    oled_cmd_set_page(oled, 0, OLED_PAGE-1);
 
     // Start DMA transfer
     uint32_t start_data = 0x40;
@@ -257,44 +200,8 @@ uint32_t print_image_oled_dma(struct oled *oled, const uint32_t *image) {
     // This makes DMA useless, but I just want to learn how to enable DMA
     vuint32_t *cr2 = &oled->i2c->CR2;
     while (*cr2 & I2C_CR2_DMAEN);
-    toggle_oled(oled);
-
-    // change back to page addressing mode
-    cmd[0] = 0x20;
-    cmd[1] = 0x02;
-    send_cmd_oled(oled, cmd, 2);
-
-    return SUCCESS;
-}
-
-uint32_t config_scroll_oled(struct oled *oled, uint32_t start_page, uint32_t end_page) {
-    uint32_t src[7];
-    src[0] = 0x26; // Continuous horizontal scroll setup
-    src[1] = 0x00;
-    src[2] = start_page&0xFF; // Page0
-    src[3] = 0x00; // 5 frames
-    src[4] = end_page&0xFF; // Page1
-    src[5] = 0x00;
-    src[6] = 0xFF;
-    CHECK_ERROR(send_cmd_oled(oled, src, 7));
-
-    return SUCCESS;
-}
-
-uint32_t set_scroll_oled(struct oled *oled) {
-    uint32_t src[2];
-    src[0] = 0x00;
-    src[1] = 0x2F; // Enable scrolling
-    CHECK_NULLPTR(i2c_tx(oled->i2c, oled->addr, src, 2));
-
-    return SUCCESS;
-}
-
-uint32_t unset_scroll_oled(struct oled *oled) {
-    uint32_t src[2];
-    src[0] = 0x00;
-    src[1] = 0x2E; // Disable scrolling
-    CHECK_NULLPTR(i2c_tx(oled->i2c, oled->addr, src, 2));
+    oled_cmd_toggle_display(oled);
+    oled_cmd_toggle_mem(oled);
 
     return SUCCESS;
 }

@@ -182,13 +182,14 @@ int main(void) {
 
     print_image_oled_dma(&oled64, flower2);
 
-    config_scroll_oled(&oled64, 0, 7);
-    set_scroll_oled(&oled64);
+    oled_cmd_setup_hort_scroll(&oled64);
+    oled_cmd_toggle_scroll(&oled64);
 
     for (;;) {
         delay_s(1);
-        unset_scroll_oled(&oled64);
+        oled_cmd_toggle_scroll(&oled64);
         delay_s(1);
-        set_scroll_oled(&oled64);
+        oled_cmd_setup_hort_scroll(&oled64);
+        oled_cmd_toggle_scroll(&oled64);
     }
 }
