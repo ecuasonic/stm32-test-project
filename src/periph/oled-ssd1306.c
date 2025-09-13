@@ -190,38 +190,69 @@ uint32_t print_oled(struct oled *oled, char *str) {
 }
 
 uint32_t print_image_oled(struct oled *oled, const uint32_t *image) {
-    clear_oled(oled);
 
     toggle_oled(oled);
+
+    // change to horizontal addressing mode
+    uint32_t cmd[3];
+    cmd[0] = 0x20;
+    cmd[1] = 0x00;
+    send_cmd_oled(oled, cmd, 2);
+
+    // Set col
+    cmd[0] = 0x21;
+    cmd[1] = 0;
+    cmd[2] = OLED_COL - 1;
+    send_cmd_oled(oled, cmd, 3);
+
+    // Set row
+    cmd[0] = 0x22;
+    cmd[1] = 0;
+    cmd[2] = OLED_PAGE - 1;
+    send_cmd_oled(oled, cmd, 3);
+
     uint32_t start_data = 0x40;
-    for (uint32_t y = 0; y < OLED_PAGE; y++) {
-        start_i2c_tx(oled->i2c, oled->addr);
-        CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &start_data, 1), oled->i2c);
-        for (uint32_t x = 0; x < OLED_COL; x++) {
-            CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, image++, 1), oled->i2c);
-        }
-        end_i2c_tx(oled->i2c);
+    start_i2c_tx(oled->i2c, oled->addr);
+    CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &start_data, 1), oled->i2c);
+    CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, image, OLED_COL * OLED_PAGE), oled->i2c);
+    end_i2c_tx(oled->i2c);
 
-        CHECK_ERROR(set_oled_cursor(oled, 0, y+1));
-    }
     toggle_oled(oled);
+
+    // change back to page addressing mode
+    cmd[0] = 0x20;
+    cmd[1] = 0x02;
+    send_cmd_oled(oled, cmd, 2);
 
     return SUCCESS;
 }
 
 uint32_t print_image_oled_dma(struct oled *oled, const uint32_t *image) {
+    // clear_oled(oled);
     toggle_oled(oled);
 
     // change to horizontal addressing mode
-    uint32_t data[2];
-    data[0] = 0x20;
-    data[1] = 0x00;
-    send_cmd_oled(oled, data, 2);
+    uint32_t cmd[3];
+    cmd[0] = 0x20;
+    cmd[1] = 0x00;
+    send_cmd_oled(oled, cmd, 2);
+
+    // Set col
+    cmd[0] = 0x21;
+    cmd[1] = 0;
+    cmd[2] = OLED_COL - 1;
+    send_cmd_oled(oled, cmd, 3);
+
+    // Set row
+    cmd[0] = 0x22;
+    cmd[1] = 0;
+    cmd[2] = OLED_PAGE - 1;
+    send_cmd_oled(oled, cmd, 3);
 
     // Start DMA transfer
-    data[0] = 0x40;
+    uint32_t start_data = 0x40;
     start_i2c_tx(oled->i2c, oled->addr);
-    i2c_tx(oled->i2c, NO_COND, data, 1);
+    i2c_tx(oled->i2c, NO_COND, &start_data, 1);
     i2c_tx_dma(oled->i2c, image, 1024);
 
     // This makes DMA useless, but I just want to learn how to enable DMA
@@ -230,9 +261,9 @@ uint32_t print_image_oled_dma(struct oled *oled, const uint32_t *image) {
     toggle_oled(oled);
 
     // change back to page addressing mode
-    data[0] = 0x20;
-    data[1] = 0x02;
-    send_cmd_oled(oled, data, 2);
+    cmd[0] = 0x20;
+    cmd[1] = 0x02;
+    send_cmd_oled(oled, cmd, 2);
 
     return SUCCESS;
 }

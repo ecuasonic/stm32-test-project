@@ -185,9 +185,10 @@ static const uint32_t *tx(struct i2c *i2c, const uint32_t *src, uint32_t nbytes)
 }
 
 const uint32_t *i2c_tx(struct i2c *i2c, uint32_t addr, const uint32_t *src, uint32_t nbytes) {
+    vuint32_t *cr2 = &i2c->CR2;
+    while (*cr2 & I2C_CR2_DMAEN);
+
     if ((int32_t)addr != NO_COND) {
-        vuint32_t *cr2 = &i2c->CR2;
-        while (*cr2 & I2C_CR2_DMAEN);
 
         send_start(i2c);
         if (send_address_tx(i2c, addr)) {
@@ -238,7 +239,7 @@ void i2c_tx_dma(struct i2c *i2c, const uint32_t *src, uint32_t n) {
     while (*cr2 & I2C_CR2_DMAEN);
 
     uint32_t c = (i2c == I2C1) ? DMA_I2C1_TX : DMA_I2C2_TX;
-    uint32_t ccr = DMA_CCR_MSIZE(2) | DMA_CCR_PSIZE(0) | DMA_CCR_MINC | DMA_CCR_DIR | DMA_CCR_TCIE;
+    uint32_t ccr = DMA_CCR_MSIZE(2) | DMA_CCR_PSIZE(2) | DMA_CCR_MINC | DMA_CCR_DIR | DMA_CCR_TCIE;
     *cr2 |= I2C_CR2_DMAEN;
     enable_dma_channel(c-1, &i2c->DR, (uint32_t *)src, n, ccr);
 }
@@ -250,7 +251,7 @@ void i2c_rx_dma(struct i2c *i2c, uint32_t *dest, uint32_t n) {
     while (*cr2 & I2C_CR2_DMAEN);
 
     uint32_t c = (i2c == I2C1) ? DMA_I2C1_RX : DMA_I2C2_RX;
-    uint32_t ccr = DMA_CCR_MSIZE(2) | DMA_CCR_PSIZE(2) | DMA_CCR_MINC | DMA_CCR_TCIE;
+    uint32_t ccr = DMA_CCR_MSIZE(2) | DMA_CCR_PSIZE(0) | DMA_CCR_MINC | DMA_CCR_TCIE;
     *cr2 |= I2C_CR2_DMAEN;
     enable_dma_channel(c-1, &i2c->DR, dest, n, ccr);
 }

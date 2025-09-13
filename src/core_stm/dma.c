@@ -30,8 +30,14 @@ void disable_dma_channel(uint32_t c) {
 
 // =============================================================================
 
+// Why does HTIF trigger TCIF?????
 void DMA1_Channel6_Handler(void) {
+    if (DMA1->ISR & DMA_ISR_HTIF(6-1)) {
+        DMA1->IFCR = DMA_IFCR_CHTIF(6-1);
+    }
+
     if (DMA1->ISR & DMA_ISR_TCIF(6-1)) {
+        DMA1->IFCR = DMA_IFCR_CTCIF(6-1);
         disable_dma_channel(6-1);
 
         vuint32_t *i2c_sr1 = &I2C1->SR1;
@@ -43,13 +49,12 @@ void DMA1_Channel6_Handler(void) {
 
             end_i2c_tx(I2C1);
         }
-
-        DMA1->IFCR = DMA_IFCR_CTCIF(6-1);
     }
 }
 
 void DMA1_Channel4_Handler(void) {
     if (DMA1->ISR & DMA_ISR_TCIF(4-1)) {
+        DMA1->IFCR = DMA_IFCR_CTCIF(4-1);
         disable_dma_channel(4-1);
 
         vuint32_t *i2c_sr1 = &I2C2->SR1;
@@ -61,7 +66,5 @@ void DMA1_Channel4_Handler(void) {
 
             end_i2c_tx(I2C2);
         }
-
-        DMA1->IFCR = DMA_IFCR_CTCIF(4-1);
     }
 }

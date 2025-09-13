@@ -173,25 +173,22 @@ int main(void) {
     print_oled(&oled32, "Very nice\nThis finally works");
     clear_oled(&oled64);
     print_oled(&oled64, "Very nice\nThis finally works");
-    set_scroll_oled(&oled64);
 
     sleep_ms(1000);
 
-    unset_scroll_oled(&oled64);
-    // print_image_oled(&oled64, flower);
     print_image_oled_dma(&oled64, flower);
 
     sleep_ms(1000);
 
-    // print_image_oled(&oled64, flower2);
     print_image_oled_dma(&oled64, flower2);
-    // config_scroll_oled(&oled64, 0, 7);
-    // set_scroll_oled(&oled64);
-    //
+
+    config_scroll_oled(&oled64, 0, 7);
+    set_scroll_oled(&oled64);
+
     for (;;) {
-        // delay_s(1);
-        // unset_scroll_oled(&oled64);
-        // delay_s(1);
-        // set_scroll_oled(&oled64);
+        delay_s(1);
+        unset_scroll_oled(&oled64);
+        delay_s(1);
+        set_scroll_oled(&oled64);
     }
 }

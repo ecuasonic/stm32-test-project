@@ -133,21 +133,21 @@ struct i2c {
     //        0x0000
     //    Bits:
     //        PEC (Packet error checking register)
-#define I2C_SR1_PEC(n)        (((n)&0xFF) << 8)
+#define I2C_SR2_PEC(n)        (((n)&0xFF) << 8)
     //        DUALF (Dual flag [slave mode])
-#define I2C_SR1_DUALF         (1U << 7)
+#define I2C_SR2_DUALF         (1U << 7)
     //        SMBHOST (SMBus host header [slave mode])
-#define I2C_SR1_SMBHOST       (1U << 6)
+#define I2C_SR2_SMBHOST       (1U << 6)
     //        SMBDEFAULT (SMBus device default address [slave mode])
-#define I2C_SR1_SMBDEFAULT    (1U << 5)
+#define I2C_SR2_SMBDEFAULT    (1U << 5)
     //        GENCALL (General call address [slave mode])
-#define I2C_SR1_GENCALL       (1U << 4)
+#define I2C_SR2_GENCALL       (1U << 4)
     //        TRA (Transmitter/reciever)
-#define I2C_SR1_TRA           (1U << 2)
+#define I2C_SR2_TRA           (1U << 2)
     //        BUSY (Bus busy)
-#define I2C_SR1_BUSY          (1U << 1)
+#define I2C_SR2_BUSY          (1U << 1)
     //        MSL (Master/slave)
-#define I2C_SR1_MSL           (1U << 0)
+#define I2C_SR2_MSL           (1U << 0)
     uint32_t SR2;
 
     // ==========================================
