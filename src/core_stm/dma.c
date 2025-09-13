@@ -26,18 +26,20 @@ void disable_dma_channel(uint32_t c) {
     dma->C[c].CMAR = 0;
     dma->C[c].CNDTR = 0;
     dma->C[c].CCR = 0;
+    // Even through trc says CGIF clears all flags, lies.
+    // Must clear here, if HTIF is set, then only half of next transfer will go through.
+    dma->IFCR = DMA_IFCR_CTEIF(c) | DMA_IFCR_CHTIF(c) | DMA_IFCR_CTCIF(c) | DMA_IFCR_CGIF(c);
 }
 
 // =============================================================================
 
 // Why does HTIF trigger TCIF?????
 void DMA1_Channel6_Handler(void) {
-    if (DMA1->ISR & DMA_ISR_HTIF(6-1)) {
-        DMA1->IFCR = DMA_IFCR_CHTIF(6-1);
-    }
+    // if (DMA1->ISR & DMA_ISR_HTIF(6-1)) {
+    //     DMA1->IFCR = DMA_IFCR_CHTIF(6-1);
+    // }
 
     if (DMA1->ISR & DMA_ISR_TCIF(6-1)) {
-        DMA1->IFCR = DMA_IFCR_CTCIF(6-1);
         disable_dma_channel(6-1);
 
         vuint32_t *i2c_sr1 = &I2C1->SR1;

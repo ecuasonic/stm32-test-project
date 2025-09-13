@@ -228,7 +228,6 @@ uint32_t print_image_oled(struct oled *oled, const uint32_t *image) {
 }
 
 uint32_t print_image_oled_dma(struct oled *oled, const uint32_t *image) {
-    // clear_oled(oled);
     toggle_oled(oled);
 
     // change to horizontal addressing mode
