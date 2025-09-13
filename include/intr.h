@@ -10,4 +10,6 @@
 // Usage: config_intr(0, 'B', IMR_bit | EMR_bit | RTSR_bit | FTSR_bit);
 void config_intr(uint32_t exti, uint32_t port, uint32_t conf);
 
+__attribute__((noreturn)) void panic(void);
+
 #endif

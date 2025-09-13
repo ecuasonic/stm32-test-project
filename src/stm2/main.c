@@ -147,7 +147,7 @@ static void setup(void) {
 //      ADC/DAC
 //          Potentiometer into ADC.
 //          DAC into transistor powering LED.
-//      DMA to print image on LCD.
+//      DMA to print image on OLED.
 //      CRC then print on LCD/USART.
 //      USART to computer through Uart-USB
 int main(void) {
@@ -181,8 +181,10 @@ int main(void) {
     config_scroll_oled(&oled64, 0, 7);
     set_scroll_oled(&oled64);
 
-    sleep_s(5);
-    unset_scroll_oled(&oled64);
-
-    for (;;);
+    for (;;) {
+        delay_s(1);
+        unset_scroll_oled(&oled64);
+        delay_s(1);
+        set_scroll_oled(&oled64);
+    }
 }

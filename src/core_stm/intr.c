@@ -24,3 +24,7 @@ void config_intr(uint32_t exti, uint32_t port, uint32_t conf) {
     if (conf & FTSR_bit)
         EXTI->FTSR |= EXTI_TR(exti);
 }
+
+__attribute__((noreturn)) void panic(void) {
+    for(;;);
+}
