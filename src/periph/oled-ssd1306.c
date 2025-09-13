@@ -70,38 +70,21 @@ uint32_t send_data_oled(struct oled* oled, uint32_t *data, uint32_t n) {
     return SUCCESS;
 }
 
-uint32_t set_oled_cursor(struct oled *oled, uint32_t x, uint32_t y) {
+uint32_t set_oled_cursor_pa(struct oled *oled, uint32_t x, uint32_t y) {
     if (x >= OLED_COL) {
         return FAILURE;
     }
 
-    oled_cmd_set_col_pa(oled, x);
-    oled_cmd_set_page_start_pa(oled, y);
+    if (oled->pa_mem) {
+        oled_cmd_set_col_pa(oled, x);
+        oled_cmd_set_page_start_pa(oled, y);
 
-    oled->cursor_x = x&0xFF;
-    oled->cursor_y = y&0x7;
+        oled->cursor_x = x&0xFF;
+        oled->cursor_y = y&0x7;
 
-    return SUCCESS;
-}
-
-uint32_t clear_oled(struct oled *oled) {
-    uint32_t start_data = 0x40;
-    uint32_t data = 0;
-
-    oled_cmd_toggle_display(oled);
-    for (uint32_t y = 0; y < OLED_PAGE; y++) {
-        start_i2c_tx(oled->i2c, oled->addr);
-        CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &start_data, 1), oled->i2c);
-        for (uint32_t x = 0; x < OLED_COL; x++) {
-            CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &data, 1), oled->i2c);
-        }
-        end_i2c_tx(oled->i2c);
-
-        CHECK_ERROR(set_oled_cursor(oled, 0, y+1));
+        return SUCCESS;
     }
-    oled_cmd_toggle_display(oled);
-
-    return SUCCESS;
+    return FAILURE;
 }
 
 uint32_t print_char_oled(struct oled *oled, uint32_t c) {
@@ -120,7 +103,7 @@ uint32_t print_char_oled(struct oled *oled, uint32_t c) {
                 proc |= ((data4 >> i)&0x1) << i*2;
             }
             CHECK_ERROR(send_data_oled(oled, &proc, 1));
-            set_oled_cursor(oled, oled->cursor_x, oled->cursor_y+1);
+            CHECK_ERROR(set_oled_cursor_pa(oled, oled->cursor_x, oled->cursor_y+1));
 
             // Higher nibble (0x X D7 X D6 X D5 X D4) on page n+1
             data4 = (data >> 4)&0xF;
@@ -129,10 +112,10 @@ uint32_t print_char_oled(struct oled *oled, uint32_t c) {
                 proc |= ((data4 >> i)&0x1) << i*2;
             }
             CHECK_ERROR(send_data_oled(oled, &proc, 1));
-            set_oled_cursor(oled, oled->cursor_x+1, oled->cursor_y-1);
+            CHECK_ERROR(set_oled_cursor_pa(oled, oled->cursor_x+1, oled->cursor_y-1));
         } else if (oled->rows == 64){
             CHECK_ERROR(send_data_oled(oled, &data, 1));
-            set_oled_cursor(oled, oled->cursor_x+1, oled->cursor_y);
+            CHECK_ERROR(set_oled_cursor_pa(oled, oled->cursor_x+1, oled->cursor_y));
         }
     }
     return SUCCESS;
@@ -144,12 +127,12 @@ static uint32_t tx_oled_nstr(struct oled *oled,char *str, uint32_t n) {
 
     while (n-- && *str) {
         if (oled->cursor_x >= OLED_COL) {
-            CHECK_ERROR(set_oled_cursor(oled, 0, (oled->cursor_y + dy)&0x7));
+            CHECK_ERROR(set_oled_cursor_pa(oled, 0, (oled->cursor_y + dy)&0x7));
             return SUCCESS;
         }
 
         if (*str == '\n') {
-            CHECK_ERROR(set_oled_cursor(oled, 0, (oled->cursor_y + dy)&0x7));
+            CHECK_ERROR(set_oled_cursor_pa(oled, 0, (oled->cursor_y + dy)&0x7));
         } else {
             oled_cmd_toggle_display(oled);
             CHECK_ERROR(print_char_oled(oled, *str));
@@ -166,42 +149,61 @@ uint32_t print_oled(struct oled *oled, char *str) {
     return SUCCESS;
 }
 
-uint32_t print_image_oled(struct oled *oled, const uint32_t *image) {
-
-    oled_cmd_toggle_display(oled);
-    oled_cmd_toggle_mem(oled);
-    oled_cmd_set_col(oled, 0, OLED_COL-1);
-    oled_cmd_set_page(oled, 0, OLED_PAGE-1);
-
+uint32_t clear_oled(struct oled *oled) {
     uint32_t start_data = 0x40;
+    uint32_t data = 0;
+
+    CHECK_ERROR(oled_cmd_toggle_display(oled));
+    CHECK_ERROR(oled_cmd_toggle_mem(oled));
+    CHECK_ERROR(oled_cmd_set_col(oled, 0, OLED_COL-1));
+    CHECK_ERROR(oled_cmd_set_page(oled, 0, OLED_PAGE-1));
+
     start_i2c_tx(oled->i2c, oled->addr);
     CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &start_data, 1), oled->i2c);
-    CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, image, OLED_COL * OLED_PAGE), oled->i2c);
+    for (uint32_t i = 0; i < OLED_PAGE * OLED_COL; i++) {
+        CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &data, 1), oled->i2c);
+    }
     end_i2c_tx(oled->i2c);
 
-    oled_cmd_toggle_display(oled);
-    oled_cmd_toggle_mem(oled);
+    CHECK_ERROR(oled_cmd_toggle_display(oled));
+    CHECK_ERROR(oled_cmd_toggle_mem(oled));
+    CHECK_ERROR(set_oled_cursor_pa(oled, 0, 0));
+
+    return SUCCESS;
+}
+
+
+uint32_t print_image_oled(struct oled *oled, const uint32_t *image) {
+    CHECK_ERROR(oled_cmd_toggle_display(oled));
+    CHECK_ERROR(oled_cmd_toggle_mem(oled));
+    CHECK_ERROR(oled_cmd_set_col(oled, 0, OLED_COL-1));
+    CHECK_ERROR(oled_cmd_set_page(oled, 0, OLED_PAGE-1));
+
+    CHECK_ERROR(send_data_oled(oled, (uint32_t *)image, OLED_COL * OLED_PAGE));
+
+    CHECK_ERROR(oled_cmd_toggle_display(oled));
+    CHECK_ERROR(oled_cmd_toggle_mem(oled));
 
     return SUCCESS;
 }
 
 uint32_t print_image_oled_dma(struct oled *oled, const uint32_t *image) {
-    oled_cmd_toggle_display(oled);
-    oled_cmd_toggle_mem(oled);
-    oled_cmd_set_col(oled, 0, OLED_COL-1);
-    oled_cmd_set_page(oled, 0, OLED_PAGE-1);
+    CHECK_ERROR(oled_cmd_toggle_display(oled));
+    CHECK_ERROR(oled_cmd_toggle_mem(oled));
+    CHECK_ERROR(oled_cmd_set_col(oled, 0, OLED_COL-1));
+    CHECK_ERROR(oled_cmd_set_page(oled, 0, OLED_PAGE-1));
 
     // Start DMA transfer
     uint32_t start_data = 0x40;
     start_i2c_tx(oled->i2c, oled->addr);
-    i2c_tx(oled->i2c, NO_COND, &start_data, 1);
-    i2c_tx_dma(oled->i2c, image, 1024);
+    CHECK_NULLPTR_ENDTX(i2c_tx(oled->i2c, NO_COND, &start_data, 1), oled->i2c);
+    i2c_tx_dma(oled->i2c, image, 1024); // DMA intr ends i2c transaction
 
     // This makes DMA useless, but I just want to learn how to enable DMA
     vuint32_t *cr2 = &oled->i2c->CR2;
     while (*cr2 & I2C_CR2_DMAEN);
-    oled_cmd_toggle_display(oled);
-    oled_cmd_toggle_mem(oled);
+    CHECK_ERROR(oled_cmd_toggle_display(oled));
+    CHECK_ERROR(oled_cmd_toggle_mem(oled));
 
     return SUCCESS;
 }

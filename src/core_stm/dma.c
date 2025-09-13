@@ -4,8 +4,6 @@
 #include "vectors.h"
 #include "types.h"
 
-#include "core_stm/gpio.h"
-
 // Figure out how to start DMA with I2C, then make DMA interrupt for full transfer.
 // Make sure that two peripherals with same channel are not on at the same time.
 void enable_dma_channel(uint32_t c, uint32_t *cpar, uint32_t *cmar, uint32_t cndtr, uint32_t ccr) {

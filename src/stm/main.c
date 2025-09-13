@@ -163,33 +163,33 @@ int main(void) {
     //
     // sleep_ms(1000);
 
-    print_oled(&oled32, "Printing on OLED 32");
-    print_oled(&oled64, "Printing on OLED 64");
-    print_lcd(&lcd, "Printing on LCD");
+    ASSERT(print_oled(&oled32, "Printing on OLED 32"));
+    ASSERT(print_oled(&oled64, "Printing on OLED 64"));
+    ASSERT(print_lcd(&lcd, "Printing on LCD"));
 
     sleep_ms(1000);
 
-    clear_oled(&oled32);
-    print_oled(&oled32, "Very nice\nThis finally works");
-    clear_oled(&oled64);
-    print_oled(&oled64, "Very nice\nThis finally works");
+    ASSERT(clear_oled(&oled32));
+    ASSERT(print_oled(&oled32, "Very nice\nThis finally works"));
+    ASSERT(clear_oled(&oled64));
+    ASSERT(print_oled(&oled64, "Very nice\nThis finally works"));
 
     sleep_ms(1000);
 
-    print_image_oled_dma(&oled64, flower);
+    ASSERT(print_image_oled_dma(&oled64, flower));
 
     sleep_ms(1000);
 
-    print_image_oled_dma(&oled64, flower2);
+    ASSERT(print_image_oled_dma(&oled64, flower2));
 
-    oled_cmd_setup_hort_scroll(&oled64);
-    oled_cmd_toggle_scroll(&oled64);
+    ASSERT(oled_cmd_setup_hort_scroll(&oled64));
+    ASSERT(oled_cmd_toggle_scroll(&oled64));
 
     for (;;) {
         delay_s(1);
-        oled_cmd_toggle_scroll(&oled64);
+        ASSERT(oled_cmd_toggle_scroll(&oled64));
         delay_s(1);
-        oled_cmd_setup_hort_scroll(&oled64);
-        oled_cmd_toggle_scroll(&oled64);
+        ASSERT(oled_cmd_setup_hort_scroll(&oled64));
+        ASSERT(oled_cmd_toggle_scroll(&oled64));
     }
 }

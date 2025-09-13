@@ -52,7 +52,3 @@ void EXTI1_Handler(void) {
         set = !set;
     }
 }
-
-__attribute__((noreturn)) void panic(void) {
-    for(;;);
-}
