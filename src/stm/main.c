@@ -170,9 +170,9 @@ int main(void) {
     sleep_ms(1000);
 
     ASSERT(clear_oled(&oled32));
-    ASSERT(print_oled(&oled32, "Very nice\nThis finally works"));
+    ASSERT(print_oled(&oled32, "DMA works\nOLED is done"));
     ASSERT(clear_oled(&oled64));
-    ASSERT(print_oled(&oled64, "Very nice\nThis finally works"));
+    ASSERT(print_oled(&oled64, "Very nice\nThis finally works\nOLED is done"));
 
     sleep_ms(1000);
 
@@ -180,15 +180,16 @@ int main(void) {
 
     sleep_ms(1000);
 
+    // FIX: After a long time, a second image looks unrecognizable.
     ASSERT(print_image_oled_dma(&oled64, flower2));
 
     ASSERT(oled_cmd_setup_hort_scroll(&oled64));
     ASSERT(oled_cmd_toggle_scroll(&oled64));
 
     for (;;) {
-        delay_s(1);
+        delay_ms(1000);
         ASSERT(oled_cmd_toggle_scroll(&oled64));
-        delay_s(1);
+        delay_ms(1000);
         ASSERT(oled_cmd_setup_hort_scroll(&oled64));
         ASSERT(oled_cmd_toggle_scroll(&oled64));
     }

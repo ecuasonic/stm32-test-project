@@ -126,17 +126,16 @@ static uint32_t tx_oled_nstr(struct oled *oled,char *str, uint32_t n) {
     uint32_t dy = (oled->rows == OLED_ROW32) ? 2 : 1;
 
     while (n-- && *str) {
-        if (oled->cursor_x >= OLED_COL) {
-            CHECK_ERROR(set_oled_cursor_pa(oled, 0, (oled->cursor_y + dy)&0x7));
-            return SUCCESS;
-        }
 
         if (*str == '\n') {
             CHECK_ERROR(set_oled_cursor_pa(oled, 0, (oled->cursor_y + dy)&0x7));
+        } else if (oled->cursor_x >= OLED_COL-6) {
+            CHECK_ERROR(set_oled_cursor_pa(oled, 0, (oled->cursor_y + dy)&0x7));
+            // return SUCCESS;
         } else {
-            oled_cmd_toggle_display(oled);
+            // CHECK_ERROR(oled_cmd_toggle_display(oled));
             CHECK_ERROR(print_char_oled(oled, *str));
-            oled_cmd_toggle_display(oled);
+            // CHECK_ERROR(oled_cmd_toggle_display(oled));
         }
         str++;
     }
