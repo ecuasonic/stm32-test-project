@@ -177,15 +177,21 @@ static void setup(void) {
 int main(void) {
     setup();
 
+    // stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb -crtscts
+    // cat /dev/ttyUSB0
+    // echo "whatever" > /dev/ttyUSB0
     usart_tx(USART2, "UART finally works\n", CONSOLE_LENGTH);
 
     char str[LCD_COLS];
+    str[0] = 'H';
+
     usart_rx(USART2, str, LCD_COLS);
     print_lcd(&lcd, str);
     usart_tx(USART2, str, LCD_COLS);
 
     usart_tx(USART2, "Tx and Rx works\n", CONSOLE_LENGTH);
     usart_tx(USART2, "Now need to work on console, and input (program execution)\n", CONSOLE_LENGTH);
+    usart_tx(USART2, "or lcd output\n", CONSOLE_LENGTH);
 
     // acc_demo();
     // image_demo();
